@@ -9,21 +9,21 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mts.repository.MtsInternalUserRepository;
+import com.mts.repository.MtsUserRepository;
 import com.mts.service.MtsUserService;
 
 @Service
 public class MtsUserServiceImpl implements MtsUserService {
 
 	@Autowired
-	MtsInternalUserRepository mtsInternalUserRepository;
+	MtsUserRepository mtsUserRepository;
 
 	@Override
 	public JSONObject getUserDetails(String email) {
 		JSONObject result = null;
 
 		try {
-			Map<String, Object> data = mtsInternalUserRepository.findByEmailAddress(email);
+			Map<String, Object> data = mtsUserRepository.findByEmailAddress(email);
 			result = new JSONObject(data);
 		} catch (Exception e) {
 			System.err.println(e.getLocalizedMessage());

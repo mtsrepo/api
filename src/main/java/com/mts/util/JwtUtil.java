@@ -72,7 +72,8 @@ public class JwtUtil {
 				.setSubject(subject)
 				.setIssuer("shibam007")
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(900000000)))
+				.setExpiration(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(600000000)))
+				.setHeaderParam("typ", "JWT")
 				.signWith(SignatureAlgorithm.HS256, this.secret)
 				.compact();
 	}

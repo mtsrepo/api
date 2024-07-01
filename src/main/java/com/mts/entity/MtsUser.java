@@ -10,8 +10,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "mts_internal_user")
-public class MtsInternalUser {
+@Table(name = "mts_user_")
+public class MtsUser {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long mtsUserId;
