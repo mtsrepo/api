@@ -10,7 +10,7 @@ import com.mts.entity.MtsUser;
 
 public interface MtsUserRepository extends JpaRepository<MtsUser, Long> {
 
-	@Query(value = "SELECT m.mtsUserName, m.emailAddress, m.mtsUserId, m,mtsUserCode\r\n"
+	@Query(value = "SELECT m.mtsUserName, m.emailAddress, m.mtsUserId, m,mtsUserCode, \r\n"
 			+ "     m.contactNumber, m.password, r.roleId FROM mts_user_ m LEFT JOIN \r\n"
 			+ "       mts_user_role_mapping rm ON m.mtsUserId = rm.userId LEFT JOIN\r\n"
 			+ "       role_ r ON rm.roleId = r.roleId WHERE m.emailAddress = :idEmailContact \n"
