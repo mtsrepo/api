@@ -1,5 +1,6 @@
 package com.mts.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +18,6 @@ import com.mts.service.MtsUserService;
 import com.mts.util.JwtUtil;
 
 @Controller
-@RequestMapping("/mts")
 public class ValidateController {
 
 	@Autowired
@@ -71,6 +71,7 @@ public class ValidateController {
 	@ResponseBody
 	@CrossOrigin
 	public String helloWorld() {
+		System.out.println("logged at "+ new Date());
 		return "Hello MTS users";
 	}
 }
