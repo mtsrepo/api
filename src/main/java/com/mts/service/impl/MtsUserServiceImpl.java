@@ -19,11 +19,11 @@ public class MtsUserServiceImpl implements MtsUserService {
 	MtsUserRepository mtsUserRepository;
 
 	@Override
-	public JSONObject getUserDetails(String email) {
+	public JSONObject getUserDetails(String idEmailContact) {
 		JSONObject result = null;
 
 		try {
-			Map<String, Object> data = mtsUserRepository.findByEmailAddress(email);
+			Map<String, Object> data = mtsUserRepository.findByIdEmailContact(idEmailContact);
 			result = new JSONObject(data);
 		} catch (Exception e) {
 			System.err.println(e.getLocalizedMessage());

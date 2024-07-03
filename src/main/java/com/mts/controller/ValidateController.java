@@ -32,9 +32,9 @@ public class ValidateController {
 		JSONObject returnMap = new JSONObject();
 
 		try {
-			String email = loginReq.get("email");
+			String idEmailContact = loginReq.get("idEmailContact");
 			String password = loginReq.get("password");
-			JSONObject userDetails = mtsUserService.getUserDetails(email);
+			JSONObject userDetails = mtsUserService.getUserDetails(idEmailContact);
 
 			if (userDetails == null || userDetails.isEmpty()) {
 				returnMap.put("success", false);
