@@ -5,12 +5,14 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import com.mts.dataObjects.SaveAssetReq;
+
 public interface EquipmentAssetService {
 
-	JSONObject getAllAssets(String category);
-
-	JSONObject getAllConsumables(String category);
+	JSONObject getAllAssets();
 
 	List<Map<String, Object>> getAssetTypeIdName();
+
+	JSONObject saveAsset(SaveAssetReq asstReq);
 
 }

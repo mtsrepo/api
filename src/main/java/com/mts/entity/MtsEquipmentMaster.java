@@ -2,6 +2,7 @@ package com.mts.entity;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +18,7 @@ public class MtsEquipmentMaster {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long mtsEquipMasterId;
+	@Column(name = "uuid_")
 	private String uuid;
 	private Long mtsEquipTypeMasterId;
 	private String mtsEquipMasterCode;
@@ -25,10 +27,10 @@ public class MtsEquipmentMaster {
 	private String manufacturedCompany;
 	private String suppliedCompany;
 	private String description;
-	private LocalDateTime dateOfPurchase;
-	private LocalDateTime lastDateOfWarranty;
+	private Long dateOfPurchase;
+	private Long lastDateOfWarranty;
 	private LocalDateTime currentState;
-	private LocalDateTime createDate;
-	private LocalDateTime modifiedDate;
+	private Long createDate;
+	private Long modifiedDate;
 	private Integer isActive;
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mts.dataObjects.SaveAssetReq;
 import com.mts.service.EquipmentAssetService;
 import com.mts.util.JwtUtil;
 
@@ -55,11 +56,18 @@ public class EquipmentAssetController {
 	@PostMapping("/saveAsset")
 	@ResponseBody
 	@CrossOrigin
-	public Map<String, Object> saveAsset(@RequestBody HashMap<String, String> equReq) {
+	public Map<String, Object> saveAsset(@RequestBody SaveAssetReq asstReq) {
 		JSONObject returnMap = new JSONObject();
 		try {
-			String token = equReq.get("authToken");
-			String userId = equReq.get("userId");
+			boolean tokenVerified = jwtUtil.validateToken(asstReq.getAuthToken(), asstReq.getUserId());
+			if(!tokenVerified) {
+				returnMap.put("status", 0);
+				returnMap.put("message", "invalid token");
+				return returnMap.toMap();
+			}
+			
+			returnMap = equipmentAssetService.saveAsset(asstReq);
+			returnMap.put("status", 1);
 		}catch (Exception e) {
 			returnMap.put("message", "asset save error");
 			returnMap.put("status", 0);
@@ -76,7 +84,7 @@ public class EquipmentAssetController {
 		try {
 			String token = equReq.get("authToken");
 			String userId = equReq.get("userId");
-			String category = equReq.get("category");
+//			String category = equReq.get("category");
 			
 			boolean tokenVerified = jwtUtil.validateToken(token, userId);
 			if(!tokenVerified) {
@@ -85,7 +93,8 @@ public class EquipmentAssetController {
 				return returnMap.toMap();
 			}
 			
-			returnMap = equipmentAssetService.getAllAssets(category);
+			returnMap = equipmentAssetService.getAllAssets();
+			returnMap.put("status", 1);
 			
 		} catch (Exception e) {
 			returnMap.put("message", "assets fetch error");

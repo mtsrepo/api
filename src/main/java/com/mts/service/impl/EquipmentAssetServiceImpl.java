@@ -8,7 +8,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mts.entity.MtsEquipmentTypeMaster;
+import com.mts.dataObjects.SaveAssetReq;
+import com.mts.entity.MtsEquipmentMaster;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.repository.MtsEquipmentTypeMasterRepository;
 import com.mts.service.EquipmentAssetService;
@@ -21,10 +22,10 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 	MtsEquipmentTypeMasterRepository mtsEquipmentTypeMasterRepository;
 
 	@Override
-	public JSONObject getAllAssets(String category) {
+	public JSONObject getAllAssets() {
 		JSONObject result = new JSONObject();
 		try {
-			List<MtsEquipmentTypeMaster> data = mtsEquipmentTypeMasterRepository.findByCategory(category);
+			List<MtsEquipmentMaster> data = mtsEquipmentMasterRepository.getAllAssets();
 //			result = new JSONObject(data);
 			result.put("data", data);
 		} catch (Exception e) {
@@ -33,23 +34,35 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 		return result;
 	}
 
-	@Override
-	public JSONObject getAllConsumables(String category) {
-		JSONObject result = new JSONObject();
-		try {
-			List<MtsEquipmentTypeMaster> data = mtsEquipmentTypeMasterRepository.findByCategory(category);
-			result.put("data", data);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
 
 	@Override
 	public List<Map<String, Object>> getAssetTypeIdName() {
 		List<Map<String, Object>> result = new ArrayList<>();
 		try {
 			result = mtsEquipmentTypeMasterRepository.getAssetTypeIdName();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+
+	@Override
+	public JSONObject saveAsset(SaveAssetReq asstReq) {
+		JSONObject result = new JSONObject();
+		try {
+			MtsEquipmentMaster asset = new MtsEquipmentMaster();
+			asset.setMtsEquipTypeMasterId(asstReq.getMtsEquipTypeMasterId());
+			asset.setName(asstReq.getAssetName());
+			asset.setManufacturedCompany(asstReq.getManufacturedCompany());
+			asset.setSuppliedCompany(asstReq.getSuppliedCompany());
+			asset.setDescription(asstReq.getDescription());
+			asset.setDateOfPurchase(asstReq.getDateOfPurchase());
+			asset.setLastDateOfWarranty(asstReq.getLastDateOfWarranty());
+			
+			mtsEquipmentMasterRepository.saveAndFlush(asset);
+			
+			result.put("message", "Asset saved successfully");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
