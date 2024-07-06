@@ -1,11 +1,7 @@
 package com.mts.entity;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -16,7 +12,7 @@ import lombok.Data;
 @Table(name = "mts_challan_document")
 public class MtsChallanDocument {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mtsChallanId;
 	@Column(name = "uuid_")
 	private String uuid;
@@ -51,9 +47,9 @@ public class MtsChallanDocument {
 
     private String description;
 
-    private LocalDateTime createDate;
+	private Long createDate;
 
-    private LocalDateTime modifiedDate;
+	private Long modifiedDate;
 
     private Integer isActive;
 }

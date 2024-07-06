@@ -1,7 +1,5 @@
 package com.mts.entity;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,7 +20,7 @@ public class MtsLocationMaster {
 	private String name;
 	private String type;
 	private String description;
-	private LocalDateTime createDate;
-	private LocalDateTime modifiedDate;
+	private Long createDate;
+	private Long modifiedDate;
 	private Integer isActive;
 }

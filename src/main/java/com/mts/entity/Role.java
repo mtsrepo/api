@@ -1,11 +1,7 @@
 package com.mts.entity;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -16,16 +12,16 @@ import lombok.Data;
 @Table(name = "role_")
 public class Role {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String roleId;
 	@Column(name = "uuid_")
 	private Long uuid;
 
 	private Long companyId;
 
-	private LocalDateTime createDate;
+	private Long createDate;
 
-	private LocalDateTime modifiedDate;
+	private Long modifiedDate;
 
 	private String name;
 

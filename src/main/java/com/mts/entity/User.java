@@ -1,11 +1,7 @@
 package com.mts.entity;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -16,16 +12,16 @@ import lombok.Data;
 @Table(name = "user_")
 public class User {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
 	@Column(name = "uuid_")
 	private String uuid;
 
 	private Long companyId;
 
-	private LocalDateTime createDate;
+	private Long createDate;
 
-	private LocalDateTime modifiedDate;
+	private Long modifiedDate;
 
 	private Long roleId;
 
@@ -37,7 +33,7 @@ public class User {
 
 	private Boolean passwordReset;
 
-	private LocalDateTime passwordModifiedDate;
+	private Long passwordModifiedDate;
 
 	private String digest;
 
@@ -85,21 +81,21 @@ public class User {
 
 	private String jobTitle;
 
-	private LocalDateTime loginDate;
+	private Long loginDate;
 
 	private String loginIP;
 
-	private LocalDateTime lastLoginDate;
+	private Long lastLoginDate;
 
 	private String lastLoginIP;
 
-	private LocalDateTime lastFailedLoginDate;
+	private Long lastFailedLoginDate;
 
 	private Integer failedLoginAttempts;
 
 	private Boolean lockout;
 
-	private LocalDateTime lockoutDate;
+	private Long lockoutDate;
 
 	private Boolean agreedToTermsOfUse;
 

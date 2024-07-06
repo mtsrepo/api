@@ -1,12 +1,9 @@
 package com.mts.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -17,7 +14,7 @@ import lombok.Data;
 @Table(name = "mts_challan_equip_dtl")
 public class MtsChallanEquipDtl {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long mtsChallanEquipId;
 	@Column(name = "uuid_")
 	private String uuid;
@@ -34,7 +31,7 @@ public class MtsChallanEquipDtl {
 
 	private String description;
 
-	private LocalDateTime createDate;
+	private Long createDate;
 
 	private Integer qty;
 
@@ -46,11 +43,11 @@ public class MtsChallanEquipDtl {
 
 	private BigDecimal IGSTAmount;
 
-	private LocalDateTime modifiedDate;
+	private Long modifiedDate;
 
-	private Long createdOn;
-
-	private Long modifiedOn;
+//	private Long createdOn;
+//
+//	private Long modifiedOn;
 
 	private Integer isActive;
 
