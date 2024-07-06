@@ -1,8 +1,10 @@
 package com.mts.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +50,19 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 	@Override
 	public JSONObject saveConsumable(SaveConsumableReq consReq) {
 		JSONObject result = new JSONObject();
+		Long userId = 0L;
 		try {
 			MtsEquipmentMaster consumable = new MtsEquipmentMaster();
+			Random random = new Random();
+			int fiveDigitNumber = 10000 + random.nextInt(90000);
+			long currentTimeSeconds = System.currentTimeMillis() / 1000;
+	        
+	        String code = "MCON" + fiveDigitNumber;
+	        userId = ((new Date().getTime() * 10) + (long) (Math.floor(Math.random() * 90L) + 100L));
+			
+	        consumable.setMtsEquipMasterId(currentTimeSeconds + fiveDigitNumber);
+	        consumable.setMtsEquipMasterCode(code);
+			
 			consumable.setMtsEquipTypeMasterId(consReq.getMtsEquipTypeMasterId());
 			consumable.setName(consReq.getConsumableName());
 			consumable.setManufacturedCompany(consReq.getManufacturedCompany());
@@ -61,7 +74,10 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 			mtsEquipmentMasterRepository.saveAndFlush(consumable);
 			
 			result.put("message", "Consumable saved successfully");
+			result.put("status", 1);
 		} catch (Exception e) {
+			result.put("message", "consumable save error");
+			result.put("status", 0);
 			e.printStackTrace();
 		}
 		return result;

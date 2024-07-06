@@ -67,10 +67,8 @@ public class EquipmentAssetController {
 			}
 			
 			returnMap = equipmentAssetService.saveAsset(asstReq);
-			returnMap.put("status", 1);
+			
 		}catch (Exception e) {
-			returnMap.put("message", "asset save error");
-			returnMap.put("status", 0);
 			e.printStackTrace();
 		}
 		return returnMap.toMap();

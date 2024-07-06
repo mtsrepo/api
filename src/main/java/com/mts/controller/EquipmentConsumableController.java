@@ -67,10 +67,8 @@ public class EquipmentConsumableController {
 			}
 			
 			returnMap = equipmentConsumableService.saveConsumable(consReq);
-			returnMap.put("status", 1);
+			
 		}catch (Exception e) {
-			returnMap.put("message", "consumable save error");
-			returnMap.put("status", 0);
 			e.printStackTrace();
 		}
 		return returnMap.toMap();

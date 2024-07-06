@@ -16,7 +16,6 @@ import lombok.Data;
 @Table(name = "mts_equipment_master")
 public class MtsEquipmentMaster {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long mtsEquipMasterId;
 	@Column(name = "uuid_")
 	private String uuid;
