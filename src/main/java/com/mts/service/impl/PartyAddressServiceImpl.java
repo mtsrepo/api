@@ -1,6 +1,8 @@
 package com.mts.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.json.JSONObject;
@@ -51,6 +53,17 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 		try {
 			List<MtsPartyAddress> data = mtsPartyAddressRepository.getAllPartyAddresses();
 			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public List<Map<String, Object>> getPartyTypeIdName() {
+		List<Map<String, Object>> result = new ArrayList<>();
+		try {
+			result = mtsPartyAddressRepository.getPartyTypeIdName();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
