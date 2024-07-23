@@ -27,7 +27,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 	public JSONObject getAllAssets() {
 		JSONObject result = new JSONObject();
 		try {
-			List<MtsEquipmentMaster> data = mtsEquipmentMasterRepository.getAllAssets();
+			List<Map<String, Object>> data = mtsEquipmentMasterRepository.getAllAssets();
 //			result = new JSONObject(data);
 			result.put("data", data);
 		} catch (Exception e) {
@@ -66,7 +66,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 			asset.setMtsEquipMasterCode(code);
 			
 			asset.setMtsEquipTypeMasterId(asstReq.getMtsEquipTypeMasterId());
-			asset.setName(asstReq.getAssetName());
+			asset.setMtsEquipName(asstReq.getAssetName());
 			asset.setManufacturedCompany(asstReq.getManufacturedCompany());
 			asset.setSuppliedCompany(asstReq.getSuppliedCompany());
 			asset.setDescription(asstReq.getDescription());

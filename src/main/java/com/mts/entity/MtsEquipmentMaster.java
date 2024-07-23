@@ -20,7 +20,7 @@ public class MtsEquipmentMaster {
 	private Long mtsEquipTypeMasterId;
 	private String mtsEquipMasterCode;
 	private Long companyId;
-	private String name;
+	private String mtsEquipName;
 	private String manufacturedCompany;
 	private String suppliedCompany;
 	private Long mtsLocationMasterId;

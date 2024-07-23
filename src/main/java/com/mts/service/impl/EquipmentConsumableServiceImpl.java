@@ -39,7 +39,7 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 	public JSONObject getAllConsumables() {
 		JSONObject result = new JSONObject();
 		try {
-			List<MtsEquipmentMaster> data = mtsEquipmentMasterRepository.getAllConsumables();
+			List<Map<String, Object>> data = mtsEquipmentMasterRepository.getAllConsumables();
 			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -64,7 +64,7 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 	        consumable.setMtsEquipMasterCode(code);
 			
 			consumable.setMtsEquipTypeMasterId(consReq.getMtsEquipTypeMasterId());
-			consumable.setName(consReq.getConsumableName());
+			consumable.setMtsEquipName(consReq.getConsumableName());
 			consumable.setManufacturedCompany(consReq.getManufacturedCompany());
 			consumable.setSuppliedCompany(consReq.getSuppliedCompany());
 			consumable.setDescription(consReq.getDescription());
