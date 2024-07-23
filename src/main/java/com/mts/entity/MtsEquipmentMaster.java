@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -25,6 +23,7 @@ public class MtsEquipmentMaster {
 	private String name;
 	private String manufacturedCompany;
 	private String suppliedCompany;
+	private Long mtsLocationMasterId;
 	private String description;
 	private Long dateOfPurchase;
 	private Long lastDateOfWarranty;

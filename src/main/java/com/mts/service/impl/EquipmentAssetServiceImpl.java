@@ -57,7 +57,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 			MtsEquipmentMaster asset = new MtsEquipmentMaster();
 			Random random = new Random();
 			int fiveDigitNumber = 10000 + random.nextInt(90000);
-			long currentTimeSeconds = System.currentTimeMillis() / 1000;
+//			long currentTimeSeconds = System.currentTimeMillis() / 1000;
 	        
 	        String code = "MEQU" + fiveDigitNumber;
 	        userId = ((new Date().getTime() * 10) + (long) (Math.floor(Math.random() * 90L) + 100L));

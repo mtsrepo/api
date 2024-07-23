@@ -35,7 +35,8 @@ public class Company {
 
 	private Long logoId;
 
-	private Boolean system;
+	@Column(name = "`system`")
+	private Integer system;
 
 	private Long maxUsers;
 	@Column(name = "active_")
