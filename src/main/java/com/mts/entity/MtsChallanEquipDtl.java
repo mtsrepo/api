@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -14,7 +16,7 @@ import lombok.Data;
 @Table(name = "mts_challan_equip_dtl")
 public class MtsChallanEquipDtl {
 	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long mtsChallanEquipId;
 	@Column(name = "uuid_")
 	private String uuid;
@@ -39,9 +41,9 @@ public class MtsChallanEquipDtl {
 
 	private BigDecimal taxableValue;
 
-	private BigDecimal IGSTPercentage;
+	private BigDecimal iGSTPercentage;
 
-	private BigDecimal IGSTAmount;
+	private BigDecimal iGSTAmount;
 
 	private Long modifiedDate;
 
