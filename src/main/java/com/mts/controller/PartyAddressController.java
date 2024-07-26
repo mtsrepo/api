@@ -1,6 +1,7 @@
 package com.mts.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -64,6 +65,37 @@ public class PartyAddressController {
 			returnMap.put("status", 1);
 		} catch (Exception e) {
 			returnMap.put("message", "party address fetch error");
+			returnMap.put("status", 0);
+			e.printStackTrace();
+		}
+		return returnMap.toMap();
+	}
+
+	@PostMapping("/partyIdWiseAddress")
+	@ResponseBody
+	@CrossOrigin
+	public Map<String, Object> partyIdWiseAddress(@RequestBody HashMap<String, String> partyReq) {
+		JSONObject returnMap = new JSONObject();
+		try {
+			String token = partyReq.get("authToken");
+			String userId = partyReq.get("userId");
+			Long mtsPartyMasterId = Long.valueOf(partyReq.get("mtsPartyMasterId"));
+
+			boolean tokenVerified = jwtUtil.validateToken(token, userId);
+			if (!tokenVerified) {
+				returnMap.put("status", 0);
+				returnMap.put("message", "invalid token");
+				return returnMap.toMap();
+			}
+
+			List<Map<String, Object>> partyMasterIdAddress = partyAddressService
+					.getPartyMasterIdAddress(mtsPartyMasterId);
+
+			returnMap.put("message", partyMasterIdAddress);
+			returnMap.put("status", 1);
+
+		} catch (Exception e) {
+			returnMap.put("message", "party id address not found");
 			returnMap.put("status", 0);
 			e.printStackTrace();
 		}
