@@ -21,5 +21,7 @@ public class MtsPartyMaster {
 	private String regNo;
 	private String details;
 	private String GSTN;
-	private String name;
+	private String partyName;
+	private String emailAddress;
+	private String contactNumber;
 }

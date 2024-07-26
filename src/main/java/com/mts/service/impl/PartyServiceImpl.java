@@ -1,6 +1,8 @@
 package com.mts.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,7 @@ public class PartyServiceImpl implements PartyService {
 			party.setRegNo(partyReq.getRegNo());
 			party.setDetails(partyReq.getDetails());
 			party.setGSTN(partyReq.getGSTN());
-			party.setName(partyReq.getName());
+			party.setPartyName(partyReq.getName());
 
 			mtsPartyMasterRepository.saveAndFlush(party);
 
@@ -57,6 +59,17 @@ public class PartyServiceImpl implements PartyService {
 		try {
 			List<MtsPartyMaster> data = mtsPartyMasterRepository.getAllParties();
 			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public List<Map<String, Object>> getPartyMasterIdName() {
+		List<Map<String, Object>> result = new ArrayList<>();
+		try {
+			result = mtsPartyMasterRepository.getPartyMasterIdName();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

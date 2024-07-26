@@ -1,6 +1,7 @@
 package com.mts.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -64,6 +65,35 @@ public class PartyController {
 			returnMap.put("status", 1);
 		} catch (Exception e) {
 			returnMap.put("message", "party fetch error");
+			returnMap.put("status", 0);
+			e.printStackTrace();
+		}
+		return returnMap.toMap();
+	}
+
+	@PostMapping("/partyMasterTypeData")
+	@ResponseBody
+	@CrossOrigin
+	public Map<String, Object> partyMasterTypeData(@RequestBody HashMap<String, String> partyReq) {
+		JSONObject returnMap = new JSONObject();
+		try {
+			String token = partyReq.get("authToken");
+			String userId = partyReq.get("userId");
+
+			boolean tokenVerified = jwtUtil.validateToken(token, userId);
+			if (!tokenVerified) {
+				returnMap.put("status", 0);
+				returnMap.put("message", "invalid token");
+				return returnMap.toMap();
+			}
+
+			List<Map<String, Object>> partyMasterIdName = partyService.getPartyMasterIdName();
+
+			returnMap.put("message", partyMasterIdName);
+			returnMap.put("status", 1);
+
+		} catch (Exception e) {
+			returnMap.put("message", "party id name not found");
 			returnMap.put("status", 0);
 			e.printStackTrace();
 		}

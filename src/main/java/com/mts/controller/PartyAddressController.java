@@ -1,7 +1,6 @@
 package com.mts.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -23,35 +22,6 @@ public class PartyAddressController {
 	@Autowired
 	PartyAddressService partyAddressService;
 
-
-	@PostMapping("/partyMasterTypeData")
-	@ResponseBody
-	@CrossOrigin
-	public Map<String, Object> partyMasterTypeData(@RequestBody HashMap<String, String> partyReq) {
-		JSONObject returnMap = new JSONObject();
-		try {
-			String token = partyReq.get("authToken");
-			String userId = partyReq.get("userId");
-
-			boolean tokenVerified = jwtUtil.validateToken(token, userId);
-			if (!tokenVerified) {
-				returnMap.put("status", 0);
-				returnMap.put("message", "invalid token");
-				return returnMap.toMap();
-			}
-
-			List<Map<String, Object>> partyTypeData = partyAddressService.getPartyTypeIdName();
-
-			returnMap.put("message", partyTypeData);
-			returnMap.put("status", 1);
-
-		} catch (Exception e) {
-			returnMap.put("message", "party type not found");
-			returnMap.put("status", 0);
-			e.printStackTrace();
-		}
-		return returnMap.toMap();
-	}
 
 	@PostMapping("/savePartyAddress")
 	@ResponseBody
