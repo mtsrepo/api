@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mts.dataObjects.SavePartyReq;
-import com.mts.entity.Company;
 import com.mts.entity.MtsPartyMaster;
 import com.mts.repository.CompanyRepository;
 import com.mts.repository.MtsPartyMasterRepository;
@@ -29,18 +28,13 @@ public class PartyServiceImpl implements PartyService {
 		JSONObject result = new JSONObject();
 
 		try {
-			Company company = new Company();
-			company.setName(partyReq.getName());
-			company.setRegAddress(partyReq.getRegAddress());
-
-			Company savedCompany = companyRepository.saveAndFlush(company);
-
 			MtsPartyMaster party = new MtsPartyMaster();
-			party.setCompanyId(savedCompany.getCompanyId());
 			party.setRegNo(partyReq.getRegNo());
 			party.setDetails(partyReq.getDetails());
 			party.setGSTN(partyReq.getGSTN());
 			party.setPartyName(partyReq.getName());
+			party.setEmailAddress(partyReq.getEmailAddress());
+			party.setContactNumber(partyReq.getContactNumber());
 
 			mtsPartyMasterRepository.saveAndFlush(party);
 

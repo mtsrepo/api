@@ -26,7 +26,7 @@ public class ChallanServiceImpl implements ChallanService {
 	MtsChallanEquipDtlRepository mtsChallanEquipDtlRepository;
 
 	@Override
-	public JSONObject saveParty(SaveChalReq chalReq) {
+	public JSONObject saveChallan(SaveChalReq chalReq) {
 		JSONObject result = new JSONObject();
 		try {
 			MtsChallanDocument challan = new MtsChallanDocument();

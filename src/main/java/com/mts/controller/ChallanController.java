@@ -35,7 +35,7 @@ public class ChallanController {
 				return returnMap.toMap();
 			}
 
-			returnMap = challanService.saveParty(chalReq);
+			returnMap = challanService.saveChallan(chalReq);
 
 		} catch (Exception e) {
 			e.printStackTrace();

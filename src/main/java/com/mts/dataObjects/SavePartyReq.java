@@ -12,4 +12,6 @@ public class SavePartyReq {
 	private String name; // same as company table name
 	private String regAddress; // for company table
 	// account -- need to ask
+	private String emailAddress;
+	private String contactNumber;
 }

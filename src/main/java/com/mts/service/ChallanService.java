@@ -6,7 +6,7 @@ import com.mts.dataObjects.SaveChalReq;
 
 public interface ChallanService {
 
-	JSONObject saveParty(SaveChalReq chalReq);
+	JSONObject saveChallan(SaveChalReq chalReq);
 
 	JSONObject getAllChallans();
 
