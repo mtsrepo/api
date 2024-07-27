@@ -15,6 +15,7 @@ import com.mts.entity.MtsChallanEquipDtl;
 import com.mts.repository.MtsChallanDocumentRepository;
 import com.mts.repository.MtsChallanEquipDtlRepository;
 import com.mts.service.ChallanService;
+import com.mts.util.JsonUtil;
 
 @Service
 public class ChallanServiceImpl implements ChallanService {
@@ -83,7 +84,7 @@ public class ChallanServiceImpl implements ChallanService {
 		JSONObject result = new JSONObject();
 		try {
 			List<Map<String, Object>> data = mtsChallanDocumentRepository.getAllChallans();
-			result.put("data", data);
+			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

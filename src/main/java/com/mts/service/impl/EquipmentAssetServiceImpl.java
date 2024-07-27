@@ -15,6 +15,7 @@ import com.mts.entity.MtsEquipmentMaster;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.repository.MtsEquipmentTypeMasterRepository;
 import com.mts.service.EquipmentAssetService;
+import com.mts.util.JsonUtil;
 
 @Service
 public class EquipmentAssetServiceImpl implements EquipmentAssetService {
@@ -28,8 +29,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 		JSONObject result = new JSONObject();
 		try {
 			List<Map<String, Object>> data = mtsEquipmentMasterRepository.getAllAssets();
-//			result = new JSONObject(data);
-			result.put("data", data);
+			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

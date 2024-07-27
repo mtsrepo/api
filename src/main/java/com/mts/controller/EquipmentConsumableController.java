@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mts.dataObjects.SaveConsumableReq;
 import com.mts.service.EquipmentConsumableService;
+import com.mts.util.JsonUtil;
 import com.mts.util.JwtUtil;
 
 @Controller
@@ -42,7 +43,7 @@ public class EquipmentConsumableController {
 			
 			List<Map<String, Object>> consumableTypeData = equipmentConsumableService.getConsumableTypeIdName();
 			
-			returnMap.put("message", consumableTypeData);
+			returnMap.put("message", JsonUtil.toJsonArrayOfObjects(consumableTypeData));
 			returnMap.put("status", 1);
 			
 		} catch (Exception e) {

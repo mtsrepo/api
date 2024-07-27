@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mts.dataObjects.SaveAssetReq;
 import com.mts.service.EquipmentAssetService;
+import com.mts.util.JsonUtil;
 import com.mts.util.JwtUtil;
 
 @Controller
@@ -42,7 +43,7 @@ public class EquipmentAssetController {
 			
 			List<Map<String, Object>> assetTypeData = equipmentAssetService.getAssetTypeIdName();
 			
-			returnMap.put("message", assetTypeData);
+			returnMap.put("message", JsonUtil.toJsonArrayOfObjects(assetTypeData));
 			returnMap.put("status", 1);
 			
 		} catch (Exception e) {

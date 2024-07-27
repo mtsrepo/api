@@ -14,6 +14,7 @@ import com.mts.entity.MtsPartyMaster;
 import com.mts.repository.CompanyRepository;
 import com.mts.repository.MtsPartyMasterRepository;
 import com.mts.service.PartyService;
+import com.mts.util.JsonUtil;
 
 @Service
 public class PartyServiceImpl implements PartyService {
@@ -58,7 +59,8 @@ public class PartyServiceImpl implements PartyService {
 		JSONObject result = new JSONObject();
 		try {
 			List<MtsPartyMaster> data = mtsPartyMasterRepository.getAllParties();
-			result.put("data", data);
+			System.out.println(data.get(0));
+			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

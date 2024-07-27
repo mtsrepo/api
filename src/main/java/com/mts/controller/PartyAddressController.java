@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mts.dataObjects.SavePartAddReq;
 import com.mts.service.PartyAddressService;
+import com.mts.util.JsonUtil;
 import com.mts.util.JwtUtil;
 
 @Controller
@@ -91,7 +92,7 @@ public class PartyAddressController {
 			List<Map<String, Object>> partyMasterIdAddress = partyAddressService
 					.getPartyMasterIdAddress(mtsPartyMasterId);
 
-			returnMap.put("message", partyMasterIdAddress);
+			returnMap.put("message", JsonUtil.toJsonArrayOfObjects(partyMasterIdAddress));
 			returnMap.put("status", 1);
 
 		} catch (Exception e) {

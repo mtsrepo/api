@@ -15,6 +15,7 @@ import com.mts.entity.MtsEquipmentMaster;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.repository.MtsEquipmentTypeMasterRepository;
 import com.mts.service.EquipmentConsumableService;
+import com.mts.util.JsonUtil;
 
 @Service
 public class EquipmentConsumableServiceImpl implements EquipmentConsumableService {
@@ -40,7 +41,7 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 		JSONObject result = new JSONObject();
 		try {
 			List<Map<String, Object>> data = mtsEquipmentMasterRepository.getAllConsumables();
-			result.put("data", data);
+			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

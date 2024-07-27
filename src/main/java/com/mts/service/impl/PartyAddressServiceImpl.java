@@ -13,6 +13,7 @@ import com.mts.dataObjects.SavePartAddReq;
 import com.mts.entity.MtsPartyAddress;
 import com.mts.repository.MtsPartyAddressRepository;
 import com.mts.service.PartyAddressService;
+import com.mts.util.JsonUtil;
 
 @Service
 public class PartyAddressServiceImpl implements PartyAddressService {
@@ -52,7 +53,7 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 		JSONObject result = new JSONObject();
 		try {
 			List<MtsPartyAddress> data = mtsPartyAddressRepository.getAllPartyAddresses();
-			result.put("data", data);
+			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
