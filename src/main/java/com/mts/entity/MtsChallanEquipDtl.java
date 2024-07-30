@@ -1,7 +1,5 @@
 package com.mts.entity;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,13 +35,13 @@ public class MtsChallanEquipDtl {
 
 	private Integer qty;
 
-	private BigDecimal valueOfGoods;
+	private Double valueOfGoods;
 
-	private BigDecimal taxableValue;
+	private Double taxableValue;
 
-	private BigDecimal iGSTPercentage;
+	private Double iGSTPercentage;
 
-	private BigDecimal iGSTAmount;
+	private Double iGSTAmount;
 
 	private Long modifiedDate;
 

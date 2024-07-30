@@ -1,6 +1,6 @@
 package com.mts.dataObjects;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -12,12 +12,7 @@ public class SaveChalReq {
 	private String userId;
 	private String authToken;
 
-	private Long mtsEquipMasterId;
-	private String type;
-	private Integer qty;
-	private BigDecimal valueOfGoods;
-	private BigDecimal taxableValue;
-	private BigDecimal iGSTPercentage;
+	private List<GoodsDto> goodsForChallan;
 
 	private Long companyId;
 	private Long despFrmLocationMasterId;

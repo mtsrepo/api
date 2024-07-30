@@ -1,21 +1,24 @@
 package com.mts.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.mts.dataObjects.GoodsDto;
 import com.mts.dataObjects.SaveChalReq;
 import com.mts.entity.MtsChallanDocument;
 import com.mts.entity.MtsChallanEquipDtl;
 import com.mts.repository.MtsChallanDocumentRepository;
 import com.mts.repository.MtsChallanEquipDtlRepository;
 import com.mts.service.ChallanService;
-import com.mts.util.JsonUtil;
 
 @Service
 public class ChallanServiceImpl implements ChallanService {
@@ -35,7 +38,6 @@ public class ChallanServiceImpl implements ChallanService {
 			String code = "MCHAL" + fiveDigitNumber;
 
 			challan.setMtsChallanCode(code);
-			challan.setType(chalReq.getType());
 			challan.setCompanyId(chalReq.getCompanyId());
 			challan.setDespFrmLocationMasterId(chalReq.getDespFrmLocationMasterId());
 			challan.setDespToLocationMasterId(chalReq.getDespToLocationMasterId());
@@ -52,22 +54,28 @@ public class ChallanServiceImpl implements ChallanService {
 			challan.setCreateDate(new Date().getTime());
 			challan.setModifiedDate(new Date().getTime());
 
-			mtsChallanDocumentRepository.saveAndFlush(challan);
+			MtsChallanDocument savedChallan = mtsChallanDocumentRepository.saveAndFlush(challan);
 
-			MtsChallanEquipDtl challanEquip = new MtsChallanEquipDtl();
-			challanEquip.setType(chalReq.getType());
-			challanEquip.setCompanyId(chalReq.getCompanyId());
+			List<MtsChallanEquipDtl> challanEquipList = new ArrayList<>();
 
-			challanEquip.setMtsEquipMasterId(chalReq.getMtsEquipMasterId());
-			challanEquip.setQty(chalReq.getQty());
-			challanEquip.setValueOfGoods(chalReq.getValueOfGoods());
-			challanEquip.setTaxableValue(chalReq.getTaxableValue());
-			challanEquip.setIGSTPercentage(chalReq.getIGSTPercentage());
-			challanEquip.setIsActive(1);
-			challanEquip.setCreateDate(new Date().getTime());
-			challanEquip.setModifiedDate(new Date().getTime());
+			for (GoodsDto val : chalReq.getGoodsForChallan()) {
+				MtsChallanEquipDtl challanEquip = new MtsChallanEquipDtl();
+				challanEquip.setType(val.getType());
+				challanEquip.setCompanyId(chalReq.getCompanyId());
+				challanEquip.setMtsChallanId(savedChallan.getMtsChallanId());
+				challanEquip.setMtsEquipMasterId(val.getMtsEquipMasterId());
+				challanEquip.setQty(val.getQty());
+				challanEquip.setValueOfGoods(val.getValueOfGoods());
+				challanEquip.setTaxableValue(val.getTaxableValue());
+				challanEquip.setIGSTPercentage(val.getIGSTPercentage());
+				challanEquip.setIsActive(1);
+				challanEquip.setCreateDate(new Date().getTime());
+				challanEquip.setModifiedDate(new Date().getTime());
 
-			mtsChallanEquipDtlRepository.saveAndFlush(challanEquip);
+				challanEquipList.add(challanEquip);
+			}
+
+			mtsChallanEquipDtlRepository.saveAllAndFlush(challanEquipList);
 
 			result.put("message", "Challan saved successfully");
 			result.put("status", 1);
@@ -80,11 +88,22 @@ public class ChallanServiceImpl implements ChallanService {
 	}
 
 	@Override
-	public JSONObject getAllChallans() {
+	public JSONObject getAllChallans(int take, int skip) {
 		JSONObject result = new JSONObject();
 		try {
-			List<Map<String, Object>> data = mtsChallanDocumentRepository.getAllChallans();
-			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
+//			List<Map<String, Object>> data = mtsChallanDocumentRepository.getAllChallans(skip, take);
+//			JSONObject data = new JSONObject();
+			int page = skip / take;
+	        Pageable pageable = PageRequest.of(page, take);
+			Page<MtsChallanDocument> resultPage = mtsChallanDocumentRepository.findAll(pageable);
+			List<MtsChallanDocument> data = resultPage.getContent();
+
+			for (MtsChallanDocument challan : data) {
+				List<MtsChallanEquipDtl> goodsForChallan = mtsChallanEquipDtlRepository.findByMtsChallanId(challan.getMtsChallanId());
+				challan.setGoodsForChallan(goodsForChallan);
+			}
+					
+			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

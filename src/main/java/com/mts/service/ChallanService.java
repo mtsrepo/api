@@ -8,6 +8,6 @@ public interface ChallanService {
 
 	JSONObject saveChallan(SaveChalReq chalReq);
 
-	JSONObject getAllChallans();
+	JSONObject getAllChallans(int take, int skip);
 
 }

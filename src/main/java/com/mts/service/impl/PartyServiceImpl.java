@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,8 @@ public class PartyServiceImpl implements PartyService {
 	@Autowired
 	MtsPartyMasterRepository mtsPartyMasterRepository;
 
+	private static final Logger log = LoggerFactory.getLogger(PartyServiceImpl.class);
+
 	@Override
 	public JSONObject saveParty(SavePartyReq partyReq) {
 		JSONObject result = new JSONObject();
@@ -35,6 +39,7 @@ public class PartyServiceImpl implements PartyService {
 			party.setPartyName(partyReq.getName());
 			party.setEmailAddress(partyReq.getEmailAddress());
 			party.setContactNumber(partyReq.getContactNumber());
+			party.setCompanyId(1L); // company id set 1 hardcoded for owener company now
 
 			mtsPartyMasterRepository.saveAndFlush(party);
 
@@ -52,8 +57,8 @@ public class PartyServiceImpl implements PartyService {
 	public JSONObject getAllParties() {
 		JSONObject result = new JSONObject();
 		try {
-			List<MtsPartyMaster> data = mtsPartyMasterRepository.getAllParties();
-			System.out.println(data.get(0));
+			List<MtsPartyMaster> data = mtsPartyMasterRepository.findAll();
+
 			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
 		} catch (Exception e) {
 			e.printStackTrace();

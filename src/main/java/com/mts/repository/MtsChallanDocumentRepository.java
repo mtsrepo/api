@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.mts.entity.MtsChallanDocument;
 
@@ -16,7 +17,8 @@ public interface MtsChallanDocumentRepository extends JpaRepository<MtsChallanDo
 			+ "	cd.description, cd.createDate, cd.modifiedDate, cd.isActive, ed.mtsChallanEquipId,"
 			+ " ed.mtsEquipMasterId, ed.qty, ed.valueOfGoods, ed.taxableValue, ed.iGSTPercentage,"
 			+ " ed.iGSTAmount from mts_challan_document cd, mts_challan_equip_dtl ed"
-			+ " where cd.mtsChallanId = ed.mtsChallanId", nativeQuery = true)
-	List<Map<String, Object>> getAllChallans();
+			+ " where cd.mtsChallanId = ed.mtsChallanId "
+			+ "order by ed.mtsChallanId LIMIT :skip , :take", nativeQuery = true)
+	List<Map<String, Object>> getAllChallans(@Param("skip") int skip, @Param("take") int take);
 
 }
