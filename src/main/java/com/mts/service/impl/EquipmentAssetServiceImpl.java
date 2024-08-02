@@ -75,6 +75,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 			asset.setDescription(asstReq.getDescription());
 			asset.setDateOfPurchase(asstReq.getDateOfPurchase());
 			asset.setLastDateOfWarranty(asstReq.getLastDateOfWarranty());
+			asset.setMtsLocationMasterId(asstReq.getMtsLocationMasterId());
 			
 			mtsEquipmentMasterRepository.saveAndFlush(asset);
 			

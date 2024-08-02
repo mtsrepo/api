@@ -13,4 +13,5 @@ public class SaveAssetReq {
 	private String description;
 	private Long dateOfPurchase;
 	private Long lastDateOfWarranty;
+	private Long mtsLocationMasterId;
 }

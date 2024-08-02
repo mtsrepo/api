@@ -71,6 +71,7 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 			consumable.setDescription(consReq.getDescription());
 			consumable.setDateOfPurchase(consReq.getDateOfPurchase());
 			consumable.setLastDateOfWarranty(consReq.getLastDateOfWarranty());
+			consumable.setMtsLocationMasterId(consReq.getMtsLocationMasterId());
 			
 			mtsEquipmentMasterRepository.saveAndFlush(consumable);
 			
