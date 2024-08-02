@@ -14,6 +14,7 @@ import com.mts.dataObjects.SaveAssetReq;
 import com.mts.entity.MtsEquipmentMaster;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.repository.MtsEquipmentTypeMasterRepository;
+import com.mts.repository.MtsLocationMasterRepository;
 import com.mts.service.EquipmentAssetService;
 import com.mts.util.JsonUtil;
 
@@ -23,6 +24,8 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 	MtsEquipmentMasterRepository mtsEquipmentMasterRepository;
 	@Autowired
 	MtsEquipmentTypeMasterRepository mtsEquipmentTypeMasterRepository;
+	@Autowired
+	MtsLocationMasterRepository mtsLocationMasterRepository;
 
 	@Override
 	public JSONObject getAllAssets() {
@@ -80,6 +83,17 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 		} catch (Exception e) {
 			result.put("message", "asset save error");
 			result.put("status", 0);
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public List<Map<String, Object>> getLocationMasterIdName() {
+		List<Map<String, Object>> result = new ArrayList<>();
+		try {
+			result = mtsLocationMasterRepository.getLocationMasterIdName();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;

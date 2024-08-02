@@ -15,4 +15,6 @@ public interface EquipmentAssetService {
 
 	JSONObject saveAsset(SaveAssetReq asstReq);
 
+	List<Map<String, Object>> getLocationMasterIdName();
+
 }

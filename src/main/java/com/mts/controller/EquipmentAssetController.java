@@ -103,5 +103,33 @@ public class EquipmentAssetController {
 		return returnMap.toMap();
 	}
 
+	@PostMapping("/locationData")
+	@ResponseBody
+	@CrossOrigin
+	public Map<String, Object> locationData(@RequestBody HashMap<String, String> locReq) {
+		JSONObject returnMap = new JSONObject();
+		try {
+			String token = locReq.get("authToken");
+			String userId = locReq.get("userId");
+
+			boolean tokenVerified = jwtUtil.validateToken(token, userId);
+			if (!tokenVerified) {
+				returnMap.put("status", 0);
+				returnMap.put("message", "invalid token");
+				return returnMap.toMap();
+			}
+
+			List<Map<String, Object>> locationMasterIdName = equipmentAssetService.getLocationMasterIdName();
+
+			returnMap.put("message", JsonUtil.toJsonArrayOfObjects(locationMasterIdName));
+			returnMap.put("status", 1);
+
+		} catch (Exception e) {
+			returnMap.put("message", "location id name not found");
+			returnMap.put("status", 0);
+			e.printStackTrace();
+		}
+		return returnMap.toMap();
+	}
 
 }
