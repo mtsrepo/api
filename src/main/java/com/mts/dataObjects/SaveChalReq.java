@@ -6,11 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 
-@JsonIgnoreProperties
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class SaveChalReq {
 	private String userId;
 	private String authToken;
+	// for update
+	private Long mtsChallanId;
 
 	private List<GoodsDto> goodsForChallan;
 

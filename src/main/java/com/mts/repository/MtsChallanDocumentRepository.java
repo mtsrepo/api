@@ -2,6 +2,7 @@ package com.mts.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,5 +21,7 @@ public interface MtsChallanDocumentRepository extends JpaRepository<MtsChallanDo
 			+ " where cd.mtsChallanId = ed.mtsChallanId "
 			+ "order by ed.mtsChallanId LIMIT :skip , :take", nativeQuery = true)
 	List<Map<String, Object>> getAllChallans(@Param("skip") int skip, @Param("take") int take);
+
+	Optional<MtsChallanDocument> findByMtsChallanId(Long mtsChallanId);
 
 }

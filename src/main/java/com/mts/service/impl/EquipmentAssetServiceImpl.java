@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 import org.json.JSONObject;
@@ -56,17 +57,27 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 	public JSONObject saveAsset(SaveAssetReq asstReq) {
 		JSONObject result = new JSONObject();
 		Long userId = 0L;
+		MtsEquipmentMaster asset = null;
 		try {
-			MtsEquipmentMaster asset = new MtsEquipmentMaster();
-			Random random = new Random();
-			int fiveDigitNumber = 10000 + random.nextInt(90000);
-//			long currentTimeSeconds = System.currentTimeMillis() / 1000;
+			if (asstReq.getMtsEquipMasterId() != null) {
+				Optional<MtsEquipmentMaster> existingAsset = mtsEquipmentMasterRepository
+						.findByMtsEquipMasterId(asstReq.getMtsEquipMasterId());
+				if (existingAsset.isPresent()) {
+					asset = existingAsset.get();
+				}
+			} else {
+				asset = new MtsEquipmentMaster();
+				Random random = new Random();
+				int fiveDigitNumber = 10000 + random.nextInt(90000);
+
+				String code = "MEQU" + fiveDigitNumber;
+				userId = ((new Date().getTime() * 10) + (long) (Math.floor(Math.random() * 90L) + 100L));
+
+				asset.setMtsEquipMasterId(userId);
+				asset.setMtsEquipMasterCode(code);
+				asset.setCreateDate(new Date().getTime());
+			}
 	        
-	        String code = "MEQU" + fiveDigitNumber;
-	        userId = ((new Date().getTime() * 10) + (long) (Math.floor(Math.random() * 90L) + 100L));
-	        
-			asset.setMtsEquipMasterId(userId);
-			asset.setMtsEquipMasterCode(code);
 			
 			asset.setMtsEquipTypeMasterId(asstReq.getMtsEquipTypeMasterId());
 			asset.setMtsEquipName(asstReq.getAssetName());
@@ -76,6 +87,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 			asset.setDateOfPurchase(asstReq.getDateOfPurchase());
 			asset.setLastDateOfWarranty(asstReq.getLastDateOfWarranty());
 			asset.setMtsLocationMasterId(asstReq.getMtsLocationMasterId());
+			asset.setModifiedDate(new Date().getTime());
 			
 			mtsEquipmentMasterRepository.saveAndFlush(asset);
 			

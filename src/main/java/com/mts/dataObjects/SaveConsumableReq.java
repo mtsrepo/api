@@ -6,6 +6,9 @@ import lombok.Data;
 public class SaveConsumableReq {
 	private String userId;
 	private String authToken;
+	// for update
+	private Long mtsEquipMasterId;
+
 	private Long mtsEquipTypeMasterId;
 	private String consumableName;
 	private String manufacturedCompany;

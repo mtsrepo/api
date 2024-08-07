@@ -6,6 +6,9 @@ import lombok.Data;
 public class SaveAssetReq {
 	private String userId;
 	private String authToken;
+	// for update
+	private Long mtsEquipMasterId;
+
 	private Long mtsEquipTypeMasterId;
 	private String assetName;
 	private String manufacturedCompany;

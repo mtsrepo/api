@@ -3,6 +3,7 @@ package com.mts.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import org.json.JSONObject;
@@ -31,13 +32,25 @@ public class ChallanServiceImpl implements ChallanService {
 	@Override
 	public JSONObject saveChallan(SaveChalReq chalReq) {
 		JSONObject result = new JSONObject();
+		MtsChallanDocument challan = null;
+		MtsChallanEquipDtl challanEquip = null;
 		try {
-			MtsChallanDocument challan = new MtsChallanDocument();
-			Random random = new Random();
-			int fiveDigitNumber = 10000 + random.nextInt(90000);
-			String code = "MCHAL" + fiveDigitNumber;
+			if (chalReq.getMtsChallanId() != null) {
+				Optional<MtsChallanDocument> existingChallan = mtsChallanDocumentRepository
+						.findByMtsChallanId(chalReq.getMtsChallanId());
+				if (existingChallan.isPresent()) {
+					challan = existingChallan.get();
+				}
+			} else {
+				challan = new MtsChallanDocument();
+				Random random = new Random();
+				int fiveDigitNumber = 10000 + random.nextInt(90000);
+				String code = "MCHAL" + fiveDigitNumber;
 
-			challan.setMtsChallanCode(code);
+				challan.setMtsChallanCode(code);
+				challan.setCreateDate(new Date().getTime());
+			}
+
 			challan.setCompanyId(chalReq.getCompanyId());
 			challan.setDespFrmLocationMasterId(chalReq.getDespFrmLocationMasterId());
 			challan.setDespToLocationMasterId(chalReq.getDespToLocationMasterId());
@@ -51,7 +64,7 @@ public class ChallanServiceImpl implements ChallanService {
 			challan.setTransporterLRNO(chalReq.getTransporterLRNO());
 			challan.setDescription(chalReq.getDescription());
 			challan.setIsActive(1);
-			challan.setCreateDate(new Date().getTime());
+
 			challan.setModifiedDate(new Date().getTime());
 
 			MtsChallanDocument savedChallan = mtsChallanDocumentRepository.saveAndFlush(challan);
@@ -59,23 +72,33 @@ public class ChallanServiceImpl implements ChallanService {
 			List<MtsChallanEquipDtl> challanEquipList = new ArrayList<>();
 
 			for (GoodsDto val : chalReq.getGoodsForChallan()) {
-				MtsChallanEquipDtl challanEquip = new MtsChallanEquipDtl();
+				if (val.getMtsChallanEquipId() != null) {
+					Optional<MtsChallanEquipDtl> existingChallanEquip = mtsChallanEquipDtlRepository
+							.findByMtsChallanEquipId(val.getMtsChallanEquipId());
+					if (existingChallanEquip.isPresent()) {
+						challanEquip = existingChallanEquip.get();
+					}
+				} else {
+					challanEquip = new MtsChallanEquipDtl();
+					challanEquip.setCreateDate(new Date().getTime());
+					challanEquip.setCompanyId(chalReq.getCompanyId());
+					challanEquip.setMtsChallanId(savedChallan.getMtsChallanId());
+				}
 				challanEquip.setType(val.getType());
-				challanEquip.setCompanyId(chalReq.getCompanyId());
-				challanEquip.setMtsChallanId(savedChallan.getMtsChallanId());
+
 				challanEquip.setMtsEquipMasterId(val.getMtsEquipMasterId());
 				challanEquip.setQty(val.getQty());
 				challanEquip.setValueOfGoods(val.getValueOfGoods());
 				challanEquip.setTaxableValue(val.getTaxableValue());
 				challanEquip.setIGSTPercentage(val.getIGSTPercentage());
 				challanEquip.setIsActive(1);
-				challanEquip.setCreateDate(new Date().getTime());
 				challanEquip.setModifiedDate(new Date().getTime());
 
 				challanEquipList.add(challanEquip);
 			}
 
-			mtsChallanEquipDtlRepository.saveAllAndFlush(challanEquipList);
+			mtsChallanEquipDtlRepository.saveAllAndFlush(challanEquipList); // i need to check if saveupdate both
+																			// happening
 
 			result.put("message", "Challan saved successfully");
 			result.put("status", 1);
