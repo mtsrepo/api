@@ -2,6 +2,7 @@ package com.mts.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,5 +18,7 @@ public interface MtsPartyMasterRepository extends JpaRepository<MtsPartyMaster, 
 	@Query(value = "select mtsPartyMasterId, partyName, emailAddress, contactNumber, "
 			+ " GSTN from mts_party_master", nativeQuery = true)
 	List<Map<String, Object>> getPartyMasterIdName();
+
+	Optional<MtsPartyMaster> findByMtsPartyMasterId(Long mtsPartyMasterId);
 
 }

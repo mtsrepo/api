@@ -2,6 +2,7 @@ package com.mts.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,5 +20,7 @@ public interface MtsPartyAddressRepository extends JpaRepository<MtsPartyAddress
 			+ " mts_party_master pm where pa.mtsPartyMasterId = :mtsPartyMasterId and "
 			+ "pa.mtsPartyMasterId = pm.mtsPartyMasterId", nativeQuery = true)
 	List<Map<String, Object>> getAddressByPartyId(@Param("mtsPartyMasterId") Long mtsPartyMasterId);
+
+	Optional<MtsPartyAddress> findByMtsPartyAddressId(Long mtsPartyAddressId);
 
 }

@@ -3,6 +3,7 @@ package com.mts.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -30,9 +31,26 @@ public class PartyServiceImpl implements PartyService {
 	@Override
 	public JSONObject saveParty(SavePartyReq partyReq) {
 		JSONObject result = new JSONObject();
-
+		MtsPartyMaster party = null;
 		try {
-			MtsPartyMaster party = new MtsPartyMaster();
+			if (partyReq.getMtsPartyMasterId() != null) {
+				Optional<MtsPartyMaster> existingParty = mtsPartyMasterRepository
+						.findByMtsPartyMasterId(partyReq.getMtsPartyMasterId());
+				if (existingParty.isPresent()) {
+					party = existingParty.get();
+				}
+			}else {
+				party = new MtsPartyMaster();
+				/*
+				 * made a party code if needed later
+				 * 
+				 * Random random = new Random(); int fiveDigitNumber = 10000 +
+				 * random.nextInt(90000); String code = "MPAR" + fiveDigitNumber;
+				 * 
+				 * party.setPartyCode(code);
+				 */
+			}
+
 			party.setRegNo(partyReq.getRegNo());
 			party.setDetails(partyReq.getDetails());
 			party.setGSTN(partyReq.getGSTN());

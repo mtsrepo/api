@@ -3,6 +3,7 @@ package com.mts.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 import org.json.JSONObject;
@@ -24,13 +25,23 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 	@Override
 	public JSONObject savePartyAddress(SavePartAddReq partAddReq) {
 		JSONObject result = new JSONObject();
+		MtsPartyAddress partyAddress = null;
 		try {
-			MtsPartyAddress partyAddress = new MtsPartyAddress();
-			Random random = new Random();
-			int fiveDigitNumber = 10000 + random.nextInt(90000);
-			String code = "MADD" + fiveDigitNumber;
+			if (partAddReq.getMtsPartyAddressId() != null) {
+				Optional<MtsPartyAddress> existingAddress = mtsPartyAddressRepository
+						.findByMtsPartyAddressId(partAddReq.getMtsPartyAddressId());
+				if (existingAddress.isPresent()) {
+					partyAddress = existingAddress.get();
+				}
+			} else {
+				partyAddress = new MtsPartyAddress();
+				Random random = new Random();
+				int fiveDigitNumber = 10000 + random.nextInt(90000);
+				String code = "MADD" + fiveDigitNumber;
 
-			partyAddress.setAddressCode(code);
+				partyAddress.setAddressCode(code);
+			}
+
 			partyAddress.setMtsPartyMasterId(partAddReq.getMtsPartyMasterId());
 			partyAddress.setCompanyId(partAddReq.getCompanyId());
 			partyAddress.setDetails(partAddReq.getDetails());

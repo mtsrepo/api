@@ -1,9 +1,11 @@
 package com.mts.dataObjects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class SavePartyReq {
 	private String userId;
@@ -17,4 +19,7 @@ public class SavePartyReq {
 	// account -- need to ask
 	private String emailAddress;
 	private String contactNumber;
+
+	// for update
+	private Long mtsPartyMasterId;
 }
