@@ -1,6 +1,7 @@
 package com.mts.dataObjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
@@ -13,6 +14,10 @@ public class SavePartAddReq {
 	private Long companyId;
 	private String details;
 	private String name;
+	@JsonProperty("GSTN")
+	private String GSTN;
+	private String emailAddress;
+	private String contactNumber;
 	//for update
 	private Long mtsPartyAddressId;
 }

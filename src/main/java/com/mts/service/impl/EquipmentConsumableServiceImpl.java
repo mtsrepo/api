@@ -74,7 +74,7 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 				consumable.setCreateDate(new Date().getTime());
 			}
 
-			
+			consumable.setSerialNo(consReq.getSerialNo());
 			consumable.setMtsEquipTypeMasterId(consReq.getMtsEquipTypeMasterId());
 			consumable.setMtsEquipName(consReq.getConsumableName());
 			consumable.setManufacturedCompany(consReq.getManufacturedCompany());

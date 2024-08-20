@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 @Data
@@ -20,4 +22,8 @@ public class MtsPartyAddress {
 	private String addressCode;
 	private String details;
 	private String name;
+	@JsonProperty("GSTN")
+	private String GSTN;
+	private String emailAddress;
+	private String contactNumber;
 }

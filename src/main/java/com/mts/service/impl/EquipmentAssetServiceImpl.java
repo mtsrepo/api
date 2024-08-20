@@ -78,7 +78,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 				asset.setCreateDate(new Date().getTime());
 			}
 	        
-			
+			asset.setSerialNo(asstReq.getSerialNo());
 			asset.setMtsEquipTypeMasterId(asstReq.getMtsEquipTypeMasterId());
 			asset.setMtsEquipName(asstReq.getAssetName());
 			asset.setManufacturedCompany(asstReq.getManufacturedCompany());

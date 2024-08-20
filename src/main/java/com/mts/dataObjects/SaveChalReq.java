@@ -17,6 +17,7 @@ public class SaveChalReq {
 	private List<GoodsDto> goodsForChallan;
 
 	private Long companyId;
+	private String deliveryAddr;
 	private Long despFrmLocationMasterId;
 	private Long despToLocationMasterId;
 	private Long consignorId;
@@ -28,4 +29,5 @@ public class SaveChalReq {
 	private String vehicleNo;
 	private String transporterLRNO;
 	private String description;
+	private Integer txnType;
 }

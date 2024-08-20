@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 
+//mts_challan_equip_dtl attributes
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class GoodsDto {

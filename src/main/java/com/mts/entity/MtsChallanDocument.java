@@ -58,6 +58,10 @@ public class MtsChallanDocument {
 
     private Integer isActive;
 
+	private Integer txnType;
+
+	private String deliveryAddress;
+
 	@Transient
 	private List<MtsChallanEquipDtl> goodsForChallan;
 }

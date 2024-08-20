@@ -10,6 +10,7 @@ public class SaveAssetReq {
 	private Long mtsEquipMasterId;
 
 	private Long mtsEquipTypeMasterId;
+	private String serialNo;
 	private String assetName;
 	private String manufacturedCompany;
 	private String suppliedCompany;

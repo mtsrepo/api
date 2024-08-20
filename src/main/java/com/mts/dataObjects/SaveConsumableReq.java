@@ -8,7 +8,7 @@ public class SaveConsumableReq {
 	private String authToken;
 	// for update
 	private Long mtsEquipMasterId;
-
+	private String serialNo;
 	private Long mtsEquipTypeMasterId;
 	private String consumableName;
 	private String manufacturedCompany;

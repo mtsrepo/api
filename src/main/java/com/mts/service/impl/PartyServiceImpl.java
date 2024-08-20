@@ -53,10 +53,10 @@ public class PartyServiceImpl implements PartyService {
 
 			party.setRegNo(partyReq.getRegNo());
 			party.setDetails(partyReq.getDetails());
-			party.setGSTN(partyReq.getGSTN());
 			party.setPartyName(partyReq.getName());
-			party.setEmailAddress(partyReq.getEmailAddress());
-			party.setContactNumber(partyReq.getContactNumber());
+//			party.setGSTN(partyReq.getGSTN());
+//			party.setEmailAddress(partyReq.getEmailAddress());
+//			party.setContactNumber(partyReq.getContactNumber());
 			party.setCompanyId(1L); // company id set 1 hardcoded for owener company now
 
 			mtsPartyMasterRepository.saveAndFlush(party);
