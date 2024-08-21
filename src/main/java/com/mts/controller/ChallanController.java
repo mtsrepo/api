@@ -26,7 +26,7 @@ public class ChallanController {
 	@PostMapping("/saveChallan")
 	@ResponseBody
 	@CrossOrigin
-	public Map<String, Object> saveParty(@RequestBody SaveChalReq chalReq) {
+	public Map<String, Object> saveChallan(@RequestBody SaveChalReq chalReq) {
 		JSONObject returnMap = new JSONObject();
 		try {
 			boolean tokenVerified = jwtUtil.validateToken(chalReq.getAuthToken(), chalReq.getUserId());
@@ -66,6 +66,27 @@ public class ChallanController {
 		} catch (Exception e) {
 			returnMap.put("message", "challan fetch error");
 			returnMap.put("status", 0);
+			e.printStackTrace();
+		}
+		return returnMap.toMap();
+	}
+
+	@PostMapping("/saveRevChallan")
+	@ResponseBody
+	@CrossOrigin
+	public Map<String, Object> saveRevChallan(@RequestBody SaveChalReq chalReq) {
+		JSONObject returnMap = new JSONObject();
+		try {
+			boolean tokenVerified = jwtUtil.validateToken(chalReq.getAuthToken(), chalReq.getUserId());
+			if (!tokenVerified) {
+				returnMap.put("status", 0);
+				returnMap.put("message", "invalid token");
+				return returnMap.toMap();
+			}
+
+			returnMap = challanService.saveRevChallan(chalReq);
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return returnMap.toMap();

@@ -13,10 +13,13 @@ import org.springframework.stereotype.Service;
 
 import com.mts.dataObjects.SaveAssetReq;
 import com.mts.entity.MtsEquipmentMaster;
+import com.mts.entity.MtsQrCode;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.repository.MtsEquipmentTypeMasterRepository;
 import com.mts.repository.MtsLocationMasterRepository;
+import com.mts.repository.MtsQrCodeRepository;
 import com.mts.service.EquipmentAssetService;
+import com.mts.service.QrCodeService;
 import com.mts.util.JsonUtil;
 
 @Service
@@ -27,6 +30,10 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 	MtsEquipmentTypeMasterRepository mtsEquipmentTypeMasterRepository;
 	@Autowired
 	MtsLocationMasterRepository mtsLocationMasterRepository;
+	@Autowired
+	MtsQrCodeRepository mtsQrCodeRepository;
+	@Autowired
+	QrCodeService qrCodeService;
 
 	@Override
 	public JSONObject getAllAssets() {
@@ -58,6 +65,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 		JSONObject result = new JSONObject();
 		Long userId = 0L;
 		MtsEquipmentMaster asset = null;
+		
 		try {
 			if (asstReq.getMtsEquipMasterId() != null) {
 				Optional<MtsEquipmentMaster> existingAsset = mtsEquipmentMasterRepository
@@ -76,6 +84,11 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 				asset.setMtsEquipMasterId(userId);
 				asset.setMtsEquipMasterCode(code);
 				asset.setCreateDate(new Date().getTime());
+				
+				MtsQrCode qrCode = qrCodeService.generateAndSaveQRCode(String.valueOf(asset.getMtsEquipMasterId()));
+				if (qrCode != null) {
+					asset.setMtsQrId(qrCode.getMtsQrId());
+				}
 			}
 	        
 			asset.setSerialNo(asstReq.getSerialNo());
@@ -88,6 +101,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 			asset.setLastDateOfWarranty(asstReq.getLastDateOfWarranty());
 			asset.setMtsLocationMasterId(asstReq.getMtsLocationMasterId());
 			asset.setModifiedDate(new Date().getTime());
+			
 			
 			mtsEquipmentMasterRepository.saveAndFlush(asset);
 			

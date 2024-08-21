@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Random;
 
 import org.json.JSONObject;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -131,6 +132,39 @@ public class ChallanServiceImpl implements ChallanService {
 					
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public JSONObject saveRevChallan(SaveChalReq chalReq) {
+		JSONObject result = new JSONObject();
+		MtsChallanDocument challan = null;
+		try {
+			if (chalReq.getMtsChallanId() != null) {
+				Optional<MtsChallanDocument> existingChallan = mtsChallanDocumentRepository
+						.findByMtsChallanId(chalReq.getMtsChallanId());
+				if (existingChallan.isPresent()) {
+					challan = existingChallan.get();
+
+					MtsChallanDocument revChallan = new MtsChallanDocument();
+
+					BeanUtils.copyProperties(challan, revChallan);
+
+					Long temp = revChallan.getConsigneeId();
+					revChallan.setConsigneeId(revChallan.getConsignorId());
+					revChallan.setConsignorId(temp);
+
+					mtsChallanDocumentRepository.saveAndFlush(revChallan);
+
+					result.put("message", "Reverse Challan saved successfully");
+					result.put("status", 1);
+				}
+			}
+		} catch (Exception e) {
+			result.put("message", "Reverse Challan save error");
+			result.put("status", 0);
 			e.printStackTrace();
 		}
 		return result;

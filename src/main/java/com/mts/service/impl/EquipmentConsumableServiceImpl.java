@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 
 import com.mts.dataObjects.SaveConsumableReq;
 import com.mts.entity.MtsEquipmentMaster;
+import com.mts.entity.MtsQrCode;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.repository.MtsEquipmentTypeMasterRepository;
 import com.mts.service.EquipmentConsumableService;
+import com.mts.service.QrCodeService;
 import com.mts.util.JsonUtil;
 
 @Service
@@ -24,7 +26,8 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 	MtsEquipmentMasterRepository mtsEquipmentMasterRepository;
 	@Autowired
 	MtsEquipmentTypeMasterRepository mtsEquipmentTypeMasterRepository;
-	
+	@Autowired
+	QrCodeService qrCodeService;
 	
 	@Override
 	public List<Map<String, Object>> getConsumableTypeIdName() {
@@ -72,6 +75,12 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 				consumable.setMtsEquipMasterId(userId);
 				consumable.setMtsEquipMasterCode(code);
 				consumable.setCreateDate(new Date().getTime());
+
+				MtsQrCode qrCode = qrCodeService
+						.generateAndSaveQRCode(String.valueOf(consumable.getMtsEquipMasterId()));
+				if (qrCode != null) {
+					consumable.setMtsQrId(qrCode.getMtsQrId());
+				}
 			}
 
 			consumable.setSerialNo(consReq.getSerialNo());

@@ -10,4 +10,6 @@ public interface ChallanService {
 
 	JSONObject getAllChallans(int take, int skip);
 
+	JSONObject saveRevChallan(SaveChalReq chalReq);
+
 }

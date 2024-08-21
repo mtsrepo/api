@@ -29,6 +29,7 @@ public class MtsEquipmentMaster {
 	private Long lastDateOfWarranty;
 	private LocalDateTime currentState;
 	private String serialNo;
+	private Long mtsQrId;
 	private Long createDate;
 	private Long modifiedDate;
 	private Integer isActive;
