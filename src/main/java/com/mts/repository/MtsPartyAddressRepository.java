@@ -16,7 +16,8 @@ public interface MtsPartyAddressRepository extends JpaRepository<MtsPartyAddress
 			+ " pa.companyId = com.companyId and pm.mtsPartyMasterId = pa.mtsPartyMasterId", nativeQuery = true)
 	List<MtsPartyAddress> getAllPartyAddresses();
 
-	@Query(value = "select pa.mtsPartyAddressId, pa.addressCode, pa.details, pa.name from mts_party_address pa,"
+	@Query(value = "select pa.mtsPartyAddressId, pa.addressCode, pa.details, pa.name, pa.GSTN,"
+			+ " pa.emailAddress, pa.contactNumber from mts_party_address pa,"
 			+ " mts_party_master pm where pa.mtsPartyMasterId = :mtsPartyMasterId and "
 			+ "pa.mtsPartyMasterId = pm.mtsPartyMasterId", nativeQuery = true)
 	List<Map<String, Object>> getAddressByPartyId(@Param("mtsPartyMasterId") Long mtsPartyMasterId);
