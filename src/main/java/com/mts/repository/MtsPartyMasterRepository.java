@@ -17,7 +17,7 @@ public interface MtsPartyMasterRepository extends JpaRepository<MtsPartyMaster, 
 
 	@Query(value = "select mpm.mtsPartyMasterId, mpm.partyName "
 			+ " from mts_party_master mpm, mts_party_address mpa "
-			+ " where mpm.mtsPartyMasterId = mpa.mtsPartyMasterId", nativeQuery = true)
+			+ " where mpm.mtsPartyMasterId = mpa.mtsPartyMasterId group by mpm.mtsPartyMasterId", nativeQuery = true)
 	List<Map<String, Object>> getPartyMasterIdName();
 
 	Optional<MtsPartyMaster> findByMtsPartyMasterId(Long mtsPartyMasterId);
