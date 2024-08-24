@@ -18,8 +18,10 @@ import com.mts.dataObjects.GoodsDto;
 import com.mts.dataObjects.SaveChalReq;
 import com.mts.entity.MtsChallanDocument;
 import com.mts.entity.MtsChallanEquipDtl;
+import com.mts.entity.MtsEquipmentMaster;
 import com.mts.repository.MtsChallanDocumentRepository;
 import com.mts.repository.MtsChallanEquipDtlRepository;
+import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.service.ChallanService;
 
 @Service
@@ -29,6 +31,8 @@ public class ChallanServiceImpl implements ChallanService {
 	MtsChallanDocumentRepository mtsChallanDocumentRepository;
 	@Autowired
 	MtsChallanEquipDtlRepository mtsChallanEquipDtlRepository;
+	@Autowired
+	MtsEquipmentMasterRepository mtsEquipmentMasterRepository;
 
 	@Override
 	public JSONObject saveChallan(SaveChalReq chalReq) {
@@ -89,8 +93,13 @@ public class ChallanServiceImpl implements ChallanService {
 					challanEquip.setMtsChallanId(savedChallan.getMtsChallanId());
 				}
 				challanEquip.setType(val.getType());
-
+//				mtsEquipName
 				challanEquip.setMtsEquipMasterId(val.getMtsEquipMasterId());
+
+				MtsEquipmentMaster data = mtsEquipmentMasterRepository
+						.findByMtsEquipMasterId(val.getMtsEquipMasterId()).get();
+
+				challanEquip.setName(data.getMtsEquipName());
 				challanEquip.setQty(val.getQty());
 				challanEquip.setValueOfGoods(val.getValueOfGoods());
 				challanEquip.setTaxableValue(val.getTaxableValue());
