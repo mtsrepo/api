@@ -14,4 +14,6 @@ public interface MtsLocationMasterRepository extends JpaRepository<MtsLocationMa
 			+ "from mts_location_master", nativeQuery = true)
 	List<Map<String, Object>> getLocationMasterIdName();
 
+	MtsLocationMaster findByMtsLocationMasterId(Long mtsLocationMasterId);
+
 }
