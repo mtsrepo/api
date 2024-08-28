@@ -22,6 +22,7 @@ public class InventoryServiceImpl implements InventoryService {
 	@Override
 	public JSONObject saveInventory(SaveInvReq invReq) {
 		JSONObject result = new JSONObject();
+		MtsEquipmentMaster equipment = null;
 		try {
 			MtsInventoryTransaction inventoryTransaction = new MtsInventoryTransaction();
 			inventoryTransaction.setMtsEquipMasterId(invReq.getMtsEquipMasterId());
@@ -32,12 +33,16 @@ public class InventoryServiceImpl implements InventoryService {
 
 			mtsInventoryTransactionRepository.saveAndFlush(inventoryTransaction);
 
-			MtsEquipmentMaster updatedLocation = mtsEquipmentMasterRepository
-					.findByMtsEquipMasterId(invReq.getMtsEquipMasterId()).get();
-			updatedLocation.setMtsLocationMasterId(invReq.getMtsLocationMasterId());
-			updatedLocation.setModifiedDate(invReq.getCurrentDate());
+			if (invReq.getMtsEquipMasterCode() != null) {
+				equipment = mtsEquipmentMasterRepository.findByMtsEquipMasterCode(invReq.getMtsEquipMasterCode());
+			} else {
+				equipment = mtsEquipmentMasterRepository.findByMtsEquipMasterId(invReq.getMtsEquipMasterId()).get();
+			}
+			equipment.setMtsLocationMasterId(invReq.getMtsLocationMasterId());
+			equipment.setModifiedDate(invReq.getCurrentDate());
 
-			mtsEquipmentMasterRepository.saveAndFlush(updatedLocation);
+			mtsEquipmentMasterRepository.saveAndFlush(equipment);
+
 			result.put("message", "Inventory saved successfully");
 			result.put("status", 1);
 		} catch (Exception e) {

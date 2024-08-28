@@ -23,4 +23,6 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 
 	Optional<MtsEquipmentMaster> findByMtsEquipMasterId(Long mtsEquipMasterId);
 
+	MtsEquipmentMaster findByMtsEquipMasterCode(String mtsEquipMasterCode);
+
 }
