@@ -25,4 +25,8 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 
 	MtsEquipmentMaster findByMtsEquipMasterCode(String mtsEquipMasterCode);
 
+	@Query(value = "select * from mts_equipment_master em, mts_location_master lm \r\n"
+			+ "where lm.mtsLocationMasterId = em.mtsLocationMasterId and lm.type = :type", nativeQuery = true)
+	List<MtsEquipmentMaster> getEquipmentsByLocationType(String type);
+
 }

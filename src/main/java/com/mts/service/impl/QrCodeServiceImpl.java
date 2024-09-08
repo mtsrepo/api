@@ -63,6 +63,7 @@ public class QrCodeServiceImpl implements QrCodeService {
 
 			result.put("mtsEquipMasterCode", equipment.getMtsEquipMasterCode());
 			result.put("mtsEquipMasterId", equipment.getMtsEquipMasterId());
+			result.put("locationId", location.getMtsLocationMasterId());
 			result.put("mtsLocationName", location.getMtsLocationName());
 			result.put("locationType", location.getType());
 			result.put("mtsEquipName", equipment.getMtsEquipName());

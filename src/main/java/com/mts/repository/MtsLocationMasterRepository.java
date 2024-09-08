@@ -16,4 +16,7 @@ public interface MtsLocationMasterRepository extends JpaRepository<MtsLocationMa
 
 	MtsLocationMaster findByMtsLocationMasterId(Long mtsLocationMasterId);
 
+	@Query(value="select distinct type from mts_location_master",nativeQuery = true)
+	List<String> findDistinctTypes();
+
 }
