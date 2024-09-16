@@ -39,6 +39,8 @@ public class MtsChallanDocument {
 	private String challanName;
 
     private String type;
+    
+    private Integer completionStatus;
 
     private String chalanTNC;
 

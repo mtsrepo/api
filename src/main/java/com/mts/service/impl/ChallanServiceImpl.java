@@ -45,6 +45,9 @@ public class ChallanServiceImpl implements ChallanService {
 						.findByMtsChallanId(chalReq.getMtsChallanId());
 				if (existingChallan.isPresent()) {
 					challan = existingChallan.get();
+					if(challan.getDespToLocationMasterId() == chalReq.getDespFrmLocationMasterId()) {
+						challan.setCompletionStatus(1);
+					}
 				}
 			} else {
 				challan = new MtsChallanDocument();
@@ -54,10 +57,12 @@ public class ChallanServiceImpl implements ChallanService {
 
 				challan.setMtsChallanCode(code);
 				challan.setCreateDate(new Date().getTime());
+				challan.setCompletionStatus(0);
 			}
 
+			
 			challan.setTxnType(chalReq.getTxnType());
-			challan.setType("will make from chalReq.getTxnType()");
+			challan.setType(String.valueOf(chalReq.getTxnType()));
 			challan.setDeliveryAddress(chalReq.getDeliveryAddr());
 			challan.setCompanyId(chalReq.getCompanyId());
 			challan.setDespFrmLocationMasterId(chalReq.getDespFrmLocationMasterId());
