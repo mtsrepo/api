@@ -23,6 +23,7 @@ import com.mts.repository.MtsChallanDocumentRepository;
 import com.mts.repository.MtsChallanEquipDtlRepository;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.service.ChallanService;
+import com.mts.util.JsonUtil;
 
 @Service
 public class ChallanServiceImpl implements ChallanService {
@@ -144,7 +145,7 @@ public class ChallanServiceImpl implements ChallanService {
 				challan.setGoodsForChallan(goodsForChallan);
 			}
 					
-			result.put("data", data);
+			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
