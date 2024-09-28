@@ -13,6 +13,6 @@ public interface PartyService {
 
 	JSONObject getAllParties();
 
-	List<Map<String, Object>> getPartyMasterIdName();
+	List<Map<String, Object>> getPartyMasterIdName(int isPartyAddress);
 
 }

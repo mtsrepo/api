@@ -85,10 +85,14 @@ public class PartyServiceImpl implements PartyService {
 	}
 
 	@Override
-	public List<Map<String, Object>> getPartyMasterIdName() {
+	public List<Map<String, Object>> getPartyMasterIdName(int isPartyAddress) {
 		List<Map<String, Object>> result = new ArrayList<>();
 		try {
-			result = mtsPartyMasterRepository.getPartyMasterIdName();
+			if(isPartyAddress == 0) {
+				result = mtsPartyMasterRepository.getPartyMasterIdNameForChallan();
+			}else {
+				result = mtsPartyMasterRepository.getPartyMasterIdNameForAddress();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

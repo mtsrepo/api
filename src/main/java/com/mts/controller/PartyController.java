@@ -80,6 +80,7 @@ public class PartyController {
 		try {
 			String token = partyReq.get("authToken");
 			String userId = partyReq.get("userId");
+			int isPartyAddress = Integer.valueOf(partyReq.get("isPartyAddress"));
 
 			boolean tokenVerified = jwtUtil.validateToken(token, userId);
 			if (!tokenVerified) {
@@ -88,7 +89,7 @@ public class PartyController {
 				return returnMap.toMap();
 			}
 
-			List<Map<String, Object>> partyMasterIdName = partyService.getPartyMasterIdName();
+			List<Map<String, Object>> partyMasterIdName = partyService.getPartyMasterIdName(isPartyAddress);
 
 			returnMap.put("message", JsonUtil.toJsonArrayOfObjects(partyMasterIdName));
 			returnMap.put("status", 1);
