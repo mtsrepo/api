@@ -26,9 +26,9 @@ public class AnalyticsController {
 	@GetMapping("/analyticsBylocationType")
 	@ResponseBody
 	@CrossOrigin
-	public Map<String, List<MtsEquipmentMaster>> analyticsBylocationType() {
+	public Map<String, List<Map<String, Object>>> analyticsBylocationType() {
 //		JSONObject returnMap = new JSONObject();
-		Map<String, List<MtsEquipmentMaster>> returnMap = new HashMap<>();
+		Map<String, List<Map<String, Object>>> returnMap = new HashMap<>();
 		try {
 			
 			returnMap = analyticService.getAnalyticsBylocationType();

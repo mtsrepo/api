@@ -23,15 +23,16 @@ public class AnalyticServiceImpl implements AnalyticService{
 	MtsEquipmentMasterRepository mtsEquipmentMasterRepository;
 	
 	@Override
-	public Map<String, List<MtsEquipmentMaster>> getAnalyticsBylocationType() {
+	public Map<String, List<Map<String, Object>>> getAnalyticsBylocationType() {
 //		JSONObject result = new JSONObject();
-		Map<String, List<MtsEquipmentMaster>> result = new HashMap<>();
+		Map<String, List<Map<String, Object>>> result = new HashMap<>();
 		try {
 			List<String> distinctTypes = mtsLocationMasterRepository.findDistinctTypes();
 			
 			for (String type : distinctTypes) {
-	            List<MtsEquipmentMaster> equipments = mtsEquipmentMasterRepository.getEquipmentsByLocationType(type);
-	            result.put(type, equipments);
+//	            List<MtsEquipmentMaster> equipments = mtsEquipmentMasterRepository.getEquipmentsByLocationType(type);
+				List<Map<String, Object>> equipmentsWithChallanDetails = mtsEquipmentMasterRepository.getEquipmentsWithChallanByLocationType(type);
+	            result.put(type, equipmentsWithChallanDetails);
 	        }
 			
 		} catch (Exception e) {

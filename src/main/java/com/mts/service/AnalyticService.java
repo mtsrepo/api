@@ -9,6 +9,6 @@ import com.mts.entity.MtsEquipmentMaster;
 
 public interface AnalyticService {
 
-	Map<String, List<MtsEquipmentMaster>> getAnalyticsBylocationType();
+	Map<String, List<Map<String, Object>>> getAnalyticsBylocationType();
 
 }
