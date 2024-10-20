@@ -20,7 +20,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 	@Query(value = "select mem.*, mlm.mtsLocationName,mqc.qrCodeImage from mts_equipment_master mem, mts_equipment_type_master metm,"
 			+ " mts_location_master mlm where mlm.mtsLocationMasterId = mem.mtsLocationMasterId and\r\n"
 			+ " and mem.mtsQrId = mqc.mtsQrId"
-			+ "mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId and metm.category <> 'Asset' order by createDate DESC", nativeQuery = true)
+			+ " and mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId and metm.category <> 'Asset' order by createDate DESC", nativeQuery = true)
 	List<Map<String, Object>> getAllConsumables();
 
 	Optional<MtsEquipmentMaster> findByMtsEquipMasterId(Long mtsEquipMasterId);
