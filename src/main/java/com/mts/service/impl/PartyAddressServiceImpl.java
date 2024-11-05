@@ -43,9 +43,9 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 			}
 
 			partyAddress.setMtsPartyMasterId(partAddReq.getMtsPartyMasterId());
-			partyAddress.setCompanyId(partAddReq.getCompanyId());
-			partyAddress.setDetails(partAddReq.getDetails());
-			partyAddress.setName(partAddReq.getName());
+			partyAddress.setCompanyId(1L);		//default
+			partyAddress.setBranchDetails(partAddReq.getBranchDetails());
+			partyAddress.setPartyAddress(partAddReq.getPartyAddress());
 			partyAddress.setGSTN(partAddReq.getGSTN());
 			partyAddress.setEmailAddress(partAddReq.getEmailAddress());
 			partyAddress.setContactNumber(partAddReq.getContactNumber());

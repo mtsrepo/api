@@ -12,8 +12,8 @@ public class SavePartAddReq {
 	private String authToken;
 	private Long mtsPartyMasterId;
 	private Long companyId;
-	private String details;
-	private String name;
+	private String branchDetails;
+	private String partyAddress;
 	@JsonProperty("GSTN")
 	private String GSTN;
 	private String emailAddress;

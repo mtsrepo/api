@@ -20,8 +20,8 @@ public class MtsPartyAddress {
 	private Long mtsPartyMasterId;
 	private Long companyId;
 	private String addressCode;
-	private String details;
-	private String name;
+	private String branchDetails;
+	private String partyAddress;
 	@JsonProperty("GSTN")
 	private String GSTN;
 	private String emailAddress;
