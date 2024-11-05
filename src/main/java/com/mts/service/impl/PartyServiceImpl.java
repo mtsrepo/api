@@ -53,7 +53,7 @@ public class PartyServiceImpl implements PartyService {
 
 			party.setRegNo(partyReq.getRegNo());
 			party.setDetails(partyReq.getDetails());
-			party.setPartyName(partyReq.getName());
+			party.setPartyName(partyReq.getPartyName());
 //			party.setGSTN(partyReq.getGSTN());
 //			party.setEmailAddress(partyReq.getEmailAddress());
 //			party.setContactNumber(partyReq.getContactNumber());
