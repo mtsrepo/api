@@ -22,9 +22,5 @@ public class MtsPartyMaster {
 	private Long companyId;
 	private String regNo;
 	private String details;
-	@JsonProperty("GSTN")
-	private String GSTN;
 	private String partyName;
-	private String emailAddress;
-	private String contactNumber;
 }
