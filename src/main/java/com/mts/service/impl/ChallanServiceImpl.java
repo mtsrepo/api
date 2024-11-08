@@ -108,7 +108,7 @@ public class ChallanServiceImpl implements ChallanService {
 				MtsEquipmentMaster data = mtsEquipmentMasterRepository
 						.findByMtsEquipMasterId(val.getMtsEquipMasterId()).get();
 
-				challanEquip.setName(data.getMtsEquipName());
+				challanEquip.setEquipName(data.getMtsEquipName());
 				challanEquip.setQty(val.getQty());
 				challanEquip.setValueOfGoods(val.getValueOfGoods());
 				challanEquip.setTaxableValue(val.getTaxableValue());
