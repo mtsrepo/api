@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mts.dataObjects.GetChalReq;
 import com.mts.dataObjects.SaveChalReq;
 import com.mts.service.ChallanService;
 import com.mts.util.JwtUtil;
@@ -87,6 +88,31 @@ public class ChallanController {
 			returnMap = challanService.saveRevChallan(chalReq);
 
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return returnMap.toMap();
+	}
+	
+	@PostMapping("/getChallanDetails")
+	@ResponseBody
+	@CrossOrigin
+	public Map<String, Object> getChallanDetails(@RequestBody GetChalReq getchal) {
+		JSONObject returnMap = new JSONObject();
+//		Map<String, Object> returnMap = new HashMap<>();
+		try {
+			boolean tokenVerified = jwtUtil.validateToken(getchal.getAuthToken(), getchal.getUserId());
+			if (!tokenVerified) {
+				returnMap.put("status", 0);
+				returnMap.put("message", "invalid token");
+				return returnMap.toMap();
+			}
+			
+			returnMap = challanService.getChallanDetails(getchal);
+			returnMap.put("status", 1);
+
+		} catch (Exception e) {
+			returnMap.put("message", "challan fetch error");
+			returnMap.put("status", 0);
 			e.printStackTrace();
 		}
 		return returnMap.toMap();

@@ -1,7 +1,10 @@
 package com.mts.service;
 
+import java.util.Map;
+
 import org.json.JSONObject;
 
+import com.mts.dataObjects.GetChalReq;
 import com.mts.dataObjects.SaveChalReq;
 
 public interface ChallanService {
@@ -11,5 +14,7 @@ public interface ChallanService {
 	JSONObject getAllChallans(int take, int skip);
 
 	JSONObject saveRevChallan(SaveChalReq chalReq);
+
+	JSONObject getChallanDetails(GetChalReq getchal);
 
 }

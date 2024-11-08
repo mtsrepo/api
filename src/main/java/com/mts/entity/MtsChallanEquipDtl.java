@@ -16,8 +16,8 @@ public class MtsChallanEquipDtl {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long mtsChallanEquipId;
-	@Column(name = "uuid_")
-	private String uuid;
+//	@Column(name = "uuid_")
+//	private String uuid;
 
 	private Long mtsChallanId;
 

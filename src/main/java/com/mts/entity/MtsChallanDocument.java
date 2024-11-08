@@ -19,8 +19,8 @@ public class MtsChallanDocument {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mtsChallanId;
-	@Column(name = "uuid_")
-	private String uuid;
+//	@Column(name = "uuid_")
+//	private String uuid;
 
     private Long companyId;
 

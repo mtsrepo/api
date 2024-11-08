@@ -2,7 +2,9 @@ package com.mts.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -14,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.mts.dataObjects.GetChalReq;
 import com.mts.dataObjects.GoodsDto;
 import com.mts.dataObjects.SaveChalReq;
 import com.mts.entity.MtsChallanDocument;
@@ -180,6 +183,28 @@ public class ChallanServiceImpl implements ChallanService {
 		} catch (Exception e) {
 			result.put("message", "Reverse Challan save error");
 			result.put("status", 0);
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public JSONObject getChallanDetails(GetChalReq getchal) {
+		JSONObject result = new JSONObject();
+		Map<String, Object> data = new HashMap<>();
+//		MtsChallanDocument challan = null;
+		try {
+//			Optional<MtsChallanDocument> existingChallan = mtsChallanDocumentRepository.findByMtsChallanId(getchal.getMtsChallanId());
+//			if (existingChallan.isPresent()) {
+//				challan = existingChallan.get();
+//			}
+			List<MtsChallanEquipDtl> goodsForChallan = mtsChallanEquipDtlRepository.findByMtsChallanId(getchal.getMtsChallanId());
+//			challan.setGoodsForChallan(goodsForChallan);
+//			result.put("data", challan);
+			data =  mtsChallanEquipDtlRepository.getChallanDetails(getchal.getMtsChallanId());
+			result.put("data", data);
+			result.put("goods", JsonUtil.toJsonArrayOfObjects(goodsForChallan));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
