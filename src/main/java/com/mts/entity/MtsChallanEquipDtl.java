@@ -25,7 +25,7 @@ public class MtsChallanEquipDtl {
 
 	private Long companyId;
 
-	private String name;
+	private String equipName;
 
 	private String type;
 
