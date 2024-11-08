@@ -24,4 +24,9 @@ public interface MtsChallanDocumentRepository extends JpaRepository<MtsChallanDo
 
 	Optional<MtsChallanDocument> findByMtsChallanId(Long mtsChallanId);
 
+	@Query(value = "select mtsChallanId, mtsChallanCode, challanName, createDate, "
+			+ "vehicleNo, transporterName from mts_challan_document where isActive = 1 "
+			+ "order by createDate limit :skip, :take", nativeQuery = true)
+	List<Map<String, Object>> getChallanDash(@Param("take") int take, @Param("skip") int skip);
+
 }

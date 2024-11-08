@@ -209,4 +209,16 @@ public class ChallanServiceImpl implements ChallanService {
 		}
 		return result;
 	}
+
+	@Override
+	public JSONObject challanDashboard(int take, int skip) {
+		JSONObject result = new JSONObject();
+		try {
+			List<Map<String,Object>> data = mtsChallanDocumentRepository.getChallanDash(take, skip);
+			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

@@ -62,7 +62,8 @@ public class ChallanController {
 				return returnMap.toMap();
 			}
 
-			returnMap = challanService.getAllChallans(take, skip);
+//			returnMap = challanService.getAllChallans(take, skip);  //stopped for now
+			returnMap = challanService.challanDashboard(take, skip);
 			returnMap.put("status", 1);
 		} catch (Exception e) {
 			returnMap.put("message", "challan fetch error");

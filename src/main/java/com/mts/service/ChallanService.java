@@ -17,4 +17,6 @@ public interface ChallanService {
 
 	JSONObject getChallanDetails(GetChalReq getchal);
 
+	JSONObject challanDashboard(int take, int skip);
+
 }
