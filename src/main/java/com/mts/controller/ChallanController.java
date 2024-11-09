@@ -72,6 +72,34 @@ public class ChallanController {
 		}
 		return returnMap.toMap();
 	}
+	
+	@PostMapping("/challanDashboardOld")
+	@ResponseBody
+	@CrossOrigin
+	public Map<String, Object> challanDashboardOld(@RequestBody HashMap<String, String> challanReq,
+			@RequestParam(defaultValue = "10") int take, @RequestParam(defaultValue = "0") int skip) {
+		JSONObject returnMap = new JSONObject();
+		try {
+			String token = challanReq.get("authToken");
+			String userId = challanReq.get("userId");
+
+			boolean tokenVerified = jwtUtil.validateToken(token, userId);
+			if (!tokenVerified) {
+				returnMap.put("status", 0);
+				returnMap.put("message", "invalid token");
+				return returnMap.toMap();
+			}
+
+			returnMap = challanService.getAllChallans(take, skip);  //stopped for now
+//			returnMap = challanService.challanDashboard(take, skip);
+			returnMap.put("status", 1);
+		} catch (Exception e) {
+			returnMap.put("message", "challan fetch error");
+			returnMap.put("status", 0);
+			e.printStackTrace();
+		}
+		return returnMap.toMap();
+	}
 
 	@PostMapping("/saveRevChallan")
 	@ResponseBody
