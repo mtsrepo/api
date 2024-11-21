@@ -10,6 +10,7 @@ import lombok.Data;
 public class SavePartAddReq {
 	private String userId;
 	private String authToken;
+	
 	private Long mtsPartyMasterId;
 	private Long companyId;
 	private String branchDetails;
@@ -18,6 +19,7 @@ public class SavePartAddReq {
 	private String GSTN;
 	private String emailAddress;
 	private String contactNumber;
+	
 	//for update
 	private Long mtsPartyAddressId;
 }

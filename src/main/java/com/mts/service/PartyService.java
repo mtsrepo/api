@@ -15,4 +15,8 @@ public interface PartyService {
 
 	List<Map<String, Object>> getPartyMasterIdName(int isPartyAddress);
 
+	JSONObject savePartyDetails(SavePartyReq partReq);
+
+	JSONObject getDetailsAllParties(int take, int skip);
+
 }
