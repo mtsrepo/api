@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mts.dataObjects.SaveConsumableReq;
+import com.mts.entity.MtsEquipmentAvailability;
 import com.mts.entity.MtsEquipmentMaster;
 import com.mts.entity.MtsQrCode;
+import com.mts.repository.MtsEquipmentAvailabilityRepository;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.repository.MtsEquipmentTypeMasterRepository;
 import com.mts.service.EquipmentConsumableService;
@@ -28,6 +30,8 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 	MtsEquipmentTypeMasterRepository mtsEquipmentTypeMasterRepository;
 	@Autowired
 	QrCodeService qrCodeService;
+	@Autowired
+	MtsEquipmentAvailabilityRepository mtsEquipmentAvailabilityRepository; 
 	
 	@Override
 	public List<Map<String, Object>> getConsumableTypeIdName() {
@@ -94,7 +98,18 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 			consumable.setMtsLocationMasterId(consReq.getMtsLocationMasterId());
 			consumable.setModifiedDate(new Date().getTime());
 			
-			mtsEquipmentMasterRepository.saveAndFlush(consumable);
+			MtsEquipmentMaster savedConsmble = mtsEquipmentMasterRepository.saveAndFlush(consumable);
+			
+			MtsEquipmentAvailability availability = new MtsEquipmentAvailability();
+			availability.setMtsEquipMasterId(savedConsmble.getMtsEquipMasterId());
+			availability.setTotalNo(consReq.getQuantity());
+			availability.setInUse(0);
+			availability.setAvailable(consReq.getQuantity());
+			availability.setCreatedOn(new Date().getTime());
+			availability.setModifiedOn(new Date().getTime());
+			availability.setIsActive(1);
+			
+			mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
 			
 			result.put("message", "Consumable saved successfully");
 			result.put("status", 1);

@@ -8,7 +8,7 @@ public class SaveAssetReq {
 	private String authToken;
 	// for update
 	private Long mtsEquipMasterId;
-
+	
 	private Long mtsEquipTypeMasterId;
 	private String serialNo;
 	private String assetName;

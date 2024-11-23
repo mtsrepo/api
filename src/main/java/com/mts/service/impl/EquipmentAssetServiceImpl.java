@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mts.dataObjects.SaveAssetReq;
+import com.mts.entity.MtsEquipmentAvailability;
 import com.mts.entity.MtsEquipmentMaster;
 import com.mts.entity.MtsQrCode;
+import com.mts.repository.MtsEquipmentAvailabilityRepository;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.repository.MtsEquipmentTypeMasterRepository;
 import com.mts.repository.MtsLocationMasterRepository;
@@ -34,6 +36,8 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 	MtsQrCodeRepository mtsQrCodeRepository;
 	@Autowired
 	QrCodeService qrCodeService;
+	@Autowired
+	MtsEquipmentAvailabilityRepository mtsEquipmentAvailabilityRepository;
 
 	@Override
 	public JSONObject getAllAssets() {
@@ -103,7 +107,18 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 			asset.setModifiedDate(new Date().getTime());
 			
 			
-			mtsEquipmentMasterRepository.saveAndFlush(asset);
+			MtsEquipmentMaster savedAsst = mtsEquipmentMasterRepository.saveAndFlush(asset);
+			
+			MtsEquipmentAvailability availability = new MtsEquipmentAvailability();
+			availability.setMtsEquipMasterId(savedAsst.getMtsEquipMasterId());
+			availability.setTotalNo(1);
+			availability.setInUse(0);
+			availability.setAvailable(1);
+			availability.setCreatedOn(new Date().getTime());
+			availability.setModifiedOn(new Date().getTime());
+			availability.setIsActive(1);
+			
+			mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
 			
 			result.put("message", "Asset saved successfully");
 			result.put("status", 1);
