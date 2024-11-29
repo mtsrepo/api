@@ -1,6 +1,7 @@
 package com.mts.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,15 +41,22 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 				String code = "MADD" + fiveDigitNumber;
 
 				partyAddress.setAddressCode(code);
+				partyAddress.setCreatedOn(new Date().getTime());
+				partyAddress.setIsActive(1);
 			}
 
 			partyAddress.setMtsPartyMasterId(partAddReq.getMtsPartyMasterId());
 			partyAddress.setCompanyId(1L);		//default
-			partyAddress.setBranchDetails(partAddReq.getBranchDetails());
-			partyAddress.setPartyAddress(partAddReq.getPartyAddress());
+			partyAddress.setAddressLine1(partAddReq.getAddressLine1());
+			partyAddress.setAddressLine2(partAddReq.getAddressLine2());
 			partyAddress.setGSTN(partAddReq.getGSTN());
 			partyAddress.setEmailAddress(partAddReq.getEmailAddress());
 			partyAddress.setContactNumber(partAddReq.getContactNumber());
+			partyAddress.setContactPerson(partAddReq.getContactPerson());
+			partyAddress.setDesignation(partAddReq.getDesignation());
+			partyAddress.setDepartment(partAddReq.getDepartment());
+			partyAddress.setPincode(partAddReq.getPincode());
+			partyAddress.setModifiedOn(new Date().getTime());
 
 			mtsPartyAddressRepository.saveAndFlush(partyAddress);
 

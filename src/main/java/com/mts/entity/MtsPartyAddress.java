@@ -20,10 +20,18 @@ public class MtsPartyAddress {
 	private Long mtsPartyMasterId;
 	private Long companyId;
 	private String addressCode;
-	private String branchDetails;
-	private String partyAddress;
+	private String addressLine1;	//new
+	private String addressLine2;	//new
 	@JsonProperty("GSTN")
 	private String GSTN;
 	private String emailAddress;
 	private String contactNumber;
+	//new
+	private String contactPerson;
+	private String designation;
+	private String department;
+	private String pincode;
+	private Long createdOn;
+	private Integer isActive;
+	private Long modifiedOn;
 }

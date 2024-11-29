@@ -13,12 +13,18 @@ public class SavePartAddReq {
 	
 	private Long mtsPartyMasterId;
 	private Long companyId;
-	private String branchDetails;
-	private String partyAddress;
+	private String addressLine1;
+	private String addressLine2;
 	@JsonProperty("GSTN")
 	private String GSTN;
 	private String emailAddress;
 	private String contactNumber;
+	//new
+		private String contactPerson;
+		private String designation;
+		private String department;
+		private String pincode;
+	
 	
 	//for update
 	private Long mtsPartyAddressId;
