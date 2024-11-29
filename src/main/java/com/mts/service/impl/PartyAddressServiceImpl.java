@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mts.dataObjects.SavePartAddReq;
+import com.mts.entity.MtsLocationMaster;
 import com.mts.entity.MtsPartyAddress;
+import com.mts.repository.MtsLocationMasterRepository;
 import com.mts.repository.MtsPartyAddressRepository;
 import com.mts.service.PartyAddressService;
 import com.mts.util.JsonUtil;
@@ -22,6 +24,8 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 
 	@Autowired
 	MtsPartyAddressRepository mtsPartyAddressRepository;
+	@Autowired
+	MtsLocationMasterRepository mtsLocationMasterRepository;
 
 	@Override
 	public JSONObject savePartyAddress(SavePartAddReq partAddReq) {
@@ -59,6 +63,15 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 			partyAddress.setModifiedOn(new Date().getTime());
 
 			mtsPartyAddressRepository.saveAndFlush(partyAddress);
+			
+			MtsLocationMaster location = new MtsLocationMaster();
+			location.setMtsLocationName(partAddReq.getAddressLine1());
+			location.setType("Factory");
+			location.setDescription(partAddReq.getAddressLine2());
+			location.setCreateDate(new Date().getTime());
+			location.setIsActive(1);
+			
+			mtsLocationMasterRepository.saveAndFlush(location);
 
 			result.put("message", "Party Address saved successfully");
 			result.put("status", 1);

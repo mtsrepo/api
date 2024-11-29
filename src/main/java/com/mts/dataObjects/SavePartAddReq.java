@@ -13,8 +13,8 @@ public class SavePartAddReq {
 	
 	private Long mtsPartyMasterId;
 	private Long companyId;
-	private String addressLine1;
-	private String addressLine2;
+	private String addressLine1;	//new
+	private String addressLine2;	//new
 	@JsonProperty("GSTN")
 	private String GSTN;
 	private String emailAddress;
