@@ -33,12 +33,14 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "where lm.mtsLocationMasterId = em.mtsLocationMasterId and lm.type = :type", nativeQuery = true)
 	List<MtsEquipmentMaster> getEquipmentsByLocationType(String type);
 	
-	@Query(value = "SELECT em.*, ced.mtsChallanId, cd.mtsChallanCode\r\n"
-			+ "FROM mts_equipment_master em\r\n"
-			+ "LEFT JOIN mts_location_master lm ON lm.mtsLocationMasterId = em.mtsLocationMasterId\r\n"
-			+ "LEFT JOIN mts_challan_equip_dtl ced ON em.mtsEquipMasterId = ced.mtsEquipMasterId\r\n"
-			+ "LEFT JOIN mts_challan_document cd ON ced.mtsChallanId = cd.mtsChallanId\r\n"
-			+ "WHERE lm.type = :type", nativeQuery = true)
+	@Query(value = "SELECT em.mtsEquipMasterId, em.mtsEquipMasterCode, em.mtsEquipName, em.serialNo, em.dateOfPurchase,"
+			+ " em.lastDateOfWarranty, em.currentState, ced.mtsChallanId, cd.mtsChallanCode, lm.mtsLocationName, "
+			+ " lm.type, pa.emailAddress, pa.contactNumber FROM mts_equipment_master em "
+			+ "			LEFT JOIN mts_location_master lm ON lm.mtsLocationMasterId = em.mtsLocationMasterId "
+			+ "			LEFT JOIN mts_challan_equip_dtl ced ON em.mtsEquipMasterId = ced.mtsEquipMasterId "
+			+ "			LEFT JOIN mts_challan_document cd ON ced.mtsChallanId = cd.mtsChallanId "
+			+ "         LEFT JOIN mts_party_address pa ON cd.consignorId = pa.mtsPartyMasterId "
+			+ "			WHERE lm.type = :type", nativeQuery = true)
 	List<Map<String, Object>> getEquipmentsWithChallanByLocationType(String type);
 
 }
