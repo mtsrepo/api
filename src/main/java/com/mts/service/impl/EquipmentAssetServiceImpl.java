@@ -103,7 +103,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 			asset.setDescription(asstReq.getDescription());
 			asset.setDateOfPurchase(asstReq.getDateOfPurchase());
 			asset.setLastDateOfWarranty(asstReq.getLastDateOfWarranty());
-			asset.setMtsLocationMasterId(asstReq.getMtsLocationMasterId());
+			asset.setMtsLocationMasterId(1L);		// default main office godown warehouse
 			asset.setModifiedDate(new Date().getTime());
 			
 			
