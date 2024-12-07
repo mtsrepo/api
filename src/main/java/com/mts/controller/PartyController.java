@@ -26,26 +26,26 @@ public class PartyController {
 	@Autowired
 	PartyService partyService;
 	
-//	@PostMapping("/saveParty")
-//	@ResponseBody
-//	@CrossOrigin
-//	public Map<String, Object> saveParty(@RequestBody SavePartyReq partReq) {
-//		JSONObject returnMap = new JSONObject();
-//		try {
-//			boolean tokenVerified = jwtUtil.validateToken(partReq.getAuthToken(), partReq.getUserId());
-//			if (!tokenVerified) {
-//				returnMap.put("status", 0);
-//				returnMap.put("message", "invalid token");
-//				return returnMap.toMap();
-//			}
-//
-//			returnMap = partyService.saveParty(partReq);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return returnMap.toMap();
-//	}
+	@PostMapping("/saveParty")
+	@ResponseBody
+	@CrossOrigin
+	public Map<String, Object> saveParty(@RequestBody SavePartyReq partReq) {
+		JSONObject returnMap = new JSONObject();
+		try {
+			boolean tokenVerified = jwtUtil.validateToken(partReq.getAuthToken(), partReq.getUserId());
+			if (!tokenVerified) {
+				returnMap.put("status", 0);
+				returnMap.put("message", "invalid token");
+				return returnMap.toMap();
+			}
+
+			returnMap = partyService.saveParty(partReq);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return returnMap.toMap();
+	}
 
 	@PostMapping("/partyDashboard")
 	@ResponseBody
@@ -103,28 +103,28 @@ public class PartyController {
 		return returnMap.toMap();
 	}
 	
-	@PostMapping("/savePartyDetails")
-	@ResponseBody
-	@CrossOrigin
-	public Map<String, Object> savePartyDetails(@RequestBody SavePartyReq partReq) {
-		JSONObject returnMap = new JSONObject();
-		try {
-			boolean tokenVerified = jwtUtil.validateToken(partReq.getAuthToken(), partReq.getUserId());
-			if (!tokenVerified) {
-				returnMap.put("status", 0);
-				returnMap.put("message", "invalid token");
-				return returnMap.toMap();
-			}
-
-			returnMap = partyService.saveParty(partReq);
-			
-			returnMap = partyService.savePartyDetails(partReq);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return returnMap.toMap();
-	}
+//	@PostMapping("/savePartyDetails")
+//	@ResponseBody
+//	@CrossOrigin
+//	public Map<String, Object> savePartyDetails(@RequestBody SavePartyReq partReq) {
+//		JSONObject returnMap = new JSONObject();
+//		try {
+//			boolean tokenVerified = jwtUtil.validateToken(partReq.getAuthToken(), partReq.getUserId());
+//			if (!tokenVerified) {
+//				returnMap.put("status", 0);
+//				returnMap.put("message", "invalid token");
+//				return returnMap.toMap();
+//			}
+//
+//			returnMap = partyService.saveParty(partReq);
+//			
+//			returnMap = partyService.savePartyDetails(partReq);
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return returnMap.toMap();
+//	}
 	
 	@PostMapping("/partyDetailsDashboard")
 	@ResponseBody
