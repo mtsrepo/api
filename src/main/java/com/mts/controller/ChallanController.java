@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mts.dataObjects.GetChalReq;
+import com.mts.dataObjects.GetTygoodReq;
 import com.mts.dataObjects.SaveChalReq;
 import com.mts.service.ChallanService;
 import com.mts.util.JwtUtil;
@@ -141,6 +142,30 @@ public class ChallanController {
 
 		} catch (Exception e) {
 			returnMap.put("message", "challan fetch error");
+			returnMap.put("status", 0);
+			e.printStackTrace();
+		}
+		return returnMap.toMap();
+	}
+	
+	@PostMapping("/getTypeWiseGoodsData")
+	@ResponseBody
+	@CrossOrigin
+	public Map<String, Object> getTypeWiseGoodsData(@RequestBody GetTygoodReq getTypeGood) {
+		JSONObject returnMap = new JSONObject();
+		try {
+			boolean tokenVerified = jwtUtil.validateToken(getTypeGood.getAuthToken(), getTypeGood.getUserId());
+			if (!tokenVerified) {
+				returnMap.put("status", 0);
+				returnMap.put("message", "invalid token");
+				return returnMap.toMap();
+			}
+			
+			returnMap = challanService.getTypeWiseGoodsData();
+			returnMap.put("status", 1);
+
+		} catch (Exception e) {
+			returnMap.put("message", "goods data fetch error");
 			returnMap.put("status", 0);
 			e.printStackTrace();
 		}

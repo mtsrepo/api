@@ -19,4 +19,6 @@ public interface ChallanService {
 
 	JSONObject challanDashboard(int take, int skip);
 
+	JSONObject getTypeWiseGoodsData();
+
 }

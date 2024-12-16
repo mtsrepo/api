@@ -43,4 +43,24 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "			WHERE lm.type = :type", nativeQuery = true)
 	List<Map<String, Object>> getEquipmentsWithChallanByLocationType(String type);
 
+	@Query(value = "SELECT \r\n"
+			+ "    mem.mtsEquipMasterId, \r\n"
+			+ "    mem.mtsEquipName, \r\n"
+			+ "    mem.serialNo, \r\n"
+			+ "    metm.category, \r\n"
+			+ "    metm.mtsEquipTypeMasterId, \r\n"
+			+ "    metm.name AS mtsEquipTypeName, \r\n"
+			+ "    mea.available \r\n"
+			+ "FROM \r\n"
+			+ "    mts_equipment_master mem\r\n"
+			+ "JOIN \r\n"
+			+ "    mts_equipment_type_master metm \r\n"
+			+ "    ON mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId\r\n"
+			+ "JOIN \r\n"
+			+ "    mts_equip_availability mea \r\n"
+			+ "    ON mea.mtsEquipMasterId = mem.mtsEquipMasterId\r\n"
+			+ "WHERE\r\n"
+			+ "    mea.available > 0", nativeQuery = true)
+	List<Map<String, Object>> getTypeWiseGoodsData();
+
 }
