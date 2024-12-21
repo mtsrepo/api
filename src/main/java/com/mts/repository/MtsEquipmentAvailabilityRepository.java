@@ -6,4 +6,6 @@ import com.mts.entity.MtsEquipmentAvailability;
 
 public interface MtsEquipmentAvailabilityRepository extends JpaRepository<MtsEquipmentAvailability, Long>{
 
+	MtsEquipmentAvailability findByMtsEquipMasterId(Long mtsEquipMasterId);
+
 }

@@ -21,9 +21,11 @@ import com.mts.dataObjects.GoodsDto;
 import com.mts.dataObjects.SaveChalReq;
 import com.mts.entity.MtsChallanDocument;
 import com.mts.entity.MtsChallanEquipDtl;
+import com.mts.entity.MtsEquipmentAvailability;
 import com.mts.entity.MtsEquipmentMaster;
 import com.mts.repository.MtsChallanDocumentRepository;
 import com.mts.repository.MtsChallanEquipDtlRepository;
+import com.mts.repository.MtsEquipmentAvailabilityRepository;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.service.ChallanService;
 import com.mts.util.JsonUtil;
@@ -37,12 +39,15 @@ public class ChallanServiceImpl implements ChallanService {
 	MtsChallanEquipDtlRepository mtsChallanEquipDtlRepository;
 	@Autowired
 	MtsEquipmentMasterRepository mtsEquipmentMasterRepository;
+	@Autowired
+	MtsEquipmentAvailabilityRepository mtsEquipmentAvailabilityRepository;
 
 	@Override
 	public JSONObject saveChallan(SaveChalReq chalReq) {
 		JSONObject result = new JSONObject();
 		MtsChallanDocument challan = null;
 		MtsChallanEquipDtl challanEquip = null;
+//		MtsEquipmentAvailability equipAvail = null;
 		try {
 			if (chalReq.getMtsChallanId() != null) {
 				Optional<MtsChallanDocument> existingChallan = mtsChallanDocumentRepository
@@ -87,6 +92,7 @@ public class ChallanServiceImpl implements ChallanService {
 			MtsChallanDocument savedChallan = mtsChallanDocumentRepository.saveAndFlush(challan);
 
 			List<MtsChallanEquipDtl> challanEquipList = new ArrayList<>();
+			List<MtsEquipmentAvailability> equipAvailList = new ArrayList<>();
 
 			for (GoodsDto val : chalReq.getGoodsForChallan()) {
 				if (val.getMtsChallanEquipId() != null) {
@@ -101,12 +107,14 @@ public class ChallanServiceImpl implements ChallanService {
 					challanEquip.setCompanyId(chalReq.getCompanyId());
 					challanEquip.setMtsChallanId(savedChallan.getMtsChallanId());
 				}
-				challanEquip.setType(val.getType());
+//				challanEquip.setType(val.getType());		i have to modify later
 //				mtsEquipName
 				challanEquip.setMtsEquipMasterId(val.getMtsEquipMasterId());
 
 				MtsEquipmentMaster data = mtsEquipmentMasterRepository
 						.findByMtsEquipMasterId(val.getMtsEquipMasterId()).get();
+				
+				MtsEquipmentAvailability equipQty = mtsEquipmentAvailabilityRepository.findByMtsEquipMasterId(data.getMtsEquipMasterId());
 
 				challanEquip.setEquipName(data.getMtsEquipName());
 				challanEquip.setQty(val.getQty());
@@ -115,12 +123,23 @@ public class ChallanServiceImpl implements ChallanService {
 				challanEquip.setIGSTPercentage(val.getIGSTPercentage());
 				challanEquip.setIsActive(1);
 				challanEquip.setModifiedDate(new Date().getTime());
+				
+				if(equipQty.getAvailable() >= val.getQty()) {
+					equipQty.setInUse(equipQty.getInUse()+val.getQty());
+					equipQty.setAvailable(equipQty.getAvailable() - val.getQty());
+					equipQty.setModifiedOn(new Date().getTime());
+				}else {
+					result.put("message","challan quantity is over the available quanty for "+data.getSerialNo());
+					result.put("status", 0);
+				}
 
 				challanEquipList.add(challanEquip);
+				equipAvailList.add(equipQty);
 			}
 
 			mtsChallanEquipDtlRepository.saveAllAndFlush(challanEquipList); // i need to check if saveupdate both
 																			// happening
+			mtsEquipmentAvailabilityRepository.saveAllAndFlush(equipAvailList);
 
 			result.put("message", "Challan saved successfully");
 			result.put("status", 1);
