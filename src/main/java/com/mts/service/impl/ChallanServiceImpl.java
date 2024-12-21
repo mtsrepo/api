@@ -218,7 +218,7 @@ public class ChallanServiceImpl implements ChallanService {
 //				challan = existingChallan.get();
 //			}
 //			List<MtsChallanEquipDtl> goodsForChallan = mtsChallanEquipDtlRepository.findByMtsChallanId(getchal.getMtsChallanId());
-			List<Map<String,Object>> goodsForChallan = mtsChallanEquipDtlRepository.challanWithgoods(getchal.getMtsChallanId());
+			List<Map<String,Object>> goodsForChallan = mtsChallanEquipDtlRepository.getGoodsOfChallan(getchal.getMtsChallanId());
 			
 			//challan.setGoodsForChallan(goodsForChallan);
 			
