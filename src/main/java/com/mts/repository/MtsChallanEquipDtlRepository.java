@@ -85,9 +85,9 @@ public interface MtsChallanEquipDtlRepository extends JpaRepository<MtsChallanEq
 			+ "    mcd.mtsChallanId = :mtsChallanId", nativeQuery = true)
 	Map<String, Object> getChallanDetails(@Param("mtsChallanId") Long mtsChallanId);
 
-	@Query(value = "select ced.mtsEquipMasterId, ced.equipName as mtsEquipName, ced.iGSTPercentage, ced.isActive, ced.iGSTAmount,\r\n"
-			+ "ced.mtsChallanEquipId, ced.valueOfGoods, ced.mtsChallanId, ced.taxableValue, ced.qty, \r\n"
-			+ "etm.mtsEquipTypeMasterId, etm.name as mtsEquipTypeName\r\n"
+	@Query(value = "select ced.mtsEquipMasterId, ced.equipName as mtsEquipName, ced.iGSTPercentage, ced.isActive, ced.iGSTAmount, "
+			+ "ced.mtsChallanEquipId, ced.valueOfGoods, ced.mtsChallanId, ced.taxableValue, ced.qty, "
+			+ "etm.mtsEquipTypeMasterId, etm.name as mtsEquipTypeName, em.serialNo "
 			+ "from mts_challan_equip_dtl ced, mts_equipment_type_master etm, mts_equipment_master em\r\n"
 			+ "where ced.mtsEquipMasterId = em.mtsEquipMasterId and etm.mtsEquipTypeMasterId = em.mtsEquipTypeMasterId",nativeQuery = true)
 	List<Map<String, Object>> challanWithgoods(Long mtsChallanId);
