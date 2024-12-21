@@ -217,8 +217,11 @@ public class ChallanServiceImpl implements ChallanService {
 //			if (existingChallan.isPresent()) {
 //				challan = existingChallan.get();
 //			}
-			List<MtsChallanEquipDtl> goodsForChallan = mtsChallanEquipDtlRepository.findByMtsChallanId(getchal.getMtsChallanId());
-//			challan.setGoodsForChallan(goodsForChallan);
+//			List<MtsChallanEquipDtl> goodsForChallan = mtsChallanEquipDtlRepository.findByMtsChallanId(getchal.getMtsChallanId());
+			List<Map<String,Object>> goodsForChallan = mtsChallanEquipDtlRepository.challanWithgoods(getchal.getMtsChallanId());
+			
+			//challan.setGoodsForChallan(goodsForChallan);
+			
 //			result.put("data", challan);
 			data =  mtsChallanEquipDtlRepository.getChallanDetails(getchal.getMtsChallanId());
 			result.put("data", data);
