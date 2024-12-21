@@ -90,7 +90,7 @@ public interface MtsChallanEquipDtlRepository extends JpaRepository<MtsChallanEq
 			+ "etm.mtsEquipTypeMasterId, etm.name as mtsEquipTypeName, em.serialNo from mts_challan_document cd, "
 			+ "mts_challan_equip_dtl ced, mts_equipment_type_master etm, mts_equipment_master em "
 			+ "where ced.mtsEquipMasterId = em.mtsEquipMasterId and ced.mtsChallanId = cd.mtsChallanId "
-			+ "etm.mtsEquipTypeMasterId = em.mtsEquipTypeMasterId",nativeQuery = true)
+			+ " and etm.mtsEquipTypeMasterId = em.mtsEquipTypeMasterId",nativeQuery = true)
 	List<Map<String, Object>> challanWithgoods(Long mtsChallanId);
 
 
