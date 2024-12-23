@@ -29,5 +29,5 @@ public class SaveChalReq {
 	private String vehicleNo;
 	private String transporterLRNO;
 	private String description;
-	private Integer txnType;
+	private String txnType;
 }

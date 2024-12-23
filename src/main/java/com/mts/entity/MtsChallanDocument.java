@@ -60,7 +60,7 @@ public class MtsChallanDocument {
 
     private Integer isActive;
 
-	private Integer txnType;
+	private String txnType;
 
 	private String deliveryAddress;
 
