@@ -85,6 +85,8 @@ public class ChallanServiceImpl implements ChallanService {
 			challan.setVehicleNo(chalReq.getVehicleNo());
 			challan.setTransporterLRNO(chalReq.getTransporterLRNO());
 			challan.setDescription(chalReq.getDescription());
+			challan.setCustomerRefNo(chalReq.getCustomerRefNo());
+			challan.setChallanDate(chalReq.getChallanDate());
 			challan.setIsActive(1);
 
 			challan.setModifiedDate(new Date().getTime());

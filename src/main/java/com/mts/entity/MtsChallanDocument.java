@@ -63,6 +63,10 @@ public class MtsChallanDocument {
 	private String txnType;
 
 	private String deliveryAddress;
+	
+	private String customerRefNo;
+	
+	private Long challanDate;
 
 	@Transient
 	private List<MtsChallanEquipDtl> goodsForChallan;

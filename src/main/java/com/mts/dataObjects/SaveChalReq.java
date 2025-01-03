@@ -30,4 +30,7 @@ public class SaveChalReq {
 	private String transporterLRNO;
 	private String description;
 	private String txnType;
+	
+	private String customerRefNo;
+	private Long challanDate;
 }
