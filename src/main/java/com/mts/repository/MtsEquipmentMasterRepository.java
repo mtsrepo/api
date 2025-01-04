@@ -11,18 +11,26 @@ import com.mts.entity.MtsEquipmentMaster;
 
 public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipmentMaster, Long> {
 
-	@Query(value = "select mem.*, mea.totalNo, mea.inUse, mea.available, mlm.mtsLocationName, mqc.qrCodeImage"
-			+ " from mts_equipment_master mem, mts_equipment_type_master metm, mts_location_master mlm, "
-			+ "mts_qr_code mqc, mts_equip_availability mea where /*mlm.mtsLocationMasterId = mem.mtsLocationMasterId"
-			+ " and*/ mem.mtsQrId = mqc.mtsQrId and mem.mtsEquipMasterId = mea.mtsEquipMasterId"
-			+ " and mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId and metm.category = 'Asset' order by createDate DESC", nativeQuery = true)
+	@Query(value = "SELECT mem.*, mea.totalNo, mea.inUse, mea.available, mlm.mtsLocationName, mqc.qrCodeImage\r\n"
+			+ "FROM mts_equipment_master mem\r\n"
+			+ "JOIN mts_equipment_type_master metm ON mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId\r\n"
+			+ "JOIN mts_qr_code mqc ON mem.mtsQrId = mqc.mtsQrId\r\n"
+			+ "LEFT JOIN mts_location_master mlm ON mlm.mtsLocationMasterId = mem.mtsLocationMasterId\r\n"
+			+ "JOIN mts_equip_availability mea ON mem.mtsEquipMasterId = mea.mtsEquipMasterId\r\n"
+			+ "WHERE metm.category = 'Asset'\r\n"
+			+ "ORDER BY createDate DESC;\r\n"
+			+ "", nativeQuery = true)
 	List<Map<String, Object>> getAllAssets();
 
-	@Query(value = "select mem.*, mea.totalNo, mea.inUse, mea.available, mlm.mtsLocationName, mqc.qrCodeImage"
-			+ " from mts_equipment_master mem, mts_equipment_type_master metm, mts_location_master mlm, "
-			+ "mts_qr_code mqc, mts_equip_availability mea where /*mlm.mtsLocationMasterId = mem.mtsLocationMasterId"
-			+ " and*/ mem.mtsQrId = mqc.mtsQrId and mem.mtsEquipMasterId = mea.mtsEquipMasterId"
-			+ " and mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId and metm.category <> 'Asset' order by createDate DESC", nativeQuery = true)
+	@Query(value = "SELECT mem.*, mea.totalNo, mea.inUse, mea.available, mlm.mtsLocationName, mqc.qrCodeImage\r\n"
+			+ "FROM mts_equipment_master mem\r\n"
+			+ "JOIN mts_equipment_type_master metm ON mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId\r\n"
+			+ "JOIN mts_qr_code mqc ON mem.mtsQrId = mqc.mtsQrId\r\n"
+			+ "LEFT JOIN mts_location_master mlm ON mlm.mtsLocationMasterId = mem.mtsLocationMasterId\r\n"
+			+ "JOIN mts_equip_availability mea ON mem.mtsEquipMasterId = mea.mtsEquipMasterId\r\n"
+			+ "WHERE metm.category <> 'Asset'\r\n"
+			+ "ORDER BY createDate DESC;\r\n"
+			+ "", nativeQuery = true)
 	List<Map<String, Object>> getAllConsumables();
 
 	Optional<MtsEquipmentMaster> findByMtsEquipMasterId(Long mtsEquipMasterId);
