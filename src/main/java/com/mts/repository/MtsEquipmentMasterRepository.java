@@ -13,14 +13,14 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 
 	@Query(value = "select mem.*, mea.totalNo, mea.inUse, mea.available, mlm.mtsLocationName, mqc.qrCodeImage"
 			+ " from mts_equipment_master mem, mts_equipment_type_master metm, mts_location_master mlm, "
-			+ "mts_qr_code mqc, mts_equip_availability mea where mlm.mtsLocationMasterId = mem.mtsLocationMasterId"
+			+ "mts_qr_code mqc, mts_equip_availability mea where /*mlm.mtsLocationMasterId = mem.mtsLocationMasterId*/"
 			+ " and mem.mtsQrId = mqc.mtsQrId and mem.mtsEquipMasterId = mea.mtsEquipMasterId"
 			+ " and mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId and metm.category = 'Asset' order by createDate DESC", nativeQuery = true)
 	List<Map<String, Object>> getAllAssets();
 
 	@Query(value = "select mem.*, mea.totalNo, mea.inUse, mea.available, mlm.mtsLocationName, mqc.qrCodeImage"
 			+ " from mts_equipment_master mem, mts_equipment_type_master metm, mts_location_master mlm, "
-			+ "mts_qr_code mqc, mts_equip_availability mea where mlm.mtsLocationMasterId = mem.mtsLocationMasterId"
+			+ "mts_qr_code mqc, mts_equip_availability mea where /*mlm.mtsLocationMasterId = mem.mtsLocationMasterId*/"
 			+ " and mem.mtsQrId = mqc.mtsQrId and mem.mtsEquipMasterId = mea.mtsEquipMasterId"
 			+ " and mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId and metm.category <> 'Asset' order by createDate DESC", nativeQuery = true)
 	List<Map<String, Object>> getAllConsumables();
