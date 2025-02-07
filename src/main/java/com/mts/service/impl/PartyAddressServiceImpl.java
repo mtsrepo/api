@@ -53,6 +53,7 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 			partyAddress.setCompanyId(1L);		//default
 			partyAddress.setAddressLine1(partAddReq.getAddressLine1());
 			partyAddress.setAddressLine2(partAddReq.getAddressLine2());
+			partyAddress.setLocationAddressDesc(partAddReq.getAddressLine1()+ ", "+partAddReq.getAddressLine2());
 			partyAddress.setGSTN(partAddReq.getGSTN());
 			partyAddress.setEmailAddress(partAddReq.getEmailAddress());
 			partyAddress.setContactNumber(partAddReq.getContactNumber());
@@ -67,7 +68,7 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 			MtsLocationMaster location = new MtsLocationMaster();
 			location.setMtsLocationName(partAddReq.getAddressLine1());
 			location.setType("Factory");
-			location.setDescription(partAddReq.getAddressLine2());
+			location.setDescription(partyAddress.getLocationAddressDesc());
 			location.setCreateDate(new Date().getTime());
 			location.setIsActive(1);
 			

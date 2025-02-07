@@ -22,6 +22,7 @@ public class MtsPartyAddress {
 	private String addressCode;
 	private String addressLine1;	//new
 	private String addressLine2;	//new
+	private String locationAddressDesc;
 	@JsonProperty("GSTN")
 	private String GSTN;
 	private String emailAddress;
