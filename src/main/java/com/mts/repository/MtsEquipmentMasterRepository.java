@@ -84,8 +84,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "    mts_location_master lm_from ON em.mtsLocationMasterId = lm_from.mtsLocationMasterId\r\n"
 			+ "LEFT JOIN\r\n"
 			+ "    mts_location_master lm_to ON lm_to.mtsLocationMasterId IN (1, 2)  -- Ensures toLocation is 1 or 2\r\n"
-			+ "WHERE\r\n"
-			+ "    em.mtsEquipMasterId = :mtsEquipMasterId;", nativeQuery = true)
+			+ "WHERE em.mtsEquipMasterId = :mtsEquipMasterId;", nativeQuery = true)
 	List<Map<String, Object>> fetchLocations(Long mtsEquipMasterId);
 
 	@Query(value = "SELECT\r\n"
@@ -95,8 +94,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "    mts_equipment_master em\r\n"
 			+ "LEFT JOIN \r\n"
 			+ "    mts_location_master lm_from ON em.mtsLocationMasterId = lm_from.mtsLocationMasterId\r\n"
-			+ "WHERE\r\n"
-			+ "    em.mtsEquipMasterId = :mtsEquipMasterId;", nativeQuery = true)
+			+ "WHERE em.mtsEquipMasterId = :mtsEquipMasterId;", nativeQuery = true)
 	Map<String, Object> fetchFromLocation(Long mtsEquipMasterId);
 
 	@Query(value = "SELECT\r\n"
@@ -116,8 +114,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "    mts_location_master lm_linked ON lm_linked.mtsLocationMasterId = cd.despToLocationMasterId\r\n"
 			+ "LEFT JOIN\r\n"
 			+ "    mts_challan_equip_dtl ced ON ced.mtsChallanId = cd.mtsChallanId AND ced.mtsEquipMasterId = :mtsEquipMasterId\r\n"
-			+ "WHERE\r\n"
-			+ "    ced.mtsEquipMasterId = :mtsEquipMasterId\r\n"
+			+ "WHERE ced.mtsEquipMasterId = :mtsEquipMasterId\r\n"
 			+ "    AND cd.despToLocationMasterId IS NOT NULL", nativeQuery = true)
 	List<Map<String, Object>> fetchToLocation(Long mtsEquipMasterId);
 
