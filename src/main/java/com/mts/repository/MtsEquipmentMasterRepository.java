@@ -88,5 +88,38 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "    em.mtsEquipMasterId = :mtsEquipMasterId;", nativeQuery = true)
 	List<Map<String, Object>> fetchLocations(Long mtsEquipMasterId);
 
+	@Query(value = "SELECT\r\n"
+			+ "    em.mtsLocationMasterId AS fromLocationId,\r\n"
+			+ "    lm_from.description AS fromLocation\r\n"
+			+ "FROM\r\n"
+			+ "    mts_equipment_master em\r\n"
+			+ "LEFT JOIN \r\n"
+			+ "    mts_location_master lm_from ON em.mtsLocationMasterId = lm_from.mtsLocationMasterId\r\n"
+			+ "WHERE\r\n"
+			+ "    em.mtsEquipMasterId = :mtsEquipMasterId;", nativeQuery = true)
+	Map<String, Object> fetchFromLocation(Long mtsEquipMasterId);
+
+	@Query(value = "SELECT\r\n"
+			+ "    lm_to.mtsLocationMasterId AS toLocationId,\r\n"
+			+ "    lm_to.description AS toLocationDescription\r\n"
+			+ "FROM\r\n"
+			+ "    mts_location_master lm_to\r\n"
+			+ "WHERE\r\n"
+			+ "    lm_to.mtsLocationMasterId IN (1, 2)\r\n"
+			+ "UNION\r\n"
+			+ "SELECT\r\n"
+			+ "    cd.despToLocationMasterId AS toLocationId,\r\n"
+			+ "    lm_linked.description AS toLocationDescription\r\n"
+			+ "FROM\r\n"
+			+ "    mts_challan_document cd\r\n"
+			+ "LEFT JOIN\r\n"
+			+ "    mts_location_master lm_linked ON lm_linked.mtsLocationMasterId = cd.despToLocationMasterId\r\n"
+			+ "LEFT JOIN\r\n"
+			+ "    mts_challan_equip_dtl ced ON ced.mtsChallanId = cd.mtsChallanId AND ced.mtsEquipMasterId = :mtsEquipMasterId\r\n"
+			+ "WHERE\r\n"
+			+ "    ced.mtsEquipMasterId = :mtsEquipMasterId\r\n"
+			+ "    AND cd.despToLocationMasterId IS NOT NULL", nativeQuery = true)
+	List<Map<String, Object>> fetchToLocation(Long mtsEquipMasterId);
+
 
 }
