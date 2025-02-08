@@ -17,8 +17,10 @@ public class MtsInventoryTransaction {
 	private Long stateTransactionId;
 
 	private Long mtsEquipMasterId;
-
-	private Long mtsLocationMasterId;
+	
+	private Long fromLocationId;
+	
+	private Long toLocationId;
 
 	private Long createdBy;
 

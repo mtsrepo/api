@@ -10,7 +10,8 @@ public class SaveInvReq {
 	private String userId;
 	private String authToken;
 	private Long mtsEquipMasterId;
-	private Long mtsLocationMasterId;
+	private Long fromLocationId;
+	private Long toLocationId;
 	private Long currentDate;
 	private String mtsEquipMasterCode;
 }

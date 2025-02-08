@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.json.JSONObject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -70,5 +71,26 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "WHERE\r\n"
 			+ "    mea.available > 0", nativeQuery = true)
 	List<Map<String, Object>> getTypeWiseGoodsData();
+
+	@Query(value = "SELECT\r\n"
+			+ "    em.mtsLocationMasterId AS fromLocationId,\r\n"
+			+ "    lm_from.description AS fromLocation,\r\n"
+			+ "    cd.despFrmLocationMasterId, cd.despToLocationMasterId,\r\n"
+			+ "    lm_to.description AS toLocation\r\n"
+			+ "FROM\r\n"
+			+ "    mts_challan_equip_dtl ce\r\n"
+			+ "JOIN \r\n"
+			+ "    mts_equipment_master em ON ce.mtsEquipMasterId = em.mtsEquipMasterId\r\n"
+			+ "JOIN \r\n"
+			+ "    mts_location_master lm_from ON em.mtsLocationMasterId = lm_from.mtsLocationMasterId\r\n"
+			+ "JOIN\r\n"
+			+ "    mts_challan_document cd ON ce.mtsChallanId = cd.mtsChallanId\r\n"
+			+ "LEFT JOIN\r\n"
+			+ "    mts_location_master lm_to ON (lm_to.mtsLocationMasterId = 5 OR lm_to.mtsLocationMasterId = cd.despToLocationMasterId)\r\n"
+			+ "WHERE\r\n"
+			+ "    ce.mtsEquipMasterId = :mtsEquipMasterId"
+			+ "", nativeQuery = true)
+	List<Map<String, Object>> fetchLocations(Long mtsEquipMasterId);
+
 
 }

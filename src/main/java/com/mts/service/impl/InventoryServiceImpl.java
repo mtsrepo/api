@@ -1,9 +1,13 @@
 package com.mts.service.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mts.dataObjects.EquiReq;
 import com.mts.dataObjects.SaveInvReq;
 import com.mts.entity.MtsEquipmentMaster;
 import com.mts.entity.MtsInventoryTransaction;
@@ -26,7 +30,8 @@ public class InventoryServiceImpl implements InventoryService {
 		try {
 			MtsInventoryTransaction inventoryTransaction = new MtsInventoryTransaction();
 			inventoryTransaction.setMtsEquipMasterId(invReq.getMtsEquipMasterId());
-			inventoryTransaction.setMtsLocationMasterId(invReq.getMtsLocationMasterId());
+			inventoryTransaction.setFromLocationId(invReq.getFromLocationId());
+			inventoryTransaction.setToLocationId(invReq.getToLocationId());
 			inventoryTransaction.setIsActive(1);
 			inventoryTransaction.setCreatedBy(Long.valueOf(invReq.getUserId()));
 			inventoryTransaction.setCreatedOn(invReq.getCurrentDate());
@@ -38,7 +43,7 @@ public class InventoryServiceImpl implements InventoryService {
 			} else {
 				equipment = mtsEquipmentMasterRepository.findByMtsEquipMasterId(invReq.getMtsEquipMasterId()).get();
 			}
-			equipment.setMtsLocationMasterId(invReq.getMtsLocationMasterId());
+			equipment.setMtsLocationMasterId(invReq.getToLocationId());
 			equipment.setModifiedDate(invReq.getCurrentDate());
 
 			mtsEquipmentMasterRepository.saveAndFlush(equipment);
@@ -47,6 +52,23 @@ public class InventoryServiceImpl implements InventoryService {
 			result.put("status", 1);
 		} catch (Exception e) {
 			result.put("message", "inventory save error");
+			result.put("status", 0);
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public JSONObject equipmentLocations(EquiReq req) {
+		JSONObject result = new JSONObject();
+//		mtsEquipmentMasterRepository.fetchLocations();
+		try {
+			List<Map<String, Object>> data = mtsEquipmentMasterRepository.fetchLocations(req.getMtsEquipMasterId());
+			
+			result.put("data", data);
+			result.put("status", 1);
+		} catch (Exception e) {
+			result.put("message", "inventory location fetch error");
 			result.put("status", 0);
 			e.printStackTrace();
 		}

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mts.dataObjects.EquiReq;
 import com.mts.dataObjects.SaveInvReq;
 import com.mts.service.InventoryService;
 import com.mts.util.JwtUtil;
@@ -34,6 +35,25 @@ public class InventoryController {
 				return returnMap.toMap();
 			}
 			returnMap = inventoryService.saveInventory(invReq);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return returnMap.toMap();
+	}
+	
+	@PostMapping("/equipmentLocations")
+	@ResponseBody
+	@CrossOrigin
+	public Map<String, Object> equipmentLocation(@RequestBody EquiReq req) {
+		JSONObject returnMap = new JSONObject();
+		try {
+			boolean tokenVerified = jwtUtil.validateToken(req.getAuthToken(), req.getUserId());
+			if(!tokenVerified) {
+				returnMap.put("status", 0);
+				returnMap.put("message", "invalid token");
+				return returnMap.toMap();
+			}
+			returnMap = inventoryService.equipmentLocations(req);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
