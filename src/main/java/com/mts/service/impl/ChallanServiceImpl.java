@@ -23,10 +23,12 @@ import com.mts.entity.MtsChallanDocument;
 import com.mts.entity.MtsChallanEquipDtl;
 import com.mts.entity.MtsEquipmentAvailability;
 import com.mts.entity.MtsEquipmentMaster;
+import com.mts.entity.MtsLocationMaster;
 import com.mts.repository.MtsChallanDocumentRepository;
 import com.mts.repository.MtsChallanEquipDtlRepository;
 import com.mts.repository.MtsEquipmentAvailabilityRepository;
 import com.mts.repository.MtsEquipmentMasterRepository;
+import com.mts.repository.MtsLocationMasterRepository;
 import com.mts.service.ChallanService;
 import com.mts.util.JsonUtil;
 
@@ -41,6 +43,8 @@ public class ChallanServiceImpl implements ChallanService {
 	MtsEquipmentMasterRepository mtsEquipmentMasterRepository;
 	@Autowired
 	MtsEquipmentAvailabilityRepository mtsEquipmentAvailabilityRepository;
+	@Autowired
+	MtsLocationMasterRepository mtsLocationMasterRepository;
 
 	@Override
 	public JSONObject saveChallan(SaveChalReq chalReq) {
@@ -68,14 +72,16 @@ public class ChallanServiceImpl implements ChallanService {
 				challan.setCreateDate(new Date().getTime());
 				challan.setCompletionStatus(0);
 			}
-
+			
+			MtsLocationMaster getDespFromLocationId = mtsLocationMasterRepository.findByMtsPartyAddressId(chalReq.getDespFrmLocationMasterId()); 
+			MtsLocationMaster getDespToLocationId = mtsLocationMasterRepository.findByMtsPartyAddressId(chalReq.getDespToLocationMasterId());
 			
 			challan.setTxnType(chalReq.getTxnType());
 			challan.setType(String.valueOf(chalReq.getTxnType()));
 			challan.setDeliveryAddress(chalReq.getDeliveryAddr());
 			challan.setCompanyId(chalReq.getCompanyId());
-			challan.setDespFrmLocationMasterId(chalReq.getDespFrmLocationMasterId());
-			challan.setDespToLocationMasterId(chalReq.getDespToLocationMasterId());
+			challan.setDespFrmLocationMasterId(getDespFromLocationId.getMtsLocationMasterId());
+			challan.setDespToLocationMasterId(getDespToLocationId.getMtsLocationMasterId());
 			challan.setConsignorId(chalReq.getConsignorId());
 			challan.setConsigneeId(chalReq.getConsigneeId());
 			challan.setChallanName(chalReq.getChallanName());
