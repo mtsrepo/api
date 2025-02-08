@@ -63,10 +63,11 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 			partyAddress.setPincode(partAddReq.getPincode());
 			partyAddress.setModifiedOn(new Date().getTime());
 
-			mtsPartyAddressRepository.saveAndFlush(partyAddress);
+			MtsPartyAddress savedAddr = mtsPartyAddressRepository.saveAndFlush(partyAddress);
 			
 			MtsLocationMaster location = new MtsLocationMaster();
 			location.setMtsLocationName(partAddReq.getAddressLine1());
+			location.setMtsPartyAddressId(savedAddr.getMtsPartyAddressId());
 			location.setType("Factory");
 			location.setDescription(partyAddress.getLocationAddressDesc());
 			location.setCreateDate(new Date().getTime());

@@ -18,6 +18,7 @@ public class MtsLocationMaster {
 	private Long mtsLocationMasterId;
 	@Column(name = "uuid_")
 	private String uuid;
+	private Long mtsPartyAddressId;
 	private Long companyId;
 	private String mtsLocationName;
 	private String type;
