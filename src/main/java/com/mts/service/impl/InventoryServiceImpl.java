@@ -59,7 +59,7 @@ public class InventoryServiceImpl implements InventoryService {
 	}
 
 	@Override
-	public JSONObject equipmentLocations(EquiReq req) {
+	public JSONObject equipmentLocation(EquiReq req) {
 		JSONObject result = new JSONObject();
 //		mtsEquipmentMasterRepository.fetchLocations();
 		try {

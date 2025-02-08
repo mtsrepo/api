@@ -9,6 +9,6 @@ public interface InventoryService {
 
 	JSONObject saveInventory(SaveInvReq invReq);
 
-	JSONObject equipmentLocations(EquiReq req);
+	JSONObject equipmentLocation(EquiReq req);
 
 }

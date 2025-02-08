@@ -53,7 +53,7 @@ public class InventoryController {
 				returnMap.put("message", "invalid token");
 				return returnMap.toMap();
 			}
-			returnMap = inventoryService.equipmentLocations(req);
+			returnMap = inventoryService.equipmentLocation(req);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
