@@ -14,7 +14,6 @@ import com.mts.entity.MtsInventoryTransaction;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.repository.MtsInventoryTransactionRepository;
 import com.mts.service.InventoryService;
-import com.mts.util.JsonUtil;
 
 @Service
 public class InventoryServiceImpl implements InventoryService {
@@ -64,13 +63,7 @@ public class InventoryServiceImpl implements InventoryService {
 		JSONObject result = new JSONObject();
 //		mtsEquipmentMasterRepository.fetchLocations();
 		try {
-			Map<String, Object> fromLocation = mtsEquipmentMasterRepository.fetchFromLocation(req.getMtsEquipMasterId());
-			List<Map<String, Object>> toLocation = mtsEquipmentMasterRepository.fetchToLocation(req.getMtsEquipMasterId());
-			
-//			List<Map<String, Object>> data = mtsEquipmentMasterRepository.fetchLocations(req.getMtsEquipMasterId());
-			JSONObject data = new JSONObject();
-			data.put("fromLocation", fromLocation);
-			data.put("toLocation", JsonUtil.toJsonArrayOfObjects(toLocation));
+			List<Map<String, Object>> data = mtsEquipmentMasterRepository.fetchLocations(req.getMtsEquipMasterId());
 			
 			result.put("data", data);
 			result.put("status", 1);
