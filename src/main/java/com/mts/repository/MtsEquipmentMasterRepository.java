@@ -94,7 +94,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "    mts_equipment_master em\r\n"
 			+ "LEFT JOIN \r\n"
 			+ "    mts_location_master lm_from ON em.mtsLocationMasterId = lm_from.mtsLocationMasterId\r\n"
-			+ "WHERE em.mtsEquipMasterId = :mtsEquipMasterId;", nativeQuery = true)
+			+ "WHERE em.mtsEquipMasterId = :mtsEquipMasterId", nativeQuery = true)
 	Map<String, Object> fetchFromLocation(Long mtsEquipMasterId);
 
 	@Query(value = "SELECT\r\n"
