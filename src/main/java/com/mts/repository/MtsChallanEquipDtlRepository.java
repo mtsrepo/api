@@ -65,6 +65,8 @@ public interface MtsChallanEquipDtlRepository extends JpaRepository<MtsChallanEq
 			+ "    mcd.*, \r\n"
 			+ "    fromAddress.description AS fromAddress,  -- Location name from mts_party_address\r\n"
 			+ "    toAddress.description AS toAddress,      -- Location name from mts_party_address\r\n"
+			+ "    fromAddress.mtsPartyAddressId, "
+			+ "    toAddress.mtsPartyAddressId, "
 			+ "    consignor.partyName AS consignorName,\r\n"
 			+ "    consignee.partyName AS consigneeName\r\n"
 			+ "FROM \r\n"
