@@ -75,21 +75,17 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 	@Query(value = "SELECT\r\n"
 			+ "    em.mtsLocationMasterId AS fromLocationId,\r\n"
 			+ "    lm_from.description AS fromLocation,\r\n"
-			+ "    cd.despFrmLocationMasterId, cd.despToLocationMasterId,\r\n"
-			+ "    lm_to.description AS toLocation\r\n"
+			+ "    -- Returning both 1 and 2 for toLocationId with their descriptions\r\n"
+			+ "    lm_to.mtsLocationMasterId AS toLocationId,\r\n"
+			+ "    lm_to.description AS toLocationDescription\r\n"
 			+ "FROM\r\n"
-			+ "    mts_challan_equip_dtl ce\r\n"
-			+ "JOIN \r\n"
-			+ "    mts_equipment_master em ON ce.mtsEquipMasterId = em.mtsEquipMasterId\r\n"
-			+ "JOIN \r\n"
+			+ "    mts_equipment_master em\r\n"
+			+ "LEFT JOIN \r\n"
 			+ "    mts_location_master lm_from ON em.mtsLocationMasterId = lm_from.mtsLocationMasterId\r\n"
-			+ "JOIN\r\n"
-			+ "    mts_challan_document cd ON ce.mtsChallanId = cd.mtsChallanId\r\n"
 			+ "LEFT JOIN\r\n"
-			+ "    mts_location_master lm_to ON (lm_to.mtsLocationMasterId = 5 OR lm_to.mtsLocationMasterId = cd.despToLocationMasterId)\r\n"
+			+ "    mts_location_master lm_to ON lm_to.mtsLocationMasterId IN (1, 2)  -- Ensures toLocation is 1 or 2\r\n"
 			+ "WHERE\r\n"
-			+ "    ce.mtsEquipMasterId = :mtsEquipMasterId"
-			+ "", nativeQuery = true)
+			+ "    em.mtsEquipMasterId = :mtsEquipMasterId;", nativeQuery = true)
 	List<Map<String, Object>> fetchLocations(Long mtsEquipMasterId);
 
 
