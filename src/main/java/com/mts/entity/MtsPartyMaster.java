@@ -23,4 +23,7 @@ public class MtsPartyMaster {
 	private String regNo;
 	private String details;
 	private String partyName;
+	private String registeredAddress;
+	private Long createdOn;
+	private Long modifiedOn;
 }

@@ -1,6 +1,7 @@
 package com.mts.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -58,6 +59,7 @@ public class PartyServiceImpl implements PartyService {
 				 * 
 				 * party.setPartyCode(code);
 				 */
+				party.setCreatedOn(new Date().getTime());
 			}
 
 			party.setRegNo(partyReq.getRegNo());
@@ -67,6 +69,8 @@ public class PartyServiceImpl implements PartyService {
 //			party.setEmailAddress(partyReq.getEmailAddress());
 //			party.setContactNumber(partyReq.getContactNumber());
 			party.setCompanyId(1L); // company id set 1 hardcoded for owener company now
+			party.setRegisteredAddress(partyReq.getRegAddress());
+			party.setModifiedOn(new Date().getTime());
 
 			mtsPartyMasterRepository.saveAndFlush(party);
 
