@@ -89,7 +89,7 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 	public JSONObject getAllPartyAddresses() {
 		JSONObject result = new JSONObject();
 		try {
-			List<MtsPartyAddress> data = mtsPartyAddressRepository.getAllPartyAddresses();
+			List<Map<String, Object>> data = mtsPartyAddressRepository.getAllPartyAddresses();
 			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
 		} catch (Exception e) {
 			e.printStackTrace();

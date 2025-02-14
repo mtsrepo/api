@@ -12,9 +12,9 @@ import com.mts.entity.MtsPartyAddress;
 
 public interface MtsPartyAddressRepository extends JpaRepository<MtsPartyAddress, Long> {
 
-	@Query(value = "select pa.* from mts_party_address pa, company com, mts_party_master pm where \r\n"
+	@Query(value = "select pm.partyName, pa.* from mts_party_address pa, company com, mts_party_master pm where \r\n"
 			+ " pa.companyId = com.companyId and pm.mtsPartyMasterId = pa.mtsPartyMasterId", nativeQuery = true)
-	List<MtsPartyAddress> getAllPartyAddresses();
+	List<Map<String, Object>> getAllPartyAddresses();
 
 	@Query(value = "select pa.mtsPartyAddressId, pa.contactPerson, pa.designation, pa.addressCode, pa.addressLine1,"
 			+ " pa.addressLine2, pa.locationAddressDesc, pa.GSTN, pa.emailAddress, pa.department, pa.pincode, pa.contactNumber from mts_party_address pa,"
