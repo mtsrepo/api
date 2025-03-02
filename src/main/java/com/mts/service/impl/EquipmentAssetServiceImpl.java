@@ -93,6 +93,17 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 				if (qrCode != null) {
 					asset.setMtsQrId(qrCode.getMtsQrId());
 				}
+				
+				MtsEquipmentAvailability availability = new MtsEquipmentAvailability();
+				availability.setMtsEquipMasterId(asset.getMtsEquipMasterId());
+				availability.setTotalNo(1);
+				availability.setInUse(0);
+				availability.setAvailable(1);
+				availability.setCreatedOn(new Date().getTime());
+				availability.setModifiedOn(new Date().getTime());
+				availability.setIsActive(1);
+				
+				mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
 			}
 	        
 			asset.setSerialNo(asstReq.getSerialNo());
@@ -107,18 +118,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 			asset.setModifiedDate(new Date().getTime());
 			
 			
-			MtsEquipmentMaster savedAsst = mtsEquipmentMasterRepository.saveAndFlush(asset);
-			
-			MtsEquipmentAvailability availability = new MtsEquipmentAvailability();
-			availability.setMtsEquipMasterId(savedAsst.getMtsEquipMasterId());
-			availability.setTotalNo(1);
-			availability.setInUse(0);
-			availability.setAvailable(1);
-			availability.setCreatedOn(new Date().getTime());
-			availability.setModifiedOn(new Date().getTime());
-			availability.setIsActive(1);
-			
-			mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
+			mtsEquipmentMasterRepository.saveAndFlush(asset);
 			
 			result.put("message", "Asset saved successfully");
 			result.put("status", 1);

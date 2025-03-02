@@ -61,12 +61,19 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 		JSONObject result = new JSONObject();
 		Long userId = 0L;
 		MtsEquipmentMaster consumable = null;
+		MtsEquipmentAvailability availability = null;
 		try {
 			if (consReq.getMtsEquipMasterId() != null) {
 				Optional<MtsEquipmentMaster> existingAsset = mtsEquipmentMasterRepository
 						.findByMtsEquipMasterId(consReq.getMtsEquipMasterId());
 				if (existingAsset.isPresent()) {
 					consumable = existingAsset.get();
+				}
+				
+				MtsEquipmentAvailability exist = mtsEquipmentAvailabilityRepository
+						.findByMtsEquipMasterId(consReq.getMtsEquipMasterId());
+				if(exist != null) {
+					availability = exist;
 				}
 			} else {
 				consumable = new MtsEquipmentMaster();
@@ -85,6 +92,14 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 				if (qrCode != null) {
 					consumable.setMtsQrId(qrCode.getMtsQrId());
 				}
+				
+				availability = new MtsEquipmentAvailability();
+				availability.setMtsEquipMasterId(consumable.getMtsEquipMasterId());
+				availability.setTotalNo(consReq.getQuantity());
+				availability.setInUse(0);
+				availability.setAvailable(consReq.getQuantity());
+				availability.setCreatedOn(new Date().getTime());
+				
 			}
 
 			consumable.setSerialNo(consReq.getSerialNo());
@@ -98,17 +113,12 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 //			consumable.setMtsLocationMasterId(1L);			// at first not decided where it will
 			consumable.setModifiedDate(new Date().getTime());
 			
-			MtsEquipmentMaster savedConsmble = mtsEquipmentMasterRepository.saveAndFlush(consumable);
+			mtsEquipmentMasterRepository.saveAndFlush(consumable);
 			
-			MtsEquipmentAvailability availability = new MtsEquipmentAvailability();
-			availability.setMtsEquipMasterId(savedConsmble.getMtsEquipMasterId());
-			availability.setTotalNo(consReq.getQuantity());
-			availability.setInUse(0);
-			availability.setAvailable(consReq.getQuantity());
-			availability.setCreatedOn(new Date().getTime());
 			availability.setModifiedOn(new Date().getTime());
 			availability.setIsActive(1);
-			
+			availability.setTotalNo(consReq.getQuantity());
+			availability.setAvailable(consReq.getQuantity()-availability.getInUse());
 			mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
 			
 			result.put("message", "Consumable saved successfully");
