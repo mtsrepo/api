@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -54,6 +55,25 @@ public class InventoryController {
 				return returnMap.toMap();
 			}
 			returnMap = inventoryService.equipmentLocation(req);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return returnMap.toMap();
+	}
+	
+	@GetMapping("/availableLocations")
+	@ResponseBody
+	@CrossOrigin
+	public Map<String, Object> availableLocations() {
+		JSONObject returnMap = new JSONObject();
+		try {
+//			boolean tokenVerified = jwtUtil.validateToken(req.getAuthToken(), req.getUserId());
+//			if(!tokenVerified) {
+//				returnMap.put("status", 0);
+//				returnMap.put("message", "invalid token");
+//				return returnMap.toMap();
+//			}
+			returnMap = inventoryService.getAvailableLocations();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

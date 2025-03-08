@@ -11,4 +11,6 @@ public interface InventoryService {
 
 	JSONObject equipmentLocation(EquiReq req);
 
+	JSONObject getAvailableLocations();
+
 }

@@ -13,6 +13,7 @@ import com.mts.entity.MtsEquipmentMaster;
 import com.mts.entity.MtsInventoryTransaction;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.repository.MtsInventoryTransactionRepository;
+import com.mts.repository.MtsLocationMasterRepository;
 import com.mts.service.InventoryService;
 import com.mts.util.JsonUtil;
 
@@ -23,6 +24,8 @@ public class InventoryServiceImpl implements InventoryService {
 	MtsInventoryTransactionRepository mtsInventoryTransactionRepository;
 	@Autowired
 	MtsEquipmentMasterRepository mtsEquipmentMasterRepository;
+	@Autowired
+	MtsLocationMasterRepository mtsLocationMasterRepository;
 
 	@Override
 	public JSONObject saveInventory(SaveInvReq invReq) {
@@ -77,6 +80,19 @@ public class InventoryServiceImpl implements InventoryService {
 		} catch (Exception e) {
 			result.put("message", "inventory location fetch error");
 			result.put("status", 0);
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public JSONObject getAvailableLocations() {
+		JSONObject result = new JSONObject();
+		try {
+			List<Map<String, Object>> data = mtsLocationMasterRepository.getAvailableLocations();
+			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
+			result.put("status", 1);		
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;

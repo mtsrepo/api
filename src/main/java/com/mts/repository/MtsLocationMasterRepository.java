@@ -21,4 +21,8 @@ public interface MtsLocationMasterRepository extends JpaRepository<MtsLocationMa
 
 	MtsLocationMaster findByMtsPartyAddressId(Long despFrmLocationMasterId);
 
+	@Query(value = "select mtsLocationMasterId, mtsLocationName, description, isActive from mts_location_master"
+			+ " where isActive = 1", nativeQuery = true)
+	List<Map<String, Object>> getAvailableLocations();
+
 }
