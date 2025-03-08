@@ -118,5 +118,18 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "    AND cd.despToLocationMasterId IS NOT NULL", nativeQuery = true)
 	List<Map<String, Object>> fetchToLocation(Long mtsEquipMasterId);
 
+	
+	@Query(value = "select mem.*, mcd.challanName, mea.totalNo, mea.inUse, mea.available, mlm.mtsLocationName, mqc.qrCodeImage  "
+			+ "from mts_equipment_master mem, mts_challan_document mcd, mts_challan_equip_dtl mce,  "
+			+ "mts_location_master mlm, mts_equipment_type_master met, mts_qr_code mqc, mts_equip_availability mea  "
+			+ "where mce.mtsChallanId  = mcd.mtsChallanId and mce.mtsEquipMasterId = mem.mtsEquipMasterId  "
+			+ "and mlm.mtsLocationMasterId  in (mcd.despFrmLocationMasterId, mcd.despToLocationMasterId)  "
+			+ "and mem.mtsQrId = mqc.mtsQrId and mem.mtsEquipMasterId = mea.mtsEquipMasterId  "
+			+ "and mem.mtsEquipTypeMasterId = met.mtsEquipTypeMasterId  "
+			+ "and (mem.mtsLocationMasterId not in (mcd.despFrmLocationMasterId, mcd.despToLocationMasterId) or   "
+			+ "mem.mtsLocationMasterId is null)  "
+			+ "and met.category = 'Asset' and mlm.mtsLocationMasterId = :mtsLocationMasterId", nativeQuery = true)
+	List<Map<String, Object>> equipmentFromLocationOfChallans(Long mtsLocationMasterId);
+
 
 }

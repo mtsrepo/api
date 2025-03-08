@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mts.dataObjects.EquiReq;
+import com.mts.dataObjects.InvReq;
 import com.mts.dataObjects.SaveInvReq;
 import com.mts.entity.MtsEquipmentMaster;
 import com.mts.entity.MtsInventoryTransaction;
@@ -92,6 +93,18 @@ public class InventoryServiceImpl implements InventoryService {
 			List<Map<String, Object>> data = mtsLocationMasterRepository.getAvailableLocations();
 			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
 			result.put("status", 1);		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public JSONObject equipmentFromLocationOfChallans(InvReq req) {
+		JSONObject result = new JSONObject();
+		try {
+			List<Map<String, Object>> data = mtsEquipmentMasterRepository.equipmentFromLocationOfChallans(req.getMtsLocationMasterId());
+			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
