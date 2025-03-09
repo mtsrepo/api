@@ -45,11 +45,11 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 	@Query(value = "SELECT em.mtsEquipMasterId, em.mtsEquipMasterCode, em.mtsEquipName, em.serialNo, em.dateOfPurchase,"
 			+ " em.lastDateOfWarranty, em.currentState, ced.mtsChallanId, cd.mtsChallanCode, lm.mtsLocationName, "
 			+ " lm.type, pa.emailAddress, pa.contactNumber FROM mts_equipment_master em "
-			+ "			LEFT JOIN mts_location_master lm ON lm.mtsLocationMasterId = em.mtsLocationMasterId "
-			+ "			LEFT JOIN mts_challan_equip_dtl ced ON em.mtsEquipMasterId = ced.mtsEquipMasterId "
-			+ "			LEFT JOIN mts_challan_document cd ON ced.mtsChallanId = cd.mtsChallanId "
-			+ "         LEFT JOIN mts_party_address pa ON cd.consignorId = pa.mtsPartyMasterId "
-			+ "			WHERE lm.type = :type", nativeQuery = true)
+			+ "	LEFT JOIN mts_location_master lm ON lm.mtsLocationMasterId = em.mtsLocationMasterId "
+			+ "	LEFT JOIN mts_challan_equip_dtl ced ON em.mtsEquipMasterId = ced.mtsEquipMasterId "
+			+ "	LEFT JOIN mts_challan_document cd ON ced.mtsChallanId = cd.mtsChallanId "
+			+ " LEFT JOIN mts_party_address pa ON cd.consignorId = pa.mtsPartyMasterId and pa.mtsPartyAddressId = lm.mtsPartyAddressId"
+			+ "	WHERE lm.type = :type", nativeQuery = true)
 	List<Map<String, Object>> getEquipmentsWithChallanByLocationType(String type);
 
 	@Query(value = "SELECT \r\n"
