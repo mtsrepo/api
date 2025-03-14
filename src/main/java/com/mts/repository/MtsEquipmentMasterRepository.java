@@ -119,16 +119,37 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 	List<Map<String, Object>> fetchToLocation(Long mtsEquipMasterId);
 
 	
-	@Query(value = "select mem.*, mcd.challanName, mea.totalNo, mea.inUse, mea.available, mlm.mtsLocationName, mqc.qrCodeImage  "
-			+ "from mts_equipment_master mem, mts_challan_document mcd, mts_challan_equip_dtl mce,  "
-			+ "mts_location_master mlm, mts_equipment_type_master met, mts_qr_code mqc, mts_equip_availability mea  "
-			+ "where mce.mtsChallanId  = mcd.mtsChallanId and mce.mtsEquipMasterId = mem.mtsEquipMasterId  "
-			+ "and mlm.mtsLocationMasterId  in (mcd.despFrmLocationMasterId, mcd.despToLocationMasterId)  "
-			+ "and mem.mtsQrId = mqc.mtsQrId and mem.mtsEquipMasterId = mea.mtsEquipMasterId  "
-			+ "and mem.mtsEquipTypeMasterId = met.mtsEquipTypeMasterId  "
-			+ "and (mem.mtsLocationMasterId not in (mcd.despFrmLocationMasterId, mcd.despToLocationMasterId) or   "
-			+ "mem.mtsLocationMasterId is null)  "
-			+ "and met.category = 'Asset' and mlm.mtsLocationMasterId = :mtsLocationMasterId", nativeQuery = true)
+	@Query(value = "SELECT \r\n"
+			+ "    mem.*, \r\n"
+			+ "    mcd.challanName, \r\n"
+			+ "    mea.totalNo, \r\n"
+			+ "    mea.inUse, \r\n"
+			+ "    mea.available, \r\n"
+			+ "    mlm.mtsLocationName, \r\n"
+			+ "    mqc.qrCodeImage  \r\n"
+			+ "FROM \r\n"
+			+ "    mts_equipment_master mem\r\n"
+			+ "JOIN \r\n"
+			+ "    mts_equipment_type_master met ON mem.mtsEquipTypeMasterId = met.mtsEquipTypeMasterId\r\n"
+			+ "LEFT JOIN \r\n"
+			+ "    mts_qr_code mqc ON mem.mtsQrId = mqc.mtsQrId\r\n"
+			+ "LEFT JOIN \r\n"
+			+ "    mts_equip_availability mea ON mem.mtsEquipMasterId = mea.mtsEquipMasterId\r\n"
+			+ "LEFT JOIN \r\n"
+			+ "    mts_challan_equip_dtl mce ON mce.mtsEquipMasterId = mem.mtsEquipMasterId\r\n"
+			+ "LEFT JOIN \r\n"
+			+ "    mts_challan_document mcd ON mce.mtsChallanId = mcd.mtsChallanId\r\n"
+			+ "LEFT JOIN \r\n"
+			+ "    mts_location_master mlm ON mlm.mtsLocationMasterId IN (mcd.despFrmLocationMasterId, mcd.despToLocationMasterId)\r\n"
+			+ "WHERE \r\n"
+			+ "    (\r\n"
+			+ "        (mem.mtsLocationMasterId IS NULL AND mem.isActive IS NULL) \r\n"
+			+ "        OR (\r\n"
+			+ "            (mem.mtsLocationMasterId = 2 AND mcd.despFrmLocationMasterId = :mtsLocationMasterId)\r\n"
+			+ "            OR (mem.mtsLocationMasterId <> 2 AND mcd.despToLocationMasterId = :mtsLocationMasterId and mcd.despToLocationMasterId)\r\n"
+			+ "        )\r\n"
+			+ "    )\r\n"
+			+ "    AND met.category = 'Asset'", nativeQuery = true)
 	List<Map<String, Object>> equipmentFromLocationOfChallans(Long mtsLocationMasterId);
 
 
