@@ -121,8 +121,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 	
 	@Query(value = "SELECT \r\n"
 			+ "			    mem.mtsEquipMasterId, mem.mtsEquipMasterCode, mem.mtsEquipName, mem.serialNo, \r\n"
-			+ "			    mcd.mtsChallanId, mcd.challanName, mce.mtsChallanEquipId,\r\n"
-			+ "			    mea.totalNo, mea.inUse, mea.available, \r\n"
+			+ "			    mcd.mtsChallanId, mcd.challanName, mea.totalNo, mea.inUse, mea.available, \r\n"
 			+ "			   -- mlm.mtsLocationName, \r\n"
 			+ "			   -- mqc.qrCodeImage  \r\n"
 			+ "                            mit.mtsChallanEquipId, mit.inTransitOrComplete\r\n"
