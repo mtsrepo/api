@@ -40,6 +40,13 @@ public class InventoryServiceImpl implements InventoryService {
 			inventoryTransaction.setIsActive(1);
 			inventoryTransaction.setCreatedBy(Long.valueOf(invReq.getUserId()));
 			inventoryTransaction.setCreatedOn(invReq.getCurrentDate());
+			
+			if(invReq.getMtsChallanEquipId() != null) {
+				inventoryTransaction.setMtsChallanEquipId(invReq.getMtsChallanEquipId());
+			}
+			if(invReq.getInTransitOrComplete() != null) {;
+				inventoryTransaction.setInTransitOrComplete(invReq.getInTransitOrComplete());
+			}
 
 			mtsInventoryTransactionRepository.saveAndFlush(inventoryTransaction);
 
