@@ -153,5 +153,35 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "			    AND met.category = 'Asset'", nativeQuery = true)
 	List<Map<String, Object>> equipmentFromLocationOfChallans(Long mtsLocationMasterId);
 
+	
+	@Query(value = "SELECT \r\n"
+			+ "	mem.mtsEquipMasterId, mem.mtsEquipMasterCode, mem.mtsEquipName, mem.serialNo, \r\n"
+			+ "	mcd.mtsChallanId, mcd.challanName, mea.totalNo, mea.inUse, mea.available, \r\n"
+			+ "	mcd.despFrmLocationMasterId, mcd.despToLocationMasterId\r\n"
+			+ "FROM \r\n"
+			+ "	mts_equipment_master mem\r\n"
+			+ "LEFT JOIN \r\n"
+			+ "	mts_equipment_type_master met ON mem.mtsEquipTypeMasterId = met.mtsEquipTypeMasterId\r\n"
+			+ "LEFT JOIN \r\n"
+			+ "	mts_qr_code mqc ON mem.mtsQrId = mqc.mtsQrId\r\n"
+			+ "LEFT JOIN \r\n"
+			+ "	mts_equip_availability mea ON mem.mtsEquipMasterId = mea.mtsEquipMasterId\r\n"
+			+ "LEFT JOIN \r\n"
+			+ "	mts_challan_equip_dtl mce ON mce.mtsEquipMasterId = mem.mtsEquipMasterId\r\n"
+			+ "LEFT JOIN \r\n"
+			+ "	mts_challan_document mcd ON mce.mtsChallanId = mcd.mtsChallanId\r\n"
+			+ "LEFT JOIN \r\n"
+			+ "	mts_inventory_transaction mit ON mem.mtsEquipMasterId = mit.mtsEquipMasterId and mce.mtsChallanEquipId = mit.mtsChallanEquipId\r\n"
+			+ "WHERE \r\n"
+			+ "	(\r\n"
+			+ "		(mem.mtsLocationMasterId IS NULL AND mem.currentStatus IS NULL) \r\n"
+			+ "		or\r\n"
+			+ "		(mcd.despFrmLocationMasterId = :mtsLocationMasterId and mem.currentStatus = :statusId and mcd.isActive = 1)\r\n"
+			+ "		or \r\n"
+			+ "		(mcd.despToLocationMasterId = :mtsLocationMasterId and mem.currentStatus = 2 and mcd.isActive = 1)\r\n"
+			+ "	)\r\n"
+			+ "	AND met.category = 'Asset' ", nativeQuery = true)
+	List<Map<String, Object>> equipmentFromLocationAndStatus(Long mtsLocationMasterId, int statusId);
+
 
 }

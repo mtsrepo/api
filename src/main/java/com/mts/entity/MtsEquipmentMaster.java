@@ -27,7 +27,7 @@ public class MtsEquipmentMaster {
 	private String description;
 	private Long dateOfPurchase;
 	private Long lastDateOfWarranty;
-	private LocalDateTime currentState;
+	private Integer currentStatus;
 	private String serialNo;
 	private Long mtsQrId;
 	private Long createDate;

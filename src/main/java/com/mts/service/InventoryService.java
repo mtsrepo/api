@@ -16,4 +16,6 @@ public interface InventoryService {
 
 	JSONObject equipmentFromLocationOfChallans(InvReq req);
 
+	JSONObject equipmentFromLocationAndStatus(InvReq req);
+
 }

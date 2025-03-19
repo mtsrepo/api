@@ -12,9 +12,12 @@ import com.mts.dataObjects.InvReq;
 import com.mts.dataObjects.SaveInvReq;
 import com.mts.entity.MtsEquipmentMaster;
 import com.mts.entity.MtsInventoryTransaction;
+import com.mts.entity.MtsLocationMaster;
+import com.mts.entity.MtsStatusMaster;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.repository.MtsInventoryTransactionRepository;
 import com.mts.repository.MtsLocationMasterRepository;
+import com.mts.repository.MtsStatusMasterRepository;
 import com.mts.service.InventoryService;
 import com.mts.util.JsonUtil;
 
@@ -27,6 +30,8 @@ public class InventoryServiceImpl implements InventoryService {
 	MtsEquipmentMasterRepository mtsEquipmentMasterRepository;
 	@Autowired
 	MtsLocationMasterRepository mtsLocationMasterRepository;
+	@Autowired
+	MtsStatusMasterRepository mtsStatusMasterRepository;
 
 	@Override
 	public JSONObject saveInventory(SaveInvReq invReq) {
@@ -111,6 +116,20 @@ public class InventoryServiceImpl implements InventoryService {
 		JSONObject result = new JSONObject();
 		try {
 			List<Map<String, Object>> data = mtsEquipmentMasterRepository.equipmentFromLocationOfChallans(req.getMtsLocationMasterId());
+			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public JSONObject equipmentFromLocationAndStatus(InvReq req) {
+		JSONObject result = new JSONObject();
+		try {
+			MtsLocationMaster location = mtsLocationMasterRepository.findByMtsLocationMasterId(req.getMtsLocationMasterId());
+			MtsStatusMaster status = mtsStatusMasterRepository.findByStatus(location.getType());
+			List<Map<String, Object>> data = mtsEquipmentMasterRepository.equipmentFromLocationAndStatus(location.getMtsLocationMasterId(),status.getStatusId());
 			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
 		} catch (Exception e) {
 			e.printStackTrace();
