@@ -146,7 +146,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "			        (mem.mtsLocationMasterId IS NULL AND mem.isActive IS NULL) \r\n"
 			+ "			        OR\r\n"
 			+ "			        :mtsLocationMasterId in (mcd.despFrmLocationMasterId,mcd.despToLocationMasterId) and mit.isActive = 1\r\n"
-			+ "					mit.fromLocationId <> 1 and \r\n"
+			+ "					and mit.fromLocationId <> 1  \r\n"
 			+ "			           -- OR (mem.mtsLocationMasterId <> 2 AND mcd.despToLocationMasterId = 1 and mcd.despToLocationMasterId)\r\n"
 			+ "			        \r\n"
 			+ "			    )\r\n"
