@@ -103,7 +103,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "FROM\r\n"
 			+ "    mts_location_master lm_to\r\n"
 			+ "WHERE\r\n"
-			+ "    lm_to.mtsLocationMasterId IN (1, 2)\r\n"
+			+ "    lm_to.mtsLocationMasterId IN (1)\r\n"
 			+ "UNION\r\n"
 			+ "SELECT\r\n"
 			+ "    cd.despToLocationMasterId AS toLocationId,\r\n"
