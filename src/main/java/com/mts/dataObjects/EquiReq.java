@@ -10,4 +10,6 @@ public class EquiReq {
 	private String userId;
 	private String authToken;
 	private Long mtsEquipMasterId;
+	private Long mtsChallanEquipId;
+	private Integer inTransitOrComplete;
 }
