@@ -15,6 +15,7 @@ public class SaveInvReq {
 	private Long currentDate;
 	private String mtsEquipMasterCode;
 	
+	private Long mtsLocationMasterId;
 	private Long mtsChallanEquipId;
 	private Integer inTransitOrComplete;
 }

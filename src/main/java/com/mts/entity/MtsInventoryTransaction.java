@@ -14,7 +14,7 @@ import lombok.Data;
 public class MtsInventoryTransaction {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long stateTransactionId;
+	private Long inventoryTransactionId;
 
 	private Long mtsEquipMasterId;
 	
