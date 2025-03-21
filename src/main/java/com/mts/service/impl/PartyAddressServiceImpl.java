@@ -68,7 +68,7 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 			MtsLocationMaster location = new MtsLocationMaster();
 			location.setMtsLocationName(partAddReq.getAddressLine1());
 			location.setMtsPartyAddressId(savedAddr.getMtsPartyAddressId());
-			location.setType("Factory");
+			location.setType("FACTORY");
 			location.setDescription(partyAddress.getLocationAddressDesc());
 			location.setCreateDate(new Date().getTime());
 			location.setIsActive(1);

@@ -49,7 +49,7 @@ public class InventoryServiceImpl implements InventoryService {
 			if(invReq.getMtsChallanEquipId() != null) {
 				inventoryTransaction.setMtsChallanEquipId(invReq.getMtsChallanEquipId());
 			}
-			if(invReq.getInTransitOrComplete() != null) {;
+			if(invReq.getInTransitOrComplete() != null) {
 				inventoryTransaction.setInTransitOrComplete(invReq.getInTransitOrComplete());
 			}
 
