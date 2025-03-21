@@ -27,12 +27,24 @@ public class AnalyticServiceImpl implements AnalyticService{
 //		JSONObject result = new JSONObject();
 		Map<String, List<Map<String, Object>>> result = new HashMap<>();
 		try {
-			List<String> distinctTypes = mtsLocationMasterRepository.findDistinctTypes();
+			List<Integer> distinctTypes = mtsLocationMasterRepository.findDistinctTypes();
 			
-			for (String type : distinctTypes) {
+			for (int type : distinctTypes) {
 //	            List<MtsEquipmentMaster> equipments = mtsEquipmentMasterRepository.getEquipmentsByLocationType(type);
 				List<Map<String, Object>> equipmentsWithChallanDetails = mtsEquipmentMasterRepository.getEquipmentsWithChallanByLocationType(type);
-	            result.put(type, equipmentsWithChallanDetails);
+				String status = "";
+				switch (type) {
+					case 1:
+						status = "WAREHOUSE";
+				        break;
+				    case 2:
+				    	status = "IN TRANSIT";
+				        break;
+				    case 3:
+				    	status = "FACTORY";
+				        break;
+				}
+				result.put(status, equipmentsWithChallanDetails);
 	        }
 			
 		} catch (Exception e) {

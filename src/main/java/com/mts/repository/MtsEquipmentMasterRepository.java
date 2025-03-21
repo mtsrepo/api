@@ -50,7 +50,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "	LEFT JOIN mts_challan_document cd ON ced.mtsChallanId = cd.mtsChallanId "
 			+ " LEFT JOIN mts_party_address pa ON cd.consignorId = pa.mtsPartyMasterId and pa.mtsPartyAddressId = lm.mtsPartyAddressId"
 			+ "	WHERE lm.type = :type", nativeQuery = true)
-	List<Map<String, Object>> getEquipmentsWithChallanByLocationType(String type);
+	List<Map<String, Object>> getEquipmentsWithChallanByLocationType(int type);
 
 	@Query(value = "SELECT \r\n"
 			+ "    mem.mtsEquipMasterId, \r\n"
