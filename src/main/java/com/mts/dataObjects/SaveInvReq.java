@@ -17,5 +17,7 @@ public class SaveInvReq {
 	
 	private Long mtsLocationMasterId;
 	private Long mtsChallanEquipId;
-	private Integer inTransitOrComplete;
+//	private Integer inTransitOrComplete;
+	private Long inventoryTransactionId;
+	private Long mtsChallanId;
 }
