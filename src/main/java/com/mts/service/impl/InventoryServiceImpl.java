@@ -44,7 +44,10 @@ public class InventoryServiceImpl implements InventoryService {
 		MtsEquipmentMaster equipment = null;
 		MtsInventoryTransaction inventoryTransaction = null;
 		MtsChallanDocument challan = null;
+		
 		try {
+			MtsLocationMaster toLocation = mtsLocationMasterRepository.findByMtsLocationMasterId(invReq.getMtsLocationMasterId());
+			
 			if (invReq.getMtsEquipMasterCode() != null) {
 				equipment = mtsEquipmentMasterRepository.findByMtsEquipMasterCode(invReq.getMtsEquipMasterCode());
 			} else {
@@ -87,9 +90,10 @@ public class InventoryServiceImpl implements InventoryService {
 			
 			if(invReq.getMtsLocationMasterId() == invReq.getFromLocationId()) {
 				inventoryTransaction.setInTransitOrComplete(1);
-				equipment.setMtsLocationMasterId(2L);
+				equipment.setCurrentStatus(2);
 			}else {
 				equipment.setMtsLocationMasterId(invReq.getToLocationId());
+				equipment.setCurrentStatus(toLocation.getType());
 			}
 
 			mtsInventoryTransactionRepository.saveAndFlush(inventoryTransaction);
@@ -161,7 +165,7 @@ public class InventoryServiceImpl implements InventoryService {
 		JSONObject result = new JSONObject();
 		try {
 			MtsLocationMaster location = mtsLocationMasterRepository.findByMtsLocationMasterId(req.getMtsLocationMasterId());
-			MtsStatusMaster status = mtsStatusMasterRepository.findByStatus(location.getType());
+			MtsStatusMaster status = mtsStatusMasterRepository.findByStatusId(location.getType());
 			List<Map<String, Object>> data = mtsEquipmentMasterRepository.equipmentFromLocationAndStatus(location.getMtsLocationMasterId(),status.getStatusId());
 			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
 		} catch (Exception e) {

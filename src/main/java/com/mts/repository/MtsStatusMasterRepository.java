@@ -6,6 +6,6 @@ import com.mts.entity.MtsStatusMaster;
 
 public interface MtsStatusMasterRepository extends JpaRepository<MtsStatusMaster, Integer>{
 
-	MtsStatusMaster findByStatus(String type);
+	MtsStatusMaster findByStatusId(int type);
 
 }

@@ -21,7 +21,7 @@ public class MtsLocationMaster {
 	private Long mtsPartyAddressId;
 	private Long companyId;
 	private String mtsLocationName;
-	private String type;
+	private Integer type;
 	private String description;
 	private Long createDate;
 	private Long modifiedDate;
