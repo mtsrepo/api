@@ -2,6 +2,7 @@ package com.mts.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,12 @@ import org.springframework.stereotype.Service;
 import com.mts.dataObjects.EquiReq;
 import com.mts.dataObjects.InvReq;
 import com.mts.dataObjects.SaveInvReq;
+import com.mts.entity.MtsChallanDocument;
 import com.mts.entity.MtsEquipmentMaster;
 import com.mts.entity.MtsInventoryTransaction;
 import com.mts.entity.MtsLocationMaster;
 import com.mts.entity.MtsStatusMaster;
+import com.mts.repository.MtsChallanDocumentRepository;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.repository.MtsInventoryTransactionRepository;
 import com.mts.repository.MtsLocationMasterRepository;
@@ -32,35 +35,65 @@ public class InventoryServiceImpl implements InventoryService {
 	MtsLocationMasterRepository mtsLocationMasterRepository;
 	@Autowired
 	MtsStatusMasterRepository mtsStatusMasterRepository;
+	@Autowired
+	MtsChallanDocumentRepository mtsChallanDocumentRepository;
 
 	@Override
 	public JSONObject saveInventory(SaveInvReq invReq) {
 		JSONObject result = new JSONObject();
 		MtsEquipmentMaster equipment = null;
+		MtsInventoryTransaction inventoryTransaction = null;
+		MtsChallanDocument challan = null;
 		try {
-			MtsInventoryTransaction inventoryTransaction = new MtsInventoryTransaction();
-			inventoryTransaction.setMtsEquipMasterId(invReq.getMtsEquipMasterId());
-			inventoryTransaction.setFromLocationId(invReq.getFromLocationId());
-			inventoryTransaction.setToLocationId(invReq.getToLocationId());
-			inventoryTransaction.setIsActive(1);
-			inventoryTransaction.setCreatedBy(Long.valueOf(invReq.getUserId()));
-			inventoryTransaction.setCreatedOn(invReq.getCurrentDate());
-			
-			if(invReq.getMtsChallanEquipId() != null) {
-				inventoryTransaction.setMtsChallanEquipId(invReq.getMtsChallanEquipId());
-			}
-			if(invReq.getInTransitOrComplete() != null) {
-				inventoryTransaction.setInTransitOrComplete(invReq.getInTransitOrComplete());
-			}
-
-			mtsInventoryTransactionRepository.saveAndFlush(inventoryTransaction);
-
 			if (invReq.getMtsEquipMasterCode() != null) {
 				equipment = mtsEquipmentMasterRepository.findByMtsEquipMasterCode(invReq.getMtsEquipMasterCode());
 			} else {
 				equipment = mtsEquipmentMasterRepository.findByMtsEquipMasterId(invReq.getMtsEquipMasterId()).get();
 			}
-			equipment.setMtsLocationMasterId(invReq.getToLocationId());
+			
+			Optional<MtsChallanDocument> existingChallan = mtsChallanDocumentRepository
+					.findByMtsChallanId(invReq.getMtsChallanId());
+			
+			if (existingChallan.isPresent()) {
+				challan = existingChallan.get();
+			}
+			
+			if(invReq.getInventoryTransactionId() != null) {
+				inventoryTransaction = mtsInventoryTransactionRepository.findByInventoryTransactionIdAndIsActive(invReq.getInventoryTransactionId(), 1);
+				
+				if(inventoryTransaction != null) {
+					
+				}
+				
+			}else {
+				inventoryTransaction = new MtsInventoryTransaction();
+				inventoryTransaction.setMtsEquipMasterId(equipment.getMtsEquipMasterId());
+				if(invReq.getMtsChallanEquipId() != null) {
+					inventoryTransaction.setMtsChallanEquipId(invReq.getMtsChallanEquipId());
+				}
+				inventoryTransaction.setCreatedBy(Long.valueOf(invReq.getUserId()));
+				inventoryTransaction.setCreatedOn(invReq.getCurrentDate());
+			}
+			
+			inventoryTransaction.setFromLocationId(invReq.getFromLocationId());
+			inventoryTransaction.setToLocationId(invReq.getToLocationId());
+			
+			if(challan.getDespToLocationMasterId() == invReq.getToLocationId()) {
+				inventoryTransaction.setIsActive(0);
+			}else {
+				inventoryTransaction.setIsActive(1);
+			}
+					
+			
+			if(invReq.getMtsLocationMasterId() == invReq.getFromLocationId()) {
+				inventoryTransaction.setInTransitOrComplete(1);
+				equipment.setMtsLocationMasterId(2L);
+			}else {
+				equipment.setMtsLocationMasterId(invReq.getToLocationId());
+			}
+
+			mtsInventoryTransactionRepository.saveAndFlush(inventoryTransaction);
+
 			equipment.setModifiedDate(invReq.getCurrentDate());
 
 			mtsEquipmentMasterRepository.saveAndFlush(equipment);

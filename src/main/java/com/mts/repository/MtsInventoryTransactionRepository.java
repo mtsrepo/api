@@ -8,4 +8,8 @@ import com.mts.entity.MtsInventoryTransaction;
 @Repository
 public interface MtsInventoryTransactionRepository extends JpaRepository<MtsInventoryTransaction, Long> {
 
+	MtsInventoryTransaction findByInventoryTransactionId(Long inventoryTransactionId);
+
+	MtsInventoryTransaction findByInventoryTransactionIdAndIsActive(Long inventoryTransactionId, int i);
+
 }
