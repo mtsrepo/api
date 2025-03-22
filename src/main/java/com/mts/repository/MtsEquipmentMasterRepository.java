@@ -12,7 +12,7 @@ import com.mts.entity.MtsEquipmentMaster;
 
 public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipmentMaster, Long> {
 
-	@Query(value = "SELECT mem.*, mea.totalNo, mea.inUse, mea.available, mlm.mtsLocationName, mqc.qrCodeImage\r\n"
+	@Query(value = "SELECT mem.*, metm.mtsEquipName, mea.totalNo, mea.inUse, mea.available, mlm.mtsLocationName, mqc.qrCodeImage\r\n"
 			+ "FROM mts_equipment_master mem\r\n"
 			+ "JOIN mts_equipment_type_master metm ON mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId\r\n"
 			+ "JOIN mts_qr_code mqc ON mem.mtsQrId = mqc.mtsQrId\r\n"
@@ -104,7 +104,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "FROM\r\n"
 			+ "    mts_location_master lm_to\r\n"
 			+ "WHERE\r\n"
-			+ "    lm_to.mtsLocationMasterId IN (1)\r\n"
+			+ "    lm_to.mtsLocationMasterId IN (1)\r\n"		//mtsLocationMasterId lagana hai
 			+ "UNION\r\n"
 			+ "SELECT\r\n"
 			+ "    cd.despToLocationMasterId AS toLocationId,\r\n"

@@ -83,6 +83,7 @@ public class InventoryServiceImpl implements InventoryService {
 			
 			if(challan!=null && (challan.getDespToLocationMasterId() == invReq.getToLocationId() && invReq.getToLocationId() == invReq.getMtsLocationMasterId())){
 				inventoryTransaction.setIsActive(0);
+				inventoryTransaction.setInTransitOrComplete(0);
 			}else {
 				inventoryTransaction.setIsActive(1);
 			}
