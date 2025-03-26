@@ -38,7 +38,7 @@ public class AnalyticServiceImpl implements AnalyticService{
 						status = "WAREHOUSE";
 				        break;
 				    case 2:
-				    	status = "IN TRANSIT";
+				    	status = "IN_TRANSIT";
 				        break;
 				    case 3:
 				    	status = "FACTORY";
