@@ -100,6 +100,7 @@ public class InventoryServiceImpl implements InventoryService {
 			mtsInventoryTransactionRepository.saveAndFlush(inventoryTransaction);
 
 			equipment.setModifiedDate(invReq.getCurrentDate());
+			equipment.setIsActive(1);
 
 			mtsEquipmentMasterRepository.saveAndFlush(equipment);
 
