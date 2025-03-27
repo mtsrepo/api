@@ -122,7 +122,7 @@ public class InventoryServiceImpl implements InventoryService {
 //		mtsEquipmentMasterRepository.fetchLocations();
 		try {
 			Map<String, Object> fromLocation = mtsEquipmentMasterRepository.fetchFromLocation(req.getMtsEquipMasterId());
-			List<Map<String, Object>> toLocation = mtsEquipmentMasterRepository.fetchToLocation(req.getMtsEquipMasterId());
+			List<Map<String, Object>> toLocation = mtsEquipmentMasterRepository.fetchToLocation(req.getMtsLocationMasterId(), req.getMtsEquipMasterId());
 			
 //			List<Map<String, Object>> data = mtsEquipmentMasterRepository.fetchLocations(req.getMtsEquipMasterId());
 			JSONObject data = new JSONObject();

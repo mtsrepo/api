@@ -104,7 +104,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "FROM\r\n"
 			+ "    mts_location_master lm_to\r\n"
 			+ "WHERE\r\n"
-			+ "    lm_to.mtsLocationMasterId IN (1)\r\n"		//mtsLocationMasterId lagana hai
+			+ "    lm_to.mtsLocationMasterId IN (:mtsLocationMasterId)\r\n"		
 			+ "UNION\r\n"
 			+ "SELECT\r\n"
 			+ "    cd.despToLocationMasterId AS toLocationId,\r\n"
@@ -117,7 +117,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "    mts_challan_equip_dtl ced ON ced.mtsChallanId = cd.mtsChallanId AND ced.mtsEquipMasterId = :mtsEquipMasterId\r\n"
 			+ "WHERE ced.mtsEquipMasterId = :mtsEquipMasterId\r\n"
 			+ "    AND cd.despToLocationMasterId IS NOT NULL", nativeQuery = true)
-	List<Map<String, Object>> fetchToLocation(Long mtsEquipMasterId);
+	List<Map<String, Object>> fetchToLocation(Long mtsLocationMasterId, Long mtsEquipMasterId);
 
 	
 	@Query(value = "SELECT \r\n"
@@ -160,7 +160,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "	mcd.mtsChallanId, mcd.challanName, mea.totalNo, mea.inUse, mea.available, \r\n"
 			+ "	mcd.despFrmLocationMasterId, mcd.despToLocationMasterId, mce.mtsChallanEquipId, mit.inventoryTransactionId, \r\n"
 			+ "	frmLoc.mtsLocationName AS despFrmLocationName, toLoc.mtsLocationName AS despToLocationName, \r\n"
-			+ "	:mtsLocationMasterId as mtsLocationMasterId \r\n"
+			+ "	:mtsLocationMasterId as mtsLocationMasterId, mem.mtsLocationMasterId AS currentLocationId \r\n"
 			+ "FROM \r\n"
 			+ "	mts_equipment_master mem\r\n"
 			+ "LEFT JOIN \r\n"

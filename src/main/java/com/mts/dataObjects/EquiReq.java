@@ -12,4 +12,5 @@ public class EquiReq {
 	private Long mtsEquipMasterId;
 	private Long mtsChallanEquipId;
 	private Integer inTransitOrComplete;
+	private Long mtsLocationMasterId;
 }
