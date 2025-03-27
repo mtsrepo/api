@@ -71,11 +71,13 @@ public class InventoryServiceImpl implements InventoryService {
 			}else {
 				inventoryTransaction = new MtsInventoryTransaction();
 				inventoryTransaction.setMtsEquipMasterId(equipment.getMtsEquipMasterId());
-				if(invReq.getMtsChallanEquipId() != null) {
-					inventoryTransaction.setMtsChallanEquipId(invReq.getMtsChallanEquipId());
-				}
+				
 				inventoryTransaction.setCreatedBy(Long.valueOf(invReq.getUserId()));
 				inventoryTransaction.setCreatedOn(invReq.getCurrentDate());
+			}
+			
+			if(invReq.getMtsChallanEquipId() != null) {
+				inventoryTransaction.setMtsChallanEquipId(invReq.getMtsChallanEquipId());
 			}
 			
 			inventoryTransaction.setFromLocationId(invReq.getFromLocationId());
