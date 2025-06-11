@@ -83,6 +83,9 @@ public interface MtsChallanEquipDtlRepository extends JpaRepository<MtsChallanEq
 			+ "LEFT JOIN \r\n"
 			+ "    mts_party_master consignee \r\n"
 			+ "    ON mcd.consigneeId = consignee.mtsPartyMasterId\r\n"
+			+ "LEFT JOIN \r\n"
+			+ "    mts_party_address consign_add \r\n"
+			+ "    ON consign_add.mtsPartyMasterId = consignor.mtsPartyMasterId\r\n"
 			+ "WHERE \r\n"
 			+ "    mcd.mtsChallanId = :mtsChallanId", nativeQuery = true)
 	Map<String, Object> getChallanDetails(@Param("mtsChallanId") Long mtsChallanId);
