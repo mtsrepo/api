@@ -50,6 +50,11 @@ public class PartyServiceImpl implements PartyService {
 					party = existingParty.get();
 				}
 			}else {
+				Optional<MtsPartyMaster> checkAlready = mtsPartyMasterRepository.findByRegNo(partyReq.getRegNo()); 
+				checkAlready.ifPresent(existingParty -> {
+				    throw new RuntimeException("Party with this registration number already exists.");
+				});
+				
 				party = new MtsPartyMaster();
 				/*
 				 * made a party code if needed later
@@ -77,7 +82,7 @@ public class PartyServiceImpl implements PartyService {
 			result.put("message", "Party saved successfully");
 			result.put("status", 1);
 		} catch (Exception e) {
-			result.put("message", "party save error");
+			result.put("message", e.getMessage());
 			result.put("status", 0);
 			e.printStackTrace();
 		}

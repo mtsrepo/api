@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.mts.entity.MtsEquipmentMaster;
+import com.mts.entity.MtsPartyMaster;
 
 public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipmentMaster, Long> {
 
@@ -190,6 +191,9 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "	)\r\n"
 			+ "	AND met.category = 'Asset' ", nativeQuery = true)
 	List<Map<String, Object>> equipmentFromLocationAndStatus(Long mtsLocationMasterId, int statusId);
+
+	Optional<MtsEquipmentMaster> findBySerialNo(String serialNo);
+
 
 
 }

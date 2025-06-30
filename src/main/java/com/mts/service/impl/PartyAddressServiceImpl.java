@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.mts.dataObjects.SavePartAddReq;
 import com.mts.entity.MtsLocationMaster;
 import com.mts.entity.MtsPartyAddress;
+import com.mts.entity.MtsPartyMaster;
 import com.mts.repository.MtsLocationMasterRepository;
 import com.mts.repository.MtsPartyAddressRepository;
 import com.mts.service.PartyAddressService;
@@ -39,6 +40,11 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 					partyAddress = existingAddress.get();
 				}
 			} else {
+				Optional<MtsPartyAddress> checkAlready = mtsPartyAddressRepository.findByGSTN(partAddReq.getGSTN()); 
+				checkAlready.ifPresent(existingParty -> {
+				    throw new RuntimeException("Party Address with this GSTN already exists.");
+				});
+				
 				partyAddress = new MtsPartyAddress();
 				Random random = new Random();
 				int fiveDigitNumber = 10000 + random.nextInt(90000);
@@ -78,7 +84,7 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 			result.put("message", "Party Address saved successfully");
 			result.put("status", 1);
 		} catch (Exception e) {
-			result.put("message", "party address save error");
+			result.put("message", e.getMessage());
 			result.put("status", 0);
 			e.printStackTrace();
 		}

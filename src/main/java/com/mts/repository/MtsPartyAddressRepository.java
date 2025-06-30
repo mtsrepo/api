@@ -28,4 +28,6 @@ public interface MtsPartyAddressRepository extends JpaRepository<MtsPartyAddress
 
 	Optional<MtsPartyAddress> findByMtsPartyAddressId(Long mtsPartyAddressId);
 
+	Optional<MtsPartyAddress> findByGSTN(String gstn);
+
 }

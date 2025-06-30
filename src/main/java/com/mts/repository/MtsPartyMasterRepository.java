@@ -26,4 +26,6 @@ public interface MtsPartyMasterRepository extends JpaRepository<MtsPartyMaster, 
 
 	Optional<MtsPartyMaster> findByMtsPartyMasterId(Long mtsPartyMasterId);
 
+	Optional<MtsPartyMaster> findByRegNo(String regNo);
+
 }

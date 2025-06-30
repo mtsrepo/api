@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.mts.dataObjects.SaveAssetReq;
 import com.mts.entity.MtsEquipmentAvailability;
 import com.mts.entity.MtsEquipmentMaster;
+import com.mts.entity.MtsPartyMaster;
 import com.mts.entity.MtsQrCode;
 import com.mts.repository.MtsEquipmentAvailabilityRepository;
 import com.mts.repository.MtsEquipmentMasterRepository;
@@ -78,6 +79,11 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 					asset = existingAsset.get();
 				}
 			} else {
+				Optional<MtsEquipmentMaster> checkAlready = mtsEquipmentMasterRepository.findBySerialNo(asstReq.getSerialNo()); 
+				checkAlready.ifPresent(existingParty -> {
+				    throw new RuntimeException("Asset with this serial number already exists.");
+				});
+				
 				asset = new MtsEquipmentMaster();
 				Random random = new Random();
 				int fiveDigitNumber = 10000 + random.nextInt(90000);
@@ -123,7 +129,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 			result.put("message", "Asset saved successfully");
 			result.put("status", 1);
 		} catch (Exception e) {
-			result.put("message", "asset save error");
+			result.put("message", e.getMessage());
 			result.put("status", 0);
 			e.printStackTrace();
 		}
