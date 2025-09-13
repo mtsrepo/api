@@ -52,6 +52,8 @@ public class ChallanServiceImpl implements ChallanService {
 		MtsChallanDocument challan = null;
 		MtsChallanEquipDtl challanEquip = null;
 //		MtsEquipmentAvailability equipAvail = null;
+		MtsLocationMaster getDespFromLocationId = null;
+		MtsLocationMaster getDespToLocationId =	null;	
 		try {
 			if (chalReq.getMtsChallanId() != null) {
 				Optional<MtsChallanDocument> existingChallan = mtsChallanDocumentRepository
@@ -62,6 +64,9 @@ public class ChallanServiceImpl implements ChallanService {
 						challan.setCompletionStatus(1);
 					}
 				}
+				
+				getDespFromLocationId = mtsLocationMasterRepository.findByMtsLocationMasterId(chalReq.getDespFrmLocationMasterId()); 
+				getDespToLocationId = mtsLocationMasterRepository.findByMtsLocationMasterId(chalReq.getDespToLocationMasterId());
 			} else {
 				challan = new MtsChallanDocument();
 				Random random = new Random();
@@ -71,10 +76,13 @@ public class ChallanServiceImpl implements ChallanService {
 				challan.setMtsChallanCode(code);
 				challan.setCreateDate(new Date().getTime());
 				challan.setCompletionStatus(0);
+				
+				getDespFromLocationId = mtsLocationMasterRepository.findByMtsPartyAddressId(chalReq.getDespFrmLocationMasterId()); 
+//				System.out.println("chalReq.getDespToLocationMasterId() "+ chalReq.getDespToLocationMasterId());
+				getDespToLocationId = mtsLocationMasterRepository.findByMtsPartyAddressId(chalReq.getDespToLocationMasterId());
 			}
 			
-			MtsLocationMaster getDespFromLocationId = mtsLocationMasterRepository.findByMtsPartyAddressId(chalReq.getDespFrmLocationMasterId()); 
-			MtsLocationMaster getDespToLocationId = mtsLocationMasterRepository.findByMtsPartyAddressId(chalReq.getDespToLocationMasterId());
+			
 			
 			challan.setTxnType(chalReq.getTxnType());
 			challan.setType(String.valueOf(chalReq.getTxnType()));
@@ -258,6 +266,29 @@ public class ChallanServiceImpl implements ChallanService {
 		try {
 			List<Map<String,Object>> data = mtsEquipmentMasterRepository.getTypeWiseGoodsData();
 			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public JSONObject deleteGoodsData(Long mtsChallanEquipId) {
+		JSONObject result = new JSONObject();
+		MtsChallanEquipDtl challanEquip = null;
+		try {
+			Optional<MtsChallanEquipDtl> existingChallanEquip = mtsChallanEquipDtlRepository
+					.findByMtsChallanEquipId(mtsChallanEquipId);
+			
+			if (existingChallanEquip.isPresent()) {
+				challanEquip = existingChallanEquip.get();
+			}
+			
+			challanEquip.setIsActive(0);
+			
+			mtsChallanEquipDtlRepository.saveAndFlush(challanEquip);
+			
+			result.put("message", "Goods deleted successfully");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -19,4 +19,6 @@ public interface PartyService {
 
 	JSONObject getDetailsAllParties(int take, int skip);
 
+	JSONObject deletePartyMaster(Long mtsPartyMasterId);
+
 }

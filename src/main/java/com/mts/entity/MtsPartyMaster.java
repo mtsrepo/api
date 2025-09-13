@@ -26,4 +26,5 @@ public class MtsPartyMaster {
 	private String registeredAddress;
 	private Long createdOn;
 	private Long modifiedOn;
+	private Integer isActive;
 }

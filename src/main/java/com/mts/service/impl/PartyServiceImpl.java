@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.mts.dataObjects.SavePartyReq;
 import com.mts.entity.MtsChallanDocument;
+import com.mts.entity.MtsChallanEquipDtl;
 import com.mts.entity.MtsPartyDetails;
 import com.mts.entity.MtsPartyMaster;
 import com.mts.repository.CompanyRepository;
@@ -93,7 +94,7 @@ public class PartyServiceImpl implements PartyService {
 	public JSONObject getAllParties() {
 		JSONObject result = new JSONObject();
 		try {
-			List<MtsPartyMaster> data = mtsPartyMasterRepository.findAll();
+			List<MtsPartyMaster> data = mtsPartyMasterRepository.findByIsActive(1);
 
 			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
 		} catch (Exception e) {
@@ -145,6 +146,29 @@ public class PartyServiceImpl implements PartyService {
 			Page<MtsPartyDetails> resultPage = mtsPartyDetailsRepository.findAll(pageable);
 			List<MtsPartyDetails> data = resultPage.getContent();
 			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public JSONObject deletePartyMaster(Long mtsPartyMasterId) {
+		JSONObject result = new JSONObject();
+		MtsPartyMaster party = null;
+		try {
+			Optional<MtsPartyMaster> existingParty = mtsPartyMasterRepository
+					.findByMtsPartyMasterId(mtsPartyMasterId);
+			
+			if (existingParty.isPresent()) {
+				party = existingParty.get();
+			}
+			
+			party.setIsActive(0);
+			
+			mtsPartyMasterRepository.saveAndFlush(party);
+			
+			result.put("message", "Party deleted successfully");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

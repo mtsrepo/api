@@ -16,4 +16,5 @@ public class GoodsDto {
 	private Double valueOfGoods;
 	private Double taxableValue;
 	private Double iGSTPercentage;
+	private Integer isActive;
 }

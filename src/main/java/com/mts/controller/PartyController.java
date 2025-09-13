@@ -153,4 +153,34 @@ public class PartyController {
 		return returnMap.toMap();
 	}
 	
+	@PostMapping("/deletePartyMaster")
+	@ResponseBody
+	@CrossOrigin
+	public Map<String, Object> deletePartyMaster(@RequestBody HashMap<String, String> party) {
+		JSONObject returnMap = new JSONObject();
+		try {
+			String token = party.get("authToken");
+			String userId = party.get("userId");
+
+			boolean tokenVerified = jwtUtil.validateToken(token, userId);
+			
+			if (!tokenVerified) {
+				returnMap.put("status", 0);
+				returnMap.put("message", "invalid token");
+				return returnMap.toMap();
+			}
+			
+			Long mtsPartyMasterId = Long.valueOf(party.get("mtsPartyMasterId"));
+			
+			returnMap = partyService.deletePartyMaster(mtsPartyMasterId);
+			returnMap.put("status", 1);
+
+		} catch (Exception e) {
+			returnMap.put("message", "party delete error");
+			returnMap.put("status", 0);
+			e.printStackTrace();
+		}
+		return returnMap.toMap();
+	}
+	
 }

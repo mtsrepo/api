@@ -41,7 +41,7 @@ public class AnalyticServiceImpl implements AnalyticService{
 				    	status = "IN_TRANSIT";
 				        break;
 				    case 3:
-				    	status = "FACTORY";
+				    	status = "PROJECT_SITE";
 				        break;
 				}
 				result.put(status, equipmentsWithChallanDetails);

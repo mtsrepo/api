@@ -171,5 +171,34 @@ public class ChallanController {
 		}
 		return returnMap.toMap();
 	}
+	
+	@PostMapping("/deleteGoodsData")
+	@ResponseBody
+	@CrossOrigin
+	public Map<String, Object> deleteGoodsData(@RequestBody HashMap<String, String> goods) {
+		JSONObject returnMap = new JSONObject();
+		try {
+			String token = goods.get("authToken");
+			String userId = goods.get("userId");
 
+			boolean tokenVerified = jwtUtil.validateToken(token, userId);
+			
+			if (!tokenVerified) {
+				returnMap.put("status", 0);
+				returnMap.put("message", "invalid token");
+				return returnMap.toMap();
+			}
+			
+			Long mtsChallanEquipId = Long.valueOf(goods.get("mtsChallanEquipId"));
+			
+			returnMap = challanService.deleteGoodsData(mtsChallanEquipId);
+			returnMap.put("status", 1);
+
+		} catch (Exception e) {
+			returnMap.put("message", "goods delete error");
+			returnMap.put("status", 0);
+			e.printStackTrace();
+		}
+		return returnMap.toMap();
+	}
 }

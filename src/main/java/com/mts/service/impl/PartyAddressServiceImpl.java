@@ -32,6 +32,7 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 	public JSONObject savePartyAddress(SavePartAddReq partAddReq) {
 		JSONObject result = new JSONObject();
 		MtsPartyAddress partyAddress = null;
+		MtsLocationMaster location = null;
 		try {
 			if (partAddReq.getMtsPartyAddressId() != null) {
 				Optional<MtsPartyAddress> existingAddress = mtsPartyAddressRepository
@@ -71,13 +72,21 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 
 			MtsPartyAddress savedAddr = mtsPartyAddressRepository.saveAndFlush(partyAddress);
 			
-			MtsLocationMaster location = new MtsLocationMaster();
-			location.setMtsLocationName(partAddReq.getAddressLine1());
-			location.setMtsPartyAddressId(savedAddr.getMtsPartyAddressId());
-			location.setType(3);
-			location.setDescription(partyAddress.getLocationAddressDesc());
-			location.setCreateDate(new Date().getTime());
-			location.setIsActive(1);
+			
+			location = mtsLocationMasterRepository.findByMtsPartyAddressId(savedAddr.getMtsPartyAddressId());
+			if(location != null) {
+				location.setMtsLocationName(savedAddr.getAddressLine1());
+				location.setMtsPartyAddressId(savedAddr.getMtsPartyAddressId());
+				location.setDescription(savedAddr.getLocationAddressDesc());
+			}else {
+				location = new MtsLocationMaster();
+				location.setMtsLocationName(savedAddr.getAddressLine1());
+				location.setMtsPartyAddressId(savedAddr.getMtsPartyAddressId());
+				location.setCreateDate(new Date().getTime());
+				location.setIsActive(1);
+				location.setType(3);
+				location.setDescription(savedAddr.getLocationAddressDesc());
+			}
 			
 			mtsLocationMasterRepository.saveAndFlush(location);
 

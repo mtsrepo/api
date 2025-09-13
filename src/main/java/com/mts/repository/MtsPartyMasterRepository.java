@@ -28,4 +28,6 @@ public interface MtsPartyMasterRepository extends JpaRepository<MtsPartyMaster, 
 
 	Optional<MtsPartyMaster> findByRegNo(String regNo);
 
+	List<MtsPartyMaster> findByIsActive(int i);
+
 }
