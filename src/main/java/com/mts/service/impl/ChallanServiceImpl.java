@@ -87,6 +87,7 @@ public class ChallanServiceImpl implements ChallanService {
 			challan.setTxnType(chalReq.getTxnType());
 			challan.setType(String.valueOf(chalReq.getTxnType()));
 			challan.setDeliveryAddress(chalReq.getDeliveryAddr());
+			challan.setCommunicationAddress(chalReq.getCommunicationAddr());
 			challan.setCompanyId(chalReq.getCompanyId());
 			challan.setDespFrmLocationMasterId(getDespFromLocationId.getMtsLocationMasterId());
 			challan.setDespToLocationMasterId(getDespToLocationId.getMtsLocationMasterId());

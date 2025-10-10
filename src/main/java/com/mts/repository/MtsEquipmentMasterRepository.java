@@ -24,14 +24,31 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "", nativeQuery = true)
 	List<Map<String, Object>> getAllAssets();
 
-	@Query(value = "SELECT mem.*, metm.name, mea.totalNo, mea.inUse, mea.available, mlm.mtsLocationName, mqc.qrCodeImage\r\n"
+	@Query(value = "SELECT \r\n"
+			+ "    mem.*, \r\n"
+			+ "    metm.name, \r\n"
+			+ "    mea.totalNo, \r\n"
+			+ "    mea.inUse, \r\n"
+			+ "    mea.available, \r\n"
+			+ "    mlm.mtsLocationName, \r\n"
+			+ "    mqc.qrCodeImage,\r\n"
+			+ "    mpa.mtsPartyMasterId,\r\n"
+			+ "    mpa.mtsPartyAddressId\r\n"
 			+ "FROM mts_equipment_master mem\r\n"
-			+ "JOIN mts_equipment_type_master metm ON mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId\r\n"
-			+ "JOIN mts_qr_code mqc ON mem.mtsQrId = mqc.mtsQrId\r\n"
-			+ "LEFT JOIN mts_location_master mlm ON mlm.mtsLocationMasterId = mem.mtsLocationMasterId\r\n"
-			+ "JOIN mts_equip_availability mea ON mem.mtsEquipMasterId = mea.mtsEquipMasterId\r\n"
-			+ "WHERE metm.category <> 'Asset'\r\n"
-			+ "ORDER BY createDate DESC;\r\n"
+			+ "JOIN mts_equipment_type_master metm \r\n"
+			+ "    ON mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId\r\n"
+			+ "JOIN mts_qr_code mqc \r\n"
+			+ "    ON mem.mtsQrId = mqc.mtsQrId\r\n"
+			+ "LEFT JOIN mts_location_master mlm \r\n"
+			+ "    ON mlm.mtsPartyAddressId = mem.mtsLocationMasterId\r\n"
+			+ "LEFT JOIN mts_party_address mpa\r\n"
+			+ "    ON mlm.mtsPartyAddressId = mpa.mtsPartyAddressId\r\n"
+			+ "JOIN mts_equip_availability mea \r\n"
+			+ "    ON mem.mtsEquipMasterId = mea.mtsEquipMasterId\r\n"
+			+ "WHERE \r\n"
+			+ "    metm.category <> 'Asset'\r\n"
+			+ "ORDER BY \r\n"
+			+ "    mem.createDate DESC;\r\n"
 			+ "", nativeQuery = true)
 	List<Map<String, Object>> getAllConsumables();
 
@@ -60,18 +77,18 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "    mem.serialNo, \r\n"
 			+ "    metm.category, \r\n"
 			+ "    metm.mtsEquipTypeMasterId, \r\n"
-			+ "    metm.name AS mtsEquipTypeName, \r\n"
-			+ "    mea.available \r\n"
+			+ "    metm.name AS mtsEquipTypeName \r\n"
+//			+ "    mea.available \r\n"
 			+ "FROM \r\n"
 			+ "    mts_equipment_master mem\r\n"
 			+ "JOIN \r\n"
 			+ "    mts_equipment_type_master metm \r\n"
-			+ "    ON mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId\r\n"
-			+ "JOIN \r\n"
-			+ "    mts_equip_availability mea \r\n"
-			+ "    ON mea.mtsEquipMasterId = mem.mtsEquipMasterId\r\n"
-			+ "WHERE\r\n"
-			+ "    mea.available > 0", nativeQuery = true)
+			+ "    ON mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId\r\n", nativeQuery = true)
+//			+ "JOIN \r\n"															//need to recheck as want 
+//			+ "    mts_equip_availability mea \r\n"
+//			+ "    ON mea.mtsEquipMasterId = mem.mtsEquipMasterId\r\n"
+//			+ "WHERE\r\n"
+//			+ "    mea.available > 0", nativeQuery = true)
 	List<Map<String, Object>> getTypeWiseGoodsData();
 
 	@Query(value = "SELECT\r\n"

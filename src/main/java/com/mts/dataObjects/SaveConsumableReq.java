@@ -18,4 +18,7 @@ public class SaveConsumableReq {
 	private Long dateOfPurchase;
 	private Long lastDateOfWarranty;
 	private Long mtsLocationMasterId;
+	
+	private Long mtsPartyMasterId;
+	private Long mtsPartyAddressId;
 }

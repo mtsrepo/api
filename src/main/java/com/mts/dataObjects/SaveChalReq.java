@@ -18,6 +18,7 @@ public class SaveChalReq {
 
 	private Long companyId;
 	private String deliveryAddr;
+	private String communicationAddr;
 	private Long despFrmLocationMasterId;
 	private Long despToLocationMasterId;
 	private Long consignorId;

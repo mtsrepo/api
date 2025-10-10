@@ -64,6 +64,8 @@ public class MtsChallanDocument {
 
 	private String deliveryAddress;
 	
+	private String communicationAddress;
+	
 	private String customerRefNo;
 	
 	private Long challanDate;
