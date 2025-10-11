@@ -68,7 +68,8 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "	LEFT JOIN mts_challan_document cd ON ced.mtsChallanId = cd.mtsChallanId "
 			+ " LEFT JOIN mts_party_address pa ON cd.consignorId = pa.mtsPartyMasterId and pa.mtsPartyAddressId = lm.mtsPartyAddressId"
 			+ "	LEFT JOIN mts_status_master sm ON sm.statusId = em.currentStatus "
-			+ "	WHERE em.currentStatus = :type", nativeQuery = true)
+			+ "LEFT JOIN mts_inventory_transaction mit ON mit.mtsEquipMasterId = em.mtsEquipMasterId "
+			+ "	WHERE mit.isActive = 1 and em.currentStatus = :type ", nativeQuery = true)
 	List<Map<String, Object>> getEquipmentsWithChallanByLocationType(int type);
 
 	@Query(value = "SELECT \r\n"
