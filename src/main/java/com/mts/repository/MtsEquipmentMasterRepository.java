@@ -60,7 +60,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "where lm.mtsLocationMasterId = em.mtsLocationMasterId and lm.type = :type", nativeQuery = true)
 	List<MtsEquipmentMaster> getEquipmentsByLocationType(String type);
 	
-	@Query(value = "SELECT em.mtsEquipMasterId, em.mtsEquipMasterCode, em.mtsEquipName, em.serialNo, em.dateOfPurchase,"
+	@Query(value = "SELECT distinct em.mtsEquipMasterId, em.mtsEquipMasterCode, em.mtsEquipName, em.serialNo, em.dateOfPurchase,"
 			+ " em.lastDateOfWarranty, em.currentStatus, ced.mtsChallanId, cd.mtsChallanCode, lm.mtsLocationName, "
 			+ " lm.type, pa.emailAddress, pa.contactNumber FROM mts_equipment_master em "
 			+ "	LEFT JOIN mts_location_master lm ON lm.mtsLocationMasterId = em.mtsLocationMasterId "
