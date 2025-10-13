@@ -94,6 +94,7 @@ public class InventoryServiceImpl implements InventoryService {
 			if(invReq.getMtsLocationMasterId() == invReq.getFromLocationId()) {
 				inventoryTransaction.setInTransitOrComplete(1);
 				equipment.setCurrentStatus(2);
+				equipment.setMtsLocationMasterId(2L);
 			}else if(invReq.getMtsLocationMasterId() == invReq.getToLocationId() && invReq.getMtsLocationMasterId() == 41L) {
 				equipment.setCurrentStatus(1);
 				equipment.setMtsLocationMasterId(41L);
