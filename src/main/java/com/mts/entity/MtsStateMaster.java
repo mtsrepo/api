@@ -1,6 +1,5 @@
 package com.mts.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -14,8 +13,8 @@ public class MtsStateMaster {
 	@Id
 //	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long mtsStateMasterId;
-	@Column(name = "uuid_")
-	private String uuid;
+//	@Column(name = "uuid_")
+//	private String uuid;
 	private Long companyId;
 	private String name;
 	private String type;

@@ -1,6 +1,5 @@
 package com.mts.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,8 +15,8 @@ public class MtsLocationMaster {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long mtsLocationMasterId;
-	@Column(name = "uuid_")
-	private String uuid;
+//	@Column(name = "uuid_")
+//	private String uuid;
 	private Long mtsPartyAddressId;
 	private Long companyId;
 	private String mtsLocationName;
