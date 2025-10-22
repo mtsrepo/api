@@ -60,16 +60,30 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "where lm.mtsLocationMasterId = em.mtsLocationMasterId and lm.type = :type", nativeQuery = true)
 	List<MtsEquipmentMaster> getEquipmentsByLocationType(String type);
 	
-	@Query(value = "SELECT distinct em.mtsEquipMasterId, em.mtsEquipMasterCode, em.mtsEquipName, em.serialNo, em.dateOfPurchase,"
-			+ " em.lastDateOfWarranty, em.currentStatus, ced.mtsChallanId, cd.mtsChallanCode, lm.mtsLocationName, "
-			+ " lm.type, pa.emailAddress, pa.contactNumber FROM mts_equipment_master em "
-			+ "	LEFT JOIN mts_location_master lm ON lm.mtsLocationMasterId = em.mtsLocationMasterId "
-			+ "	LEFT JOIN mts_challan_equip_dtl ced ON em.mtsEquipMasterId = ced.mtsEquipMasterId "
-			+ "	LEFT JOIN mts_challan_document cd ON ced.mtsChallanId = cd.mtsChallanId "
-			+ " LEFT JOIN mts_party_address pa ON cd.consignorId = pa.mtsPartyMasterId and pa.mtsPartyAddressId = lm.mtsPartyAddressId"
-			+ "	LEFT JOIN mts_status_master sm ON sm.statusId = em.currentStatus "
-			+ "LEFT JOIN mts_inventory_transaction mit ON mit.mtsEquipMasterId = em.mtsEquipMasterId "
-			+ "	WHERE mit.isActive = 1 and ced.isActive = 1 and em.currentStatus = :type ", nativeQuery = true)
+	@Query(value = "SELECT DISTINCT em.mtsEquipMasterId, em.mtsEquipMasterCode, em.mtsEquipName, em.serialNo, em.dateOfPurchase, em.lastDateOfWarranty, \r\n"
+			+ "em.currentStatus, cd.mtsChallanId, cd.mtsChallanCode, lm.mtsLocationName, lm.type, pa.emailAddress, pa.contactNumber\r\n"
+			+ "FROM mts_equipment_master em\r\n"
+			+ "LEFT JOIN mts_location_master lm \r\n"
+			+ "    ON lm.mtsLocationMasterId = em.mtsLocationMasterId\r\n"
+			+ "LEFT JOIN (\r\n"
+			+ "    SELECT \r\n"
+			+ "        mtsEquipMasterId, \r\n"
+			+ "        MAX(mtsChallanId) AS latestChallanId\r\n"
+			+ "    FROM mts_challan_equip_dtl\r\n"
+			+ "    GROUP BY mtsEquipMasterId\r\n"
+			+ ") latest \r\n"
+			+ "    ON latest.mtsEquipMasterId = em.mtsEquipMasterId\r\n"
+			+ "LEFT JOIN mts_challan_document cd \r\n"
+			+ "    ON cd.mtsChallanId = latest.latestChallanId\r\n"
+			+ "LEFT JOIN mts_party_address pa \r\n"
+			+ "    ON cd.consignorId = pa.mtsPartyMasterId \r\n"
+			+ "    AND pa.mtsPartyAddressId = lm.mtsPartyAddressId\r\n"
+			+ "LEFT JOIN mts_status_master sm \r\n"
+			+ "    ON sm.statusId = em.currentStatus\r\n"
+			+ "LEFT JOIN mts_inventory_transaction mit \r\n"
+			+ "    ON mit.mtsEquipMasterId = em.mtsEquipMasterId\r\n"
+			+ "WHERE mit.isActive = 1\r\n"
+			+ "  AND em.currentStatus = :type ", nativeQuery = true)
 	List<Map<String, Object>> getEquipmentsWithChallanByLocationType(int type);
 
 	@Query(value = "SELECT \r\n"

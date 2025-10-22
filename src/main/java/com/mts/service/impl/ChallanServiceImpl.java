@@ -131,11 +131,11 @@ public class ChallanServiceImpl implements ChallanService {
 				MtsEquipmentMaster data = mtsEquipmentMasterRepository
 						.findByMtsEquipMasterId(val.getMtsEquipMasterId()).get();
 				
-				if(data.getMtsLocationMasterId() == chalReq.getDespFrmLocationMasterId()) {
-					MtsChallanEquipDtl toBeDeactivated = mtsChallanEquipDtlRepository.findByMtsEquipMasterIdAndIsActive(val.getMtsEquipMasterId(), 1);
-					toBeDeactivated.setIsActive(0);
-					mtsChallanEquipDtlRepository.saveAndFlush(toBeDeactivated);
-				}
+//				if(data.getMtsLocationMasterId() == chalReq.getDespFrmLocationMasterId()) {
+//					MtsChallanEquipDtl toBeDeactivated = mtsChallanEquipDtlRepository.findByMtsEquipMasterIdAndIsActive(val.getMtsEquipMasterId(), 1);
+//					toBeDeactivated.setIsActive(0);
+//					mtsChallanEquipDtlRepository.saveAndFlush(toBeDeactivated);
+//				}
 				
 				MtsEquipmentAvailability equipQty = mtsEquipmentAvailabilityRepository.findByMtsEquipMasterId(data.getMtsEquipMasterId());
 
