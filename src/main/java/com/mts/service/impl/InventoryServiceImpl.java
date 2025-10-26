@@ -176,6 +176,8 @@ public class InventoryServiceImpl implements InventoryService {
 			MtsLocationMaster location = mtsLocationMasterRepository.findByMtsLocationMasterId(req.getMtsLocationMasterId());
 			MtsStatusMaster status = mtsStatusMasterRepository.findByStatusId(location.getType());
 			List<Map<String, Object>> data = mtsEquipmentMasterRepository.equipmentFromLocationAndStatus(location.getMtsLocationMasterId(),status.getStatusId());
+			List<Map<String, Object>> data1 = mtsEquipmentMasterRepository.nonLocatedEquipmentsFromStatus();
+			data.addAll(data1);
 			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -223,6 +223,28 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "	)\r\n"
 			+ "	AND met.category = 'Asset' ", nativeQuery = true)
 	List<Map<String, Object>> equipmentFromLocationAndStatus(Long mtsLocationMasterId, int statusId);
+	
+	
+	@Query(value = "SELECT \r\n"
+			+ "				mem.mtsEquipMasterId, mem.mtsEquipMasterCode, mem.mtsEquipName, mem.serialNo, \r\n"
+			+ "				 mea.totalNo, mea.inUse, mea.available, mit.inventoryTransactionId, \r\n"
+			+ "				 mem.mtsLocationMasterId AS currentLocationId \r\n"
+			+ "			FROM \r\n"
+			+ "				mts_equipment_master mem\r\n"
+			+ "			LEFT JOIN \r\n"
+			+ "				mts_equipment_type_master met ON mem.mtsEquipTypeMasterId = met.mtsEquipTypeMasterId\r\n"
+			+ "			LEFT JOIN \r\n"
+			+ "				mts_qr_code mqc ON mem.mtsQrId = mqc.mtsQrId\r\n"
+			+ "			LEFT JOIN \r\n"
+			+ "				mts_equip_availability mea ON mem.mtsEquipMasterId = mea.mtsEquipMasterId\r\n"
+			+ "			LEFT JOIN \r\n"
+			+ "				mts_inventory_transaction mit ON mem.mtsEquipMasterId = mit.mtsEquipMasterId and \r\n"
+			+ "			(mit.inTransitOrComplete is null OR mit.inTransitOrComplete <> 0) and (mit.isActive is null OR mit.isActive <> 0)\r\n"
+			+ "				\r\n"
+			+ "			WHERE \r\n"
+			+ "				mem.mtsLocationMasterId IS NULL OR mem.currentStatus IS NULL\r\n"
+			+ "				AND met.category = 'Asset' ", nativeQuery = true)
+	List<Map<String, Object>> nonLocatedEquipmentsFromStatus();
 
 	Optional<MtsEquipmentMaster> findBySerialNo(String serialNo);
 
