@@ -92,18 +92,18 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "    mem.serialNo, \r\n"
 			+ "    metm.category, \r\n"
 			+ "    metm.mtsEquipTypeMasterId, \r\n"
-			+ "    metm.name AS mtsEquipTypeName \r\n"
-//			+ "    mea.available \r\n"
+			+ "    metm.name AS mtsEquipTypeName, \r\n"
+			+ "    mea.available \r\n"
 			+ "FROM \r\n"
 			+ "    mts_equipment_master mem\r\n"
 			+ "JOIN \r\n"
 			+ "    mts_equipment_type_master metm \r\n"
-			+ "    ON mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId\r\n", nativeQuery = true)
-//			+ "JOIN \r\n"															//need to recheck as want 
-//			+ "    mts_equip_availability mea \r\n"
-//			+ "    ON mea.mtsEquipMasterId = mem.mtsEquipMasterId\r\n"
-//			+ "WHERE\r\n"
-//			+ "    mea.available > 0", nativeQuery = true)
+			+ "    ON mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId\r\n"		//, nativeQuery = true)
+			+ "JOIN \r\n"															//need to recheck as want 
+			+ "    mts_equip_availability mea \r\n"
+			+ "    ON mea.mtsEquipMasterId = mem.mtsEquipMasterId\r\n"
+			+ "WHERE\r\n"
+			+ "    mea.available > 0", nativeQuery = true)
 	List<Map<String, Object>> getTypeWiseGoodsData();
 
 	@Query(value = "SELECT\r\n"
