@@ -268,10 +268,16 @@ public class ChallanServiceImpl implements ChallanService {
 	}
 
 	@Override
-	public JSONObject getTypeWiseGoodsData() {
+	public JSONObject getTypeWiseGoodsData(Long mtsPartyAddressId) {
 		JSONObject result = new JSONObject();
+		List<Map<String,Object>> data = new ArrayList<>();
 		try {
-			List<Map<String,Object>> data = mtsEquipmentMasterRepository.getTypeWiseGoodsData();
+			if(mtsPartyAddressId == 41L) {
+				data = mtsEquipmentMasterRepository.getTypeWiseGoodsData();
+			}else {
+				data = mtsEquipmentMasterRepository.getTypeWiseGoodsData(mtsPartyAddressId);
+			}
+			
 			result.put("data", JsonUtil.toJsonArrayOfObjects(data));
 		} catch (Exception e) {
 			e.printStackTrace();

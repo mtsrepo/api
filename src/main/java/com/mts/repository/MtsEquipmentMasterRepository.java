@@ -248,6 +248,30 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 
 	Optional<MtsEquipmentMaster> findBySerialNo(String serialNo);
 
+	@Query(value = "SELECT \r\n"
+			+ "			    mem.mtsEquipMasterId, \r\n"
+			+ "			    mem.mtsEquipName, \r\n"
+			+ "			    mem.serialNo, \r\n"
+			+ "			    metm.category, \r\n"
+			+ "			    metm.mtsEquipTypeMasterId, \r\n"
+			+ "			    metm.name AS mtsEquipTypeName, \r\n"
+			+ "			    mea.available \r\n"
+			+ "			FROM \r\n"
+			+ "			    mts_equipment_master mem\r\n"
+			+ "			JOIN \r\n"
+			+ "			    mts_equipment_type_master metm \r\n"
+			+ "			    ON mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId		\r\n"
+			+ "			JOIN 															\r\n"
+			+ "			    mts_equip_availability mea \r\n"
+			+ "			    ON mea.mtsEquipMasterId = mem.mtsEquipMasterId\r\n"
+			+ "                        JOIN \r\n"
+			+ "                            mts_location_master mlm\r\n"
+			+ "                            ON mlm.mtsLocationMasterId = mem.mtsLocationMasterId\r\n"
+			+ "JOIN mts_party_address mpa ON mpa.mtsPartyAddressId = mlm.mtsPartyAddressId\r\n"
+			+ "			WHERE\r\n"
+			+ "			    mea.inUse > 0 and mlm.mtsPartyAddressId = :mtsPartyAddressId", nativeQuery = true)
+	List<Map<String, Object>> getTypeWiseGoodsData(Long mtsPartyAddressId);
+
 
 
 }
