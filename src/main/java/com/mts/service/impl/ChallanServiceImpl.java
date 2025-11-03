@@ -272,7 +272,7 @@ public class ChallanServiceImpl implements ChallanService {
 		JSONObject result = new JSONObject();
 		List<Map<String,Object>> data = new ArrayList<>();
 		try {
-			if(mtsPartyAddressId == 41L) {
+			if(mtsPartyAddressId == 2L) {
 				data = mtsEquipmentMasterRepository.getTypeWiseGoodsData();
 			}else {
 				data = mtsEquipmentMasterRepository.getTypeWiseGoodsData(mtsPartyAddressId);
