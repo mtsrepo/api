@@ -269,7 +269,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "                            ON mlm.mtsLocationMasterId = mem.mtsLocationMasterId\r\n"
 			+ "JOIN mts_party_address mpa ON mpa.mtsPartyAddressId = mlm.mtsPartyAddressId\r\n"
 			+ "			WHERE\r\n"
-			+ "			    mea.inUse > 0 and mlm.mtsPartyAddressId = :mtsPartyAddressId", nativeQuery = true)
+			+ "			    mea.available > 0 and mlm.mtsPartyAddressId = :mtsPartyAddressId", nativeQuery = true)
 	List<Map<String, Object>> getTypeWiseGoodsData(Long mtsPartyAddressId);
 
 
