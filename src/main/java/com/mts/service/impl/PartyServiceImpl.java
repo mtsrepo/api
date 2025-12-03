@@ -77,6 +77,7 @@ public class PartyServiceImpl implements PartyService {
 			party.setCompanyId(1L); // company id set 1 hardcoded for owener company now
 			party.setRegisteredAddress(partyReq.getRegAddress());
 			party.setModifiedOn(new Date().getTime());
+			party.setIsActive(1);
 
 			mtsPartyMasterRepository.saveAndFlush(party);
 
