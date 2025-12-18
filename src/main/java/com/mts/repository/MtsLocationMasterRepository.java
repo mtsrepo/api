@@ -25,4 +25,6 @@ public interface MtsLocationMasterRepository extends JpaRepository<MtsLocationMa
 			+ " where isActive = 1", nativeQuery = true)
 	List<Map<String, Object>> getAvailableLocations();
 
+	MtsLocationMaster findByType(int i);
+
 }

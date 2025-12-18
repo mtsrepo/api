@@ -7,8 +7,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
+import javax.transaction.Transactional;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.mts.dataObjects.SaveConsumableReq;
@@ -32,6 +35,9 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 	QrCodeService qrCodeService;
 	@Autowired
 	MtsEquipmentAvailabilityRepository mtsEquipmentAvailabilityRepository; 
+	
+	@Value("${SD_WAREHOUSE_LOCATION_ID}")
+	private long SD_WAREHOUSE_LOCATION_ID;
 	
 	@Override
 	public List<Map<String, Object>> getConsumableTypeIdName() {
@@ -57,6 +63,7 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 	}
 
 	@Override
+	@Transactional
 	public JSONObject saveConsumable(SaveConsumableReq consReq) {
 		JSONObject result = new JSONObject();
 		Long userId = 0L;
@@ -111,7 +118,7 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 			consumable.setDateOfPurchase(consReq.getDateOfPurchase());
 			consumable.setLastDateOfWarranty(consReq.getLastDateOfWarranty());
 //			consumable.setMtsLocationMasterId(1L);			// at first not decided where it will
-			consumable.setMtsLocationMasterId(consReq.getMtsPartyAddressId());
+			consumable.setMtsLocationMasterId(SD_WAREHOUSE_LOCATION_ID);
 			consumable.setModifiedDate(new Date().getTime());
 			
 			mtsEquipmentMasterRepository.saveAndFlush(consumable);

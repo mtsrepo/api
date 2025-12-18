@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
+import javax.transaction.Transactional;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,6 +68,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 
 
 	@Override
+	@Transactional
 	public JSONObject saveAsset(SaveAssetReq asstReq) {
 		JSONObject result = new JSONObject();
 		Long userId = 0L;

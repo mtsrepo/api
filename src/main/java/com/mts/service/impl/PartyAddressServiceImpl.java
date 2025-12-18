@@ -7,14 +7,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
+import javax.transaction.Transactional;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.mts.dataObjects.SavePartAddReq;
 import com.mts.entity.MtsLocationMaster;
 import com.mts.entity.MtsPartyAddress;
-import com.mts.entity.MtsPartyMaster;
 import com.mts.repository.MtsLocationMasterRepository;
 import com.mts.repository.MtsPartyAddressRepository;
 import com.mts.service.PartyAddressService;
@@ -28,7 +30,13 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 	@Autowired
 	MtsLocationMasterRepository mtsLocationMasterRepository;
 
+	@Value("${LOCATION_TYPE_PROJECT_SITE}")
+	private int LOCATION_TYPE_PROJECT_SITE;
+	@Value("${IN_TRANSIT}")
+	private int IN_TRANSIT;
+	
 	@Override
+	@Transactional
 	public JSONObject savePartyAddress(SavePartAddReq partAddReq) {
 		JSONObject result = new JSONObject();
 		MtsPartyAddress partyAddress = null;
@@ -41,10 +49,10 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 					partyAddress = existingAddress.get();
 				}
 			} else {
-				Optional<MtsPartyAddress> checkAlready = mtsPartyAddressRepository.findByGSTN(partAddReq.getGSTN()); 
-				checkAlready.ifPresent(existingParty -> {
-				    throw new RuntimeException("Party Address with this GSTN already exists.");
-				});
+//				Optional<MtsPartyAddress> checkAlready = mtsPartyAddressRepository.findByGSTN(partAddReq.getGSTN()); 
+//				checkAlready.ifPresent(existingParty -> {
+//				    throw new RuntimeException("Party Address with this GSTN already exists.");
+//				});
 				
 				partyAddress = new MtsPartyAddress();
 				Random random = new Random();
@@ -72,8 +80,8 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 
 			MtsPartyAddress savedAddr = mtsPartyAddressRepository.saveAndFlush(partyAddress);
 			
-			
 			location = mtsLocationMasterRepository.findByMtsPartyAddressId(savedAddr.getMtsPartyAddressId());
+			
 			if(location != null) {
 				location.setMtsLocationName(savedAddr.getAddressLine1());
 				location.setMtsPartyAddressId(savedAddr.getMtsPartyAddressId());
@@ -84,8 +92,12 @@ public class PartyAddressServiceImpl implements PartyAddressService {
 				location.setMtsPartyAddressId(savedAddr.getMtsPartyAddressId());
 				location.setCreateDate(new Date().getTime());
 				location.setIsActive(1);
-				location.setType(3);
+				location.setType(LOCATION_TYPE_PROJECT_SITE);
 				location.setDescription(savedAddr.getLocationAddressDesc());
+			}
+			
+			if (location.getType() == IN_TRANSIT) {
+			    throw new RuntimeException("IN_TRANSIT location cannot be tied to party address");
 			}
 			
 			mtsLocationMasterRepository.saveAndFlush(location);

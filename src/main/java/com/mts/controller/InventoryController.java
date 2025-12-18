@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mts.dataObjects.DispatchReq;
 import com.mts.dataObjects.EquiReq;
 import com.mts.dataObjects.InvReq;
+import com.mts.dataObjects.InventoryLocationReq;
+import com.mts.dataObjects.ReceiveReq;
 import com.mts.dataObjects.SaveInvReq;
 import com.mts.service.InventoryService;
 import com.mts.util.JwtUtil;
@@ -100,4 +103,124 @@ public class InventoryController {
 		}
 		return returnMap.toMap();
 	}
+	
+	//=========================================================================\\
+	
+	
+	
+	  /* =====================================================
+    1. DISPATCHABLE EQUIPMENT (OUT LIST)
+    ===================================================== */
+ @PostMapping("/inventory/dispatchableEquipment")
+ public Map<String, Object> getDispatchableEquipment(
+         @RequestBody InventoryLocationReq req) {
+
+     JSONObject res = new JSONObject();
+     try {
+         boolean tokenVerified =
+             jwtUtil.validateToken(req.getAuthToken(), String.valueOf(req.getUserId()));
+
+         if (!tokenVerified) {
+             res.put("status", 0);
+             res.put("message", "Invalid token");
+             return res.toMap();
+         }
+
+         res = inventoryService.getDispatchableEquipment(req);
+         res.put("status", 1);
+
+     } catch (Exception e) {
+         e.printStackTrace();
+         res.put("status", 0);
+         res.put("message", "Failed to fetch dispatchable equipment");
+     }
+     return res.toMap();
+ }
+
+ /* =====================================================
+    2. DISPATCH SUBMIT
+    ===================================================== */
+ @PostMapping("/inventory/dispatch")
+ public Map<String, Object> dispatchEquipment(
+         @RequestBody DispatchReq req) {
+
+     JSONObject res = new JSONObject();
+     try {
+         boolean tokenVerified =
+             jwtUtil.validateToken(req.getAuthToken(), String.valueOf(req.getUserId()));
+
+         if (!tokenVerified) {
+             res.put("status", 0);
+             res.put("message", "Invalid token");
+             return res.toMap();
+         }
+
+         res = inventoryService.dispatchEquipment(req);
+
+     } catch (Exception e) {
+         e.printStackTrace();
+         res.put("status", 0);
+         res.put("message", e.getMessage());
+     }
+     return res.toMap();
+ }
+
+ /* =====================================================
+    3. RECEIVABLE EQUIPMENT (IN LIST)
+    ===================================================== */
+ @PostMapping("/inventory/receivableEquipment")
+ public Map<String, Object> getReceivableEquipment(
+         @RequestBody InventoryLocationReq req) {
+
+     JSONObject res = new JSONObject();
+     try {
+         boolean tokenVerified =
+             jwtUtil.validateToken(req.getAuthToken(), String.valueOf(req.getUserId()));
+
+         if (!tokenVerified) {
+             res.put("status", 0);
+             res.put("message", "Invalid token");
+             return res.toMap();
+         }
+
+         res = inventoryService.getReceivableEquipment(req);
+         res.put("status", 1);
+
+     } catch (Exception e) {
+         e.printStackTrace();
+         res.put("status", 0);
+         res.put("message", "Failed to fetch receivable equipment");
+     }
+     return res.toMap();
+ }
+
+ /* =====================================================
+    4. RECEIVE SUBMIT
+    ===================================================== */
+ @PostMapping("/inventory/receive")
+ public Map<String, Object> receiveEquipment(
+         @RequestBody ReceiveReq req) {
+
+     JSONObject res = new JSONObject();
+     try {
+         boolean tokenVerified =
+             jwtUtil.validateToken(req.getAuthToken(), String.valueOf(req.getUserId()));
+
+         if (!tokenVerified) {
+             res.put("status", 0);
+             res.put("message", "Invalid token");
+             return res.toMap();
+         }
+
+         res = inventoryService.receiveEquipment(req);
+
+     } catch (Exception e) {
+         e.printStackTrace();
+         res.put("status", 0);
+         res.put("message", e.getMessage());
+     }
+     return res.toMap();
+ }
+ 
+ 
 }

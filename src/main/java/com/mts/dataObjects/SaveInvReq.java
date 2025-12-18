@@ -14,7 +14,7 @@ public class SaveInvReq {
 	private Long toLocationId;
 	private Long currentDate;
 	private String mtsEquipMasterCode;
-	
+	private String transactionType;
 	private Long mtsLocationMasterId;
 	private Long mtsChallanEquipId;
 //	private Integer inTransitOrComplete;

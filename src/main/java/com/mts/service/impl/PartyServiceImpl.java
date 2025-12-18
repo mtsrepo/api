@@ -52,9 +52,9 @@ public class PartyServiceImpl implements PartyService {
 				}
 			}else {
 				Optional<MtsPartyMaster> checkAlready = mtsPartyMasterRepository.findByRegNo(partyReq.getRegNo()); 
-				checkAlready.ifPresent(existingParty -> {
+				if (checkAlready.isPresent()) {
 				    throw new RuntimeException("Party with this registration number already exists.");
-				});
+				}
 				
 				party = new MtsPartyMaster();
 				/*
@@ -74,7 +74,7 @@ public class PartyServiceImpl implements PartyService {
 //			party.setGSTN(partyReq.getGSTN());
 //			party.setEmailAddress(partyReq.getEmailAddress());
 //			party.setContactNumber(partyReq.getContactNumber());
-			party.setCompanyId(1L); // company id set 1 hardcoded for owener company now
+			party.setCompanyId(1L); // TODO: companyId will be derived from logged-in user in phase-2
 			party.setRegisteredAddress(partyReq.getRegAddress());
 			party.setModifiedOn(new Date().getTime());
 			party.setIsActive(1);

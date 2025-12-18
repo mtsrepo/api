@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
+import javax.transaction.Transactional;
+
 import org.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,7 @@ public class ChallanServiceImpl implements ChallanService {
 	MtsLocationMasterRepository mtsLocationMasterRepository;
 
 	@Override
+	@Transactional
 	public JSONObject saveChallan(SaveChalReq chalReq) {
 		JSONObject result = new JSONObject();
 		MtsChallanDocument challan = null;
@@ -60,9 +63,9 @@ public class ChallanServiceImpl implements ChallanService {
 						.findByMtsChallanId(chalReq.getMtsChallanId());
 				if (existingChallan.isPresent()) {
 					challan = existingChallan.get();
-					if(challan.getDespToLocationMasterId() == chalReq.getDespFrmLocationMasterId()) {
-						challan.setCompletionStatus(1);
-					}
+//					if(challan.getDespToLocationMasterId() == chalReq.getDespFrmLocationMasterId()) {
+						challan.setCompletionStatus(0);
+//					}
 				}
 				
 				getDespFromLocationId = mtsLocationMasterRepository.findByMtsLocationMasterId(chalReq.getDespFrmLocationMasterId()); 
@@ -77,9 +80,16 @@ public class ChallanServiceImpl implements ChallanService {
 				challan.setCreateDate(new Date().getTime());
 				challan.setCompletionStatus(0);
 				
-				getDespFromLocationId = mtsLocationMasterRepository.findByMtsPartyAddressId(chalReq.getDespFrmLocationMasterId()); 
-//				System.out.println("chalReq.getDespToLocationMasterId() "+ chalReq.getDespToLocationMasterId());
-				getDespToLocationId = mtsLocationMasterRepository.findByMtsPartyAddressId(chalReq.getDespToLocationMasterId());
+//				getDespFromLocationId = mtsLocationMasterRepository.findByMtsPartyAddressId(chalReq.getDespFrmLocationMasterId()); 
+////				System.out.println("chalReq.getDespToLocationMasterId() "+ chalReq.getDespToLocationMasterId());
+//				getDespToLocationId = mtsLocationMasterRepository.findByMtsPartyAddressId(chalReq.getDespToLocationMasterId());
+				getDespFromLocationId = mtsLocationMasterRepository
+				        .findByMtsLocationMasterId(chalReq.getDespFrmLocationMasterId());
+
+				getDespToLocationId = mtsLocationMasterRepository
+				        .findByMtsLocationMasterId(chalReq.getDespToLocationMasterId());
+
+			
 			}
 			
 			
@@ -147,14 +157,18 @@ public class ChallanServiceImpl implements ChallanService {
 				challanEquip.setIsActive(1);
 				challanEquip.setModifiedDate(new Date().getTime());
 				
-				if(equipQty.getAvailable() >= val.getQty()) {
-					equipQty.setInUse(equipQty.getInUse()+val.getQty());
-					equipQty.setAvailable(equipQty.getAvailable() - val.getQty());
-					equipQty.setModifiedOn(new Date().getTime());
-				}else {
-					result.put("message","challan quantity is over the available quanty for "+data.getSerialNo());
-					result.put("status", 0);
+//				if(equipQty.getAvailable() >= val.getQty()) {
+//					equipQty.setInUse(equipQty.getInUse()+val.getQty());
+//					equipQty.setAvailable(equipQty.getAvailable() - val.getQty());
+//					equipQty.setModifiedOn(new Date().getTime());
+//				}else {
+//					result.put("message","challan quantity is over the available quanty for "+data.getSerialNo());
+//					result.put("status", 0);
+//				}
+				if (equipQty.getAvailable() < val.getQty()) {
+				    throw new RuntimeException("Insufficient quantity for " + data.getSerialNo());
 				}
+
 
 				challanEquipList.add(challanEquip);
 				equipAvailList.add(equipQty);

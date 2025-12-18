@@ -2,16 +2,19 @@ package com.mts.service.impl;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mts.dataObjects.DispatchReq;
 import com.mts.dataObjects.EquiReq;
 import com.mts.dataObjects.InvReq;
+import com.mts.dataObjects.InventoryLocationReq;
+import com.mts.dataObjects.ReceiveReq;
 import com.mts.dataObjects.SaveInvReq;
-import com.mts.entity.MtsChallanDocument;
 import com.mts.entity.MtsEquipmentMaster;
 import com.mts.entity.MtsInventoryTransaction;
 import com.mts.entity.MtsLocationMaster;
@@ -38,88 +41,120 @@ public class InventoryServiceImpl implements InventoryService {
 	@Autowired
 	MtsChallanDocumentRepository mtsChallanDocumentRepository;
 
+	@Transactional
 	@Override
-	public JSONObject saveInventory(SaveInvReq invReq) {
-		JSONObject result = new JSONObject();
-		MtsEquipmentMaster equipment = null;
-		MtsInventoryTransaction inventoryTransaction = null;
-		MtsChallanDocument challan = null;
-		
-		try {
-			MtsLocationMaster toLocation = mtsLocationMasterRepository.findByMtsLocationMasterId(invReq.getMtsLocationMasterId());
-			
-			if (invReq.getMtsEquipMasterCode() != null) {
-				equipment = mtsEquipmentMasterRepository.findByMtsEquipMasterCode(invReq.getMtsEquipMasterCode());
-			} else {
-				equipment = mtsEquipmentMasterRepository.findByMtsEquipMasterId(invReq.getMtsEquipMasterId()).get();
-			}
-			
-			Optional<MtsChallanDocument> existingChallan = mtsChallanDocumentRepository
-					.findByMtsChallanId(invReq.getMtsChallanId());
-			
-			if (existingChallan.isPresent()) {
-				challan = existingChallan.get();
-			}
-			
-			if(invReq.getInventoryTransactionId() != null) {
-				inventoryTransaction = mtsInventoryTransactionRepository.findByInventoryTransactionIdAndIsActive(invReq.getInventoryTransactionId(), 1);
-				
-				if(inventoryTransaction != null) {
-					
-				}
-				
-			}else {
-				inventoryTransaction = new MtsInventoryTransaction();
-				inventoryTransaction.setMtsEquipMasterId(equipment.getMtsEquipMasterId());
-				
-				inventoryTransaction.setCreatedBy(Long.valueOf(invReq.getUserId()));
-				inventoryTransaction.setCreatedOn(invReq.getCurrentDate());
-			}
-			
-			if(invReq.getMtsChallanEquipId() != null) {
-				inventoryTransaction.setMtsChallanEquipId(invReq.getMtsChallanEquipId());
-			}
-			
-			inventoryTransaction.setFromLocationId(invReq.getFromLocationId());
-			inventoryTransaction.setToLocationId(invReq.getToLocationId());
-			
-			if(challan!=null && (challan.getDespToLocationMasterId() == invReq.getToLocationId() && invReq.getToLocationId() == invReq.getMtsLocationMasterId())){
-				inventoryTransaction.setIsActive(1);
-				inventoryTransaction.setInTransitOrComplete(0);
-			}else {
-				inventoryTransaction.setIsActive(1);
-			}
-					
-			
-			if(invReq.getMtsLocationMasterId() == invReq.getFromLocationId()) {
-				inventoryTransaction.setInTransitOrComplete(1);
-				equipment.setCurrentStatus(2);
-				equipment.setMtsLocationMasterId(2L);
-			}else if(invReq.getMtsLocationMasterId() == invReq.getToLocationId() && invReq.getMtsLocationMasterId() == 41L) {
-				equipment.setCurrentStatus(1);
-				equipment.setMtsLocationMasterId(41L);
-			}else {
-				equipment.setMtsLocationMasterId(invReq.getToLocationId());
-				equipment.setCurrentStatus(mtsLocationMasterRepository.findByMtsLocationMasterId(invReq.getToLocationId()).getType());
-			}
-//			equipment.setMtsLocationMasterId(invReq.getToLocationId());
+	public JSONObject saveInventory(SaveInvReq req) {
 
-			mtsInventoryTransactionRepository.saveAndFlush(inventoryTransaction);
+	    JSONObject result = new JSONObject();
 
-			equipment.setModifiedDate(invReq.getCurrentDate());
-			equipment.setIsActive(1);
+	    try {
+	        // 1. Load equipment
+	        MtsEquipmentMaster equipment = mtsEquipmentMasterRepository
+	                .findByMtsEquipMasterId(req.getMtsEquipMasterId())
+	                .orElseThrow(() -> new RuntimeException("Equipment not found"));
 
-			mtsEquipmentMasterRepository.saveAndFlush(equipment);
+	        // 2. Load locations
+	        MtsLocationMaster fromLocation =
+	                mtsLocationMasterRepository.findByMtsLocationMasterId(req.getFromLocationId());
+	        MtsLocationMaster toLocation =
+	                mtsLocationMasterRepository.findByMtsLocationMasterId(req.getToLocationId());
 
-			result.put("message", "Inventory saved successfully");
-			result.put("status", 1);
-		} catch (Exception e) {
-			result.put("message", "inventory save error");
-			result.put("status", 0);
-			e.printStackTrace();
-		}
-		return result;
+	        if (fromLocation == null || toLocation == null) {
+	            throw new RuntimeException("Invalid location");
+	        }
+
+	        // 3. Find OPEN inventory transaction (if any)
+	        MtsInventoryTransaction openTxn =
+	                mtsInventoryTransactionRepository.findOpenTransaction(equipment.getMtsEquipMasterId());
+
+	        // 4. DISPATCH FLOW
+	        if ("DISPATCH".equalsIgnoreCase(req.getTransactionType())) {
+
+	            if (openTxn != null) {
+	                throw new RuntimeException("Equipment already in transit");
+	            }
+
+	            // Create DISPATCH transaction
+	            MtsInventoryTransaction dispatchTxn = new MtsInventoryTransaction();
+	            dispatchTxn.setMtsEquipMasterId(equipment.getMtsEquipMasterId());
+	            dispatchTxn.setMtsChallanEquipId(req.getMtsChallanEquipId());
+	            dispatchTxn.setFromLocationId(req.getFromLocationId());
+	            dispatchTxn.setToLocationId(req.getToLocationId());
+	            dispatchTxn.setTransactionType("DISPATCH");
+	            dispatchTxn.setInTransitOrComplete(1); // OPEN
+	            dispatchTxn.setCreatedBy(Long.valueOf(req.getUserId()));
+	            dispatchTxn.setCreatedOn(req.getCurrentDate());
+	            dispatchTxn.setIsActive(1);
+
+	            mtsInventoryTransactionRepository.save(dispatchTxn);
+
+	            // Move equipment to IN_TRANSIT
+	            MtsLocationMaster inTransitLocation =
+	                    mtsLocationMasterRepository.findByType(2); // type = IN_TRANSIT
+
+	            equipment.setMtsLocationMasterId(inTransitLocation.getMtsLocationMasterId());
+	            equipment.setCurrentStatus(2); // IN_TRANSIT
+	            equipment.setModifiedDate(req.getCurrentDate());
+
+	            mtsEquipmentMasterRepository.save(equipment);
+
+	            result.put("status", 1);
+	            result.put("message", "Dispatch completed successfully");
+	            return result;
+	        }
+
+	        // 5. RECEIVE FLOW
+	        if ("RECEIVE".equalsIgnoreCase(req.getTransactionType())) {
+
+	            if (openTxn == null) {
+	                throw new RuntimeException("No open dispatch found for this equipment");
+	            }
+
+	            if (!openTxn.getToLocationId().equals(req.getToLocationId())) {
+	                throw new RuntimeException("Receiving at wrong location");
+	            }
+
+	            // Close previous OPEN transaction
+	            openTxn.setInTransitOrComplete(0); // CLOSED
+	            openTxn.setModifiedOn(req.getCurrentDate());
+	            mtsInventoryTransactionRepository.save(openTxn);
+
+	            // Create RECEIVE transaction (history)
+	            MtsInventoryTransaction receiveTxn = new MtsInventoryTransaction();
+	            receiveTxn.setMtsEquipMasterId(equipment.getMtsEquipMasterId());
+	            receiveTxn.setMtsChallanEquipId(req.getMtsChallanEquipId());
+	            receiveTxn.setFromLocationId(openTxn.getFromLocationId());
+	            receiveTxn.setToLocationId(req.getToLocationId());
+	            receiveTxn.setTransactionType("RECEIVE");
+	            receiveTxn.setInTransitOrComplete(0); // CLOSED
+	            receiveTxn.setCreatedBy(Long.valueOf(req.getUserId()));
+	            receiveTxn.setCreatedOn(req.getCurrentDate());
+	            receiveTxn.setIsActive(1);
+
+	            mtsInventoryTransactionRepository.save(receiveTxn);
+
+	            // Update equipment snapshot
+	            equipment.setMtsLocationMasterId(req.getToLocationId());
+	            equipment.setCurrentStatus(toLocation.getType());
+	            equipment.setModifiedDate(req.getCurrentDate());
+
+	            mtsEquipmentMasterRepository.save(equipment);
+
+	            result.put("status", 1);
+	            result.put("message", "Receive completed successfully");
+	            return result;
+	        }
+
+	        throw new RuntimeException("Invalid transaction type");
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        result.put("status", 0);
+	        result.put("message", e.getMessage());
+	        return result;
+	    }
 	}
+
 
 	@Override
 	public JSONObject equipmentLocation(EquiReq req) {
@@ -184,5 +219,157 @@ public class InventoryServiceImpl implements InventoryService {
 		}
 		return result;
 	}
+
+//==============================================\\
+	
+	/* =====================================================
+    1. DISPATCHABLE EQUIPMENT LIST
+    ===================================================== */
+ @Override
+ public JSONObject getDispatchableEquipment(InventoryLocationReq req) {
+
+     JSONObject result = new JSONObject();
+     try {
+         List<Map<String, Object>> data =
+             mtsEquipmentMasterRepository.getDispatchableEquipment(req.getLocationId());
+
+         result.put("data", JsonUtil.toJsonArrayOfObjects(data));
+         result.put("status", 1);
+
+     } catch (Exception e) {
+         e.printStackTrace();
+         result.put("status", 0);
+         result.put("message", "Failed to fetch dispatchable equipment");
+     }
+     return result;
+ }
+
+ /* =====================================================
+    2. DISPATCH EQUIPMENT (OUT)
+    ===================================================== */
+ @Override
+ @Transactional
+ public JSONObject dispatchEquipment(DispatchReq req) {
+
+     JSONObject result = new JSONObject();
+
+     try {
+         MtsEquipmentMaster equipment =
+             mtsEquipmentMasterRepository.findById(req.getMtsEquipMasterId())
+             .orElseThrow(() -> new RuntimeException("Equipment not found"));
+
+         // VALIDATION
+         if (!equipment.getMtsLocationMasterId().equals(req.getFromLocationId())) {
+             throw new RuntimeException("Equipment not present at selected source location");
+         }
+
+         if (equipment.getCurrentStatus() == 2) {
+             throw new RuntimeException("Equipment already in transit");
+         }
+
+         // CREATE INVENTORY TRANSACTION (OPEN)
+         MtsInventoryTransaction tx = new MtsInventoryTransaction();
+         tx.setMtsEquipMasterId(equipment.getMtsEquipMasterId());
+         tx.setFromLocationId(req.getFromLocationId());
+         tx.setToLocationId(req.getToLocationId());
+         tx.setMtsChallanEquipId(req.getMtsChallanEquipId());
+         tx.setCreatedBy(req.getUserId());
+         tx.setCreatedOn(req.getDispatchDate());
+         tx.setInTransitOrComplete(1); // OPEN
+         tx.setIsActive(1);
+
+         mtsInventoryTransactionRepository.save(tx);
+
+         // UPDATE EQUIPMENT → IN_TRANSIT
+         equipment.setCurrentStatus(2); // IN_TRANSIT
+         equipment.setMtsLocationMasterId(2L); // virtual location
+         equipment.setModifiedDate(req.getDispatchDate());
+
+         mtsEquipmentMasterRepository.save(equipment);
+
+         result.put("status", 1);
+         result.put("message", "Equipment dispatched successfully");
+
+     } catch (Exception e) {
+         e.printStackTrace();
+         result.put("status", 0);
+         result.put("message", e.getMessage());
+     }
+     return result;
+ }
+
+ /* =====================================================
+    3. RECEIVABLE EQUIPMENT LIST
+    ===================================================== */
+ @Override
+ public JSONObject getReceivableEquipment(InventoryLocationReq req) {
+
+     JSONObject result = new JSONObject();
+     try {
+         List<Map<String, Object>> data =
+             mtsEquipmentMasterRepository.getReceivableEquipment(req.getLocationId());
+
+         result.put("data", JsonUtil.toJsonArrayOfObjects(data));
+         result.put("status", 1);
+
+     } catch (Exception e) {
+         e.printStackTrace();
+         result.put("status", 0);
+         result.put("message", "Failed to fetch receivable equipment");
+     }
+     return result;
+ }
+
+ /* =====================================================
+    4. RECEIVE EQUIPMENT (IN)
+    ===================================================== */
+ @Override
+ @Transactional
+ public JSONObject receiveEquipment(ReceiveReq req) {
+
+     JSONObject result = new JSONObject();
+
+     try {
+         // FETCH OPEN TRANSACTION
+         MtsInventoryTransaction tx =
+             mtsInventoryTransactionRepository.findById(req.getInventoryTransactionId())
+             .orElseThrow(() -> new RuntimeException("Inventory transaction not found"));
+
+         if (tx.getInTransitOrComplete() == 0) {
+             throw new RuntimeException("Inventory transaction already completed");
+         }
+
+         // CLOSE TRANSACTION
+         tx.setInTransitOrComplete(0); // COMPLETE
+         tx.setModifiedBy(req.getUserId());
+         tx.setModifiedOn(req.getReceiveDate());
+
+         mtsInventoryTransactionRepository.save(tx);
+
+         // UPDATE EQUIPMENT LOCATION
+         MtsEquipmentMaster equipment =
+             mtsEquipmentMasterRepository.findById(req.getMtsEquipMasterId())
+             .orElseThrow(() -> new RuntimeException("Equipment not found"));
+
+         MtsLocationMaster receiveLocation =
+             mtsLocationMasterRepository.findById(req.getReceiveLocationId())
+             .orElseThrow(() -> new RuntimeException("Location not found"));
+
+         equipment.setMtsLocationMasterId(req.getReceiveLocationId());
+         equipment.setCurrentStatus(receiveLocation.getType());
+         equipment.setModifiedDate(req.getReceiveDate());
+
+         mtsEquipmentMasterRepository.save(equipment);
+
+         result.put("status", 1);
+         result.put("message", "Equipment received successfully");
+
+     } catch (Exception e) {
+         e.printStackTrace();
+         result.put("status", 0);
+         result.put("message", e.getMessage());
+     }
+     return result;
+ }
 
 }

@@ -20,6 +20,8 @@ public class MtsInventoryTransaction {
 	
 	private Long mtsChallanEquipId;
 	
+	private String transactionType;
+	
 	private Long fromLocationId;
 	
 	private Long toLocationId;
