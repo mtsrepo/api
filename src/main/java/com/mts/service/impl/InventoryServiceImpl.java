@@ -234,8 +234,8 @@ public class InventoryServiceImpl implements InventoryService {
 
      JSONObject result = new JSONObject();
      try {
-         List<Map<String, Object>> data =
-             mtsEquipmentMasterRepository.getDispatchableEquipment(req.getLocationId());
+         List<Map<String, Object>> data = (req.getLocationId() == 999) ? mtsEquipmentMasterRepository.findExternalDispatchable()
+            : mtsEquipmentMasterRepository.getDispatchableEquipment(req.getLocationId());
 
          result.put("data", JsonUtil.toJsonArrayOfObjects(data));
          result.put("status", 1);
@@ -263,9 +263,14 @@ public class InventoryServiceImpl implements InventoryService {
              .orElseThrow(() -> new RuntimeException("Equipment not found"));
 
          // VALIDATION
-         if (!equipment.getMtsLocationMasterId().equals(req.getFromLocationId())) {
-             throw new RuntimeException("Equipment not present at selected source location");
-         }
+         if (req.getFromLocationId() == 999 && req.getToLocationId() == 999) {
+        	    throw new RuntimeException("Invalid movement: External to External");
+        	}
+         
+         if (equipment.getMtsLocationMasterId() != null &&
+        		    !equipment.getMtsLocationMasterId().equals(req.getFromLocationId())) {
+        		    throw new RuntimeException("Equipment not at source location");
+        		}
 
          if (equipment.getCurrentStatus() == 2) {
              throw new RuntimeException("Equipment already in transit");
@@ -351,6 +356,11 @@ public class InventoryServiceImpl implements InventoryService {
      JSONObject result = new JSONObject();
 
      try {
+    	 
+    	 if (req.getReceiveLocationId() == 999) {
+    		    throw new RuntimeException("Cannot receive into External location");
+    		}
+
          // FETCH OPEN TRANSACTION
          MtsInventoryTransaction tx =
              mtsInventoryTransactionRepository.findById(req.getInventoryTransactionId())

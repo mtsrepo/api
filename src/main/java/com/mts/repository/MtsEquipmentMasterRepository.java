@@ -271,17 +271,17 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "    AND mit.inventoryTransactionId IS NULL", nativeQuery = true)
 	List<Map<String, Object>> getTypeWiseGoodsData(Long mtsLocationMasterId);
 
-	@Query(value = "SELECT \r\n"
-			+ "		        mem.mtsEquipMasterId,\r\n"
-			+ "		        mem.mtsEquipMasterCode,\r\n"
-			+ "		        mem.mtsEquipName,\r\n"
-			+ "		        mem.serialNo,\r\n"
-			+ "		        mem.currentStatus,\r\n"
-			+ "		        mem.mtsLocationMasterId\r\n"
-			+ "		    FROM mts_equipment_master mem\r\n"
-			+ "		    WHERE mem.isActive = 1\r\n"
-			+ "		      AND mem.currentStatus <> 2\r\n"
-			+ "		      AND mem.mtsLocationMasterId = :locationId", nativeQuery = true)
+	@Query(value = "SELECT *\r\n"
+			+ "FROM mts_equipment_master em\r\n"
+			+ "LEFT JOIN mts_inventory_transaction it\r\n"
+			+ "    ON it.mtsEquipMasterId = em.mtsEquipMasterId\r\n"
+			+ "    AND it.inTransitOrComplete = 1\r\n"
+			+ "    AND it.isActive = 1\r\n"
+			+ "WHERE\r\n"
+			+ "    em.mtsLocationMasterId = :locationId\r\n"
+			+ "    AND em.currentStatus != 2\r\n"
+			+ "    AND it.inventoryTransactionId IS NULL;\r\n"
+			+ "", nativeQuery = true)
 		List<Map<String, Object>> getDispatchableEquipment(
 		    @Param("locationId") Long locationId
 		);
@@ -304,6 +304,19 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 		List<Map<String, Object>> getReceivableEquipment(
 		    @Param("locationId") Long locationId
 		);
+
+	@Query(value = "SELECT *\r\n"
+			+ "FROM mts_equipment_master em\r\n"
+			+ "LEFT JOIN mts_inventory_transaction it\r\n"
+			+ "    ON it.mtsEquipMasterId = em.mtsEquipMasterId\r\n"
+			+ "    AND it.inTransitOrComplete = 1\r\n"
+			+ "    AND it.isActive = 1\r\n"
+			+ "WHERE\r\n"
+			+ "    em.mtsLocationMasterId IS NULL\r\n"
+			+ "    AND em.currentStatus IS NULL\r\n"
+			+ "    AND it.inventoryTransactionId IS NULL;\r\n"
+			+ "", nativeQuery = true)
+	List<Map<String, Object>> findExternalDispatchable();
 
 
 
