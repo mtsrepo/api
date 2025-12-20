@@ -14,14 +14,12 @@ public interface MtsInventoryTransactionRepository extends JpaRepository<MtsInve
 
 	MtsInventoryTransaction findByInventoryTransactionIdAndIsActive(Long inventoryTransactionId, int i);
 	
-	@Query(value = """
-		    SELECT *
-		    FROM mts_inventory_transaction
-		    WHERE mtsEquipMasterId = :equipId
-		      AND inTransitOrComplete = 1
-		    ORDER BY createdOn DESC
-		    LIMIT 1
-		""", nativeQuery = true)
+	@Query(value = "SELECT *\n"
+			+ "		    FROM mts_inventory_transaction\n"
+			+ "		    WHERE mtsEquipMasterId = :equipId\n"
+			+ "		      AND inTransitOrComplete = 1\n"
+			+ "		    ORDER BY createdOn DESC\n"
+			+ "		    LIMIT 1", nativeQuery = true)
 		MtsInventoryTransaction findOpenTransaction(@Param("equipId") Long equipId);
 
 

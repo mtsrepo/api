@@ -10,4 +10,5 @@ public class GetTygoodReq {
 	private String userId;
 	private String authToken;
 	private Long mtsPartyAddressId;
+	private Long mtsLocationMasterId;
 }

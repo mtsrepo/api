@@ -112,6 +112,8 @@ public class InventoryController {
     1. DISPATCHABLE EQUIPMENT (OUT LIST)
     ===================================================== */
  @PostMapping("/inventory/dispatchableEquipment")
+ @ResponseBody
+	@CrossOrigin
  public Map<String, Object> getDispatchableEquipment(
          @RequestBody InventoryLocationReq req) {
 
@@ -141,6 +143,8 @@ public class InventoryController {
     2. DISPATCH SUBMIT
     ===================================================== */
  @PostMapping("/inventory/dispatch")
+ @ResponseBody
+	@CrossOrigin
  public Map<String, Object> dispatchEquipment(
          @RequestBody DispatchReq req) {
 
@@ -169,6 +173,8 @@ public class InventoryController {
     3. RECEIVABLE EQUIPMENT (IN LIST)
     ===================================================== */
  @PostMapping("/inventory/receivableEquipment")
+ @ResponseBody
+	@CrossOrigin
  public Map<String, Object> getReceivableEquipment(
          @RequestBody InventoryLocationReq req) {
 
@@ -198,6 +204,8 @@ public class InventoryController {
     4. RECEIVE SUBMIT
     ===================================================== */
  @PostMapping("/inventory/receive")
+ @ResponseBody
+	@CrossOrigin
  public Map<String, Object> receiveEquipment(
          @RequestBody ReceiveReq req) {
 

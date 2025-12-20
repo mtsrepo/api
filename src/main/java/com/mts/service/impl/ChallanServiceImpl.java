@@ -84,10 +84,10 @@ public class ChallanServiceImpl implements ChallanService {
 ////				System.out.println("chalReq.getDespToLocationMasterId() "+ chalReq.getDespToLocationMasterId());
 //				getDespToLocationId = mtsLocationMasterRepository.findByMtsPartyAddressId(chalReq.getDespToLocationMasterId());
 				getDespFromLocationId = mtsLocationMasterRepository
-				        .findByMtsLocationMasterId(chalReq.getDespFrmLocationMasterId());
+				        .findByMtsPartyAddressId(chalReq.getDespFrmLocationMasterId());
 
 				getDespToLocationId = mtsLocationMasterRepository
-				        .findByMtsLocationMasterId(chalReq.getDespToLocationMasterId());
+				        .findByMtsPartyAddressId(chalReq.getDespToLocationMasterId());
 
 			
 			}
@@ -165,8 +165,10 @@ public class ChallanServiceImpl implements ChallanService {
 //					result.put("message","challan quantity is over the available quanty for "+data.getSerialNo());
 //					result.put("status", 0);
 //				}
-				if (equipQty.getAvailable() < val.getQty()) {
-				    throw new RuntimeException("Insufficient quantity for " + data.getSerialNo());
+				if (equipQty.getAvailable() < val.getQty() && getDespFromLocationId.getType() == 1) {
+				    result.put("message", "Insufficient quantity for " + data.getSerialNo());
+					result.put("status", 0);
+					return result;
 				}
 
 
@@ -282,14 +284,14 @@ public class ChallanServiceImpl implements ChallanService {
 	}
 
 	@Override
-	public JSONObject getTypeWiseGoodsData(Long mtsPartyAddressId) {
+	public JSONObject getTypeWiseGoodsData(Long mtsLocationMasterId) {
 		JSONObject result = new JSONObject();
 		List<Map<String,Object>> data = new ArrayList<>();
 		try {
 //			if(mtsPartyAddressId == 2L) {
 //				data = mtsEquipmentMasterRepository.getTypeWiseGoodsData();
 //			}else {
-				data = mtsEquipmentMasterRepository.getTypeWiseGoodsData(mtsPartyAddressId);
+				data = mtsEquipmentMasterRepository.getTypeWiseGoodsData(mtsLocationMasterId);
 //			}
 			
 			result.put("data", JsonUtil.toJsonArrayOfObjects(data));

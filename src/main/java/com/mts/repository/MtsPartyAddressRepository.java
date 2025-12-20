@@ -12,19 +12,17 @@ import com.mts.entity.MtsPartyAddress;
 
 public interface MtsPartyAddressRepository extends JpaRepository<MtsPartyAddress, Long> {
 
-	@Query(value = """
-			SELECT pm.partyName, pa.*
-			FROM mts_party_address pa
-			JOIN mts_party_master pm
-			  ON pm.mtsPartyMasterId = pa.mtsPartyMasterId
-			WHERE pa.isActive = 1;
-		""", nativeQuery = true)
+	@Query(value = "SELECT pm.partyName, pa.*\r\n"
+			+ "			FROM mts_party_address pa\r\n"
+			+ "			JOIN mts_party_master pm\r\n"
+			+ "			  ON pm.mtsPartyMasterId = pa.mtsPartyMasterId\r\n"
+			+ "			WHERE pa.isActive = 1;", nativeQuery = true)
 	List<Map<String, Object>> getAllPartyAddresses();
 
-	@Query(value = "select pa.mtsPartyAddressId, pa.contactPerson, pa.designation, pa.addressCode, pa.addressLine1,"
+	@Query(value = "select pa.mtsPartyAddressId, lm.mtsLocationMasterId, pa.contactPerson, pa.designation, pa.addressCode, pa.addressLine1,"
 			+ " pa.addressLine2, pa.locationAddressDesc, pa.GSTN, pa.emailAddress, pa.department, pa.pincode, pa.contactNumber from mts_party_address pa,"
-			+ " mts_party_master pm where pa.mtsPartyMasterId = :mtsPartyMasterId and "
-			+ "pa.mtsPartyMasterId = pm.mtsPartyMasterId and pa.isActive = 1", nativeQuery = true)
+			+ " mts_party_master pm, mts_location_master lm where pa.mtsPartyMasterId = :mtsPartyMasterId and "
+			+ "pa.mtsPartyMasterId = pm.mtsPartyMasterId and lm.mtsPartyAddressId = pa.mtsPartyAddressId and pa.isActive = 1", nativeQuery = true)
 //	@Query(value = "select lm.mtsLocationMasterId, pa.contactPerson, pa.designation, pa.addressCode, pa.addressLine1,\r\n"
 //			+ " pa.addressLine2, lm.description, pa.GSTN, pa.emailAddress, pa.department, pa.pincode, pa.contactNumber from mts_party_address pa,\r\n"
 //			+ " mts_party_master pm, mts_location_master lm where pa.mtsPartyMasterId = :mtsPartyMasterId and \r\n"

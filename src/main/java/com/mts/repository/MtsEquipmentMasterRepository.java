@@ -248,64 +248,59 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 	Optional<MtsEquipmentMaster> findBySerialNo(String serialNo);
 
 	@Query(value = "SELECT \r\n"
-			+ "			    mem.mtsEquipMasterId, \r\n"
-			+ "			    mem.mtsEquipName, \r\n"
-			+ "			    mem.serialNo, \r\n"
-			+ "			    metm.category, \r\n"
-			+ "			    metm.mtsEquipTypeMasterId, \r\n"
-			+ "			    metm.name AS mtsEquipTypeName, \r\n"
-			+ "			    mea.available \r\n"
-			+ "			FROM \r\n"
-			+ "			    mts_equipment_master mem\r\n"
-			+ "			JOIN \r\n"
-			+ "			    mts_equipment_type_master metm \r\n"
-			+ "			    ON mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId		\r\n"
-			+ "			JOIN 															\r\n"
-			+ "			    mts_equip_availability mea \r\n"
-			+ "			    ON mea.mtsEquipMasterId = mem.mtsEquipMasterId\r\n"
-			+ "                        JOIN \r\n"
-			+ "                            mts_location_master mlm\r\n"
-			+ "                            ON mlm.mtsLocationMasterId = mem.mtsLocationMasterId\r\n"
-			+ "JOIN mts_party_address mpa ON mpa.mtsPartyAddressId = mlm.mtsPartyAddressId\r\n"
-			+ "			WHERE\r\n"
-			+ "			    (mea.available > 0 and  mlm.mtsPartyAddressId = :mtsPartyAddressId) or "
-			+ " (mea.inUse > 0 and  mlm.mtsPartyAddressId = :mtsPartyAddressId)", nativeQuery = true)
-	List<Map<String, Object>> getTypeWiseGoodsData(Long mtsPartyAddressId);
+			+ "    mem.mtsEquipMasterId,\r\n"
+			+ "    mem.mtsEquipName,\r\n"
+			+ "    mem.serialNo,\r\n"
+			+ "    metm.category,\r\n"
+			+ "    metm.mtsEquipTypeMasterId,\r\n"
+			+ "    metm.name AS mtsEquipTypeName,\r\n"
+			+ "    mea.available\r\n"
+			+ "FROM mts_equipment_master mem\r\n"
+			+ "JOIN mts_equipment_type_master metm\r\n"
+			+ "    ON mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId\r\n"
+			+ "JOIN mts_equip_availability mea\r\n"
+			+ "    ON mea.mtsEquipMasterId = mem.mtsEquipMasterId\r\n"
+			+ "LEFT JOIN mts_inventory_transaction mit\r\n"
+			+ "    ON mit.mtsEquipMasterId = mem.mtsEquipMasterId\r\n"
+			+ "    AND mit.isActive = 1\r\n"
+			+ "    AND mit.inTransitOrComplete = 1\r\n"
+			+ "WHERE\r\n"
+			+ "    mem.mtsLocationMasterId = :mtsLocationMasterId\r\n"
+			+ "    AND mem.currentStatus <> 2\r\n"
+			+ "    AND mea.available > 0\r\n"
+			+ "    AND mit.inventoryTransactionId IS NULL", nativeQuery = true)
+	List<Map<String, Object>> getTypeWiseGoodsData(Long mtsLocationMasterId);
 
-	@Query(value = """
-		    SELECT 
-		        mem.mtsEquipMasterId,
-		        mem.mtsEquipMasterCode,
-		        mem.mtsEquipName,
-		        mem.serialNo,
-		        mem.currentStatus,
-		        mem.mtsLocationMasterId
-		    FROM mts_equipment_master mem
-		    WHERE mem.isActive = 1
-		      AND mem.currentStatus <> 2
-		      AND mem.mtsLocationMasterId = :locationId
-		""", nativeQuery = true)
+	@Query(value = "SELECT \r\n"
+			+ "		        mem.mtsEquipMasterId,\r\n"
+			+ "		        mem.mtsEquipMasterCode,\r\n"
+			+ "		        mem.mtsEquipName,\r\n"
+			+ "		        mem.serialNo,\r\n"
+			+ "		        mem.currentStatus,\r\n"
+			+ "		        mem.mtsLocationMasterId\r\n"
+			+ "		    FROM mts_equipment_master mem\r\n"
+			+ "		    WHERE mem.isActive = 1\r\n"
+			+ "		      AND mem.currentStatus <> 2\r\n"
+			+ "		      AND mem.mtsLocationMasterId = :locationId", nativeQuery = true)
 		List<Map<String, Object>> getDispatchableEquipment(
 		    @Param("locationId") Long locationId
 		);
 
 
-	@Query(value = """
-		    SELECT 
-		        mem.mtsEquipMasterId,
-		        mem.mtsEquipMasterCode,
-		        mem.mtsEquipName,
-		        mem.serialNo,
-		        mit.inventoryTransactionId,
-		        mit.fromLocationId
-		    FROM mts_equipment_master mem
-		    JOIN mts_inventory_transaction mit
-		        ON mit.mtsEquipMasterId = mem.mtsEquipMasterId
-		    WHERE mem.currentStatus = 2
-		      AND mit.inTransitOrComplete = 1
-		      AND mit.toLocationId = :locationId
-		      AND mit.isActive = 1
-		""", nativeQuery = true)
+	@Query(value = "SELECT \r\n"
+			+ "		        mem.mtsEquipMasterId,\r\n"
+			+ "		        mem.mtsEquipMasterCode,\r\n"
+			+ "		        mem.mtsEquipName,\r\n"
+			+ "		        mem.serialNo,\r\n"
+			+ "		        mit.inventoryTransactionId,\r\n"
+			+ "		        mit.fromLocationId\r\n"
+			+ "		    FROM mts_equipment_master mem\r\n"
+			+ "		    JOIN mts_inventory_transaction mit\r\n"
+			+ "		        ON mit.mtsEquipMasterId = mem.mtsEquipMasterId\r\n"
+			+ "		    WHERE mem.currentStatus = 2\r\n"
+			+ "		      AND mit.inTransitOrComplete = 1\r\n"
+			+ "		      AND mit.toLocationId = :locationId\r\n"
+			+ "		      AND mit.isActive = 1", nativeQuery = true)
 		List<Map<String, Object>> getReceivableEquipment(
 		    @Param("locationId") Long locationId
 		);

@@ -19,7 +19,7 @@ public interface ChallanService {
 
 	JSONObject challanDashboard(int take, int skip);
 
-	JSONObject getTypeWiseGoodsData(Long mtsPartyAddressId);
+	JSONObject getTypeWiseGoodsData(Long mtsLocationMasterId);
 
 	JSONObject deleteGoodsData(Long mtsChallanEquipId);
 

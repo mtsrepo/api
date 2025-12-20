@@ -161,7 +161,7 @@ public class ChallanController {
 				return returnMap.toMap();
 			}
 			
-			returnMap = challanService.getTypeWiseGoodsData(getTypeGood.getMtsPartyAddressId());
+			returnMap = challanService.getTypeWiseGoodsData(getTypeGood.getMtsLocationMasterId());
 			returnMap.put("status", 1);
 
 		} catch (Exception e) {
