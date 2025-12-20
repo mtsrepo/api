@@ -15,11 +15,13 @@ import com.mts.dataObjects.InvReq;
 import com.mts.dataObjects.InventoryLocationReq;
 import com.mts.dataObjects.ReceiveReq;
 import com.mts.dataObjects.SaveInvReq;
+import com.mts.entity.MtsEquipmentAvailability;
 import com.mts.entity.MtsEquipmentMaster;
 import com.mts.entity.MtsInventoryTransaction;
 import com.mts.entity.MtsLocationMaster;
 import com.mts.entity.MtsStatusMaster;
 import com.mts.repository.MtsChallanDocumentRepository;
+import com.mts.repository.MtsEquipmentAvailabilityRepository;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.repository.MtsInventoryTransactionRepository;
 import com.mts.repository.MtsLocationMasterRepository;
@@ -40,6 +42,8 @@ public class InventoryServiceImpl implements InventoryService {
 	MtsStatusMasterRepository mtsStatusMasterRepository;
 	@Autowired
 	MtsChallanDocumentRepository mtsChallanDocumentRepository;
+	@Autowired
+	MtsEquipmentAvailabilityRepository mtsEquipmentAvailabilityRepository;
 
 	@Transactional
 	@Override
@@ -86,7 +90,7 @@ public class InventoryServiceImpl implements InventoryService {
 	            dispatchTxn.setCreatedOn(req.getCurrentDate());
 	            dispatchTxn.setIsActive(1);
 
-	            mtsInventoryTransactionRepository.save(dispatchTxn);
+	            mtsInventoryTransactionRepository.saveAndFlush(dispatchTxn);
 
 	            // Move equipment to IN_TRANSIT
 	            MtsLocationMaster inTransitLocation =
@@ -96,7 +100,7 @@ public class InventoryServiceImpl implements InventoryService {
 	            equipment.setCurrentStatus(2); // IN_TRANSIT
 	            equipment.setModifiedDate(req.getCurrentDate());
 
-	            mtsEquipmentMasterRepository.save(equipment);
+	            mtsEquipmentMasterRepository.saveAndFlush(equipment);
 
 	            result.put("status", 1);
 	            result.put("message", "Dispatch completed successfully");
@@ -117,7 +121,7 @@ public class InventoryServiceImpl implements InventoryService {
 	            // Close previous OPEN transaction
 	            openTxn.setInTransitOrComplete(0); // CLOSED
 	            openTxn.setModifiedOn(req.getCurrentDate());
-	            mtsInventoryTransactionRepository.save(openTxn);
+	            mtsInventoryTransactionRepository.saveAndFlush(openTxn);
 
 	            // Create RECEIVE transaction (history)
 	            MtsInventoryTransaction receiveTxn = new MtsInventoryTransaction();
@@ -131,14 +135,14 @@ public class InventoryServiceImpl implements InventoryService {
 	            receiveTxn.setCreatedOn(req.getCurrentDate());
 	            receiveTxn.setIsActive(1);
 
-	            mtsInventoryTransactionRepository.save(receiveTxn);
+	            mtsInventoryTransactionRepository.saveAndFlush(receiveTxn);
 
 	            // Update equipment snapshot
 	            equipment.setMtsLocationMasterId(req.getToLocationId());
 	            equipment.setCurrentStatus(toLocation.getType());
 	            equipment.setModifiedDate(req.getCurrentDate());
 
-	            mtsEquipmentMasterRepository.save(equipment);
+	            mtsEquipmentMasterRepository.saveAndFlush(equipment);
 
 	            result.put("status", 1);
 	            result.put("message", "Receive completed successfully");
@@ -266,6 +270,16 @@ public class InventoryServiceImpl implements InventoryService {
          if (equipment.getCurrentStatus() == 2) {
              throw new RuntimeException("Equipment already in transit");
          }
+         
+         MtsEquipmentAvailability availability =
+                 mtsEquipmentAvailabilityRepository
+                     .findByMtsEquipMasterId(equipment.getMtsEquipMasterId());
+         
+         int qty = req.getQty(); // for asset = 1
+         
+         if (availability.getAvailable() < qty) {
+             throw new RuntimeException("Insufficient available quantity");
+         }
 
          // CREATE INVENTORY TRANSACTION (OPEN)
          MtsInventoryTransaction tx = new MtsInventoryTransaction();
@@ -278,14 +292,21 @@ public class InventoryServiceImpl implements InventoryService {
          tx.setInTransitOrComplete(1); // OPEN
          tx.setIsActive(1);
 
-         mtsInventoryTransactionRepository.save(tx);
+         mtsInventoryTransactionRepository.saveAndFlush(tx);
+         
+         // UPDATE AVAILABILITY  ✅
+         availability.setAvailable(availability.getAvailable() - qty);
+         availability.setInUse(availability.getInUse() + qty);
+         availability.setModifiedOn(req.getDispatchDate());
+
+         mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
 
          // UPDATE EQUIPMENT → IN_TRANSIT
          equipment.setCurrentStatus(2); // IN_TRANSIT
          equipment.setMtsLocationMasterId(2L); // virtual location
          equipment.setModifiedDate(req.getDispatchDate());
 
-         mtsEquipmentMasterRepository.save(equipment);
+         mtsEquipmentMasterRepository.saveAndFlush(equipment);
 
          result.put("status", 1);
          result.put("message", "Equipment dispatched successfully");
@@ -338,13 +359,31 @@ public class InventoryServiceImpl implements InventoryService {
          if (tx.getInTransitOrComplete() == 0) {
              throw new RuntimeException("Inventory transaction already completed");
          }
+         
+         int qty = req.getQty(); // asset = 1
+
+         // FETCH AVAILABILITY
+         MtsEquipmentAvailability availability =
+             mtsEquipmentAvailabilityRepository
+                 .findByMtsEquipMasterId(req.getMtsEquipMasterId());
+
+         if (availability.getInUse() < qty) {
+             throw new RuntimeException("Invalid receive quantity");
+         }
 
          // CLOSE TRANSACTION
          tx.setInTransitOrComplete(0); // COMPLETE
          tx.setModifiedBy(req.getUserId());
          tx.setModifiedOn(req.getReceiveDate());
 
-         mtsInventoryTransactionRepository.save(tx);
+         mtsInventoryTransactionRepository.saveAndFlush(tx);
+         
+      // UPDATE AVAILABILITY ✅
+         availability.setAvailable(availability.getAvailable() + qty);
+         availability.setInUse(availability.getInUse() - qty);
+         availability.setModifiedOn(req.getReceiveDate());
+
+         mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
 
          // UPDATE EQUIPMENT LOCATION
          MtsEquipmentMaster equipment =
@@ -359,7 +398,7 @@ public class InventoryServiceImpl implements InventoryService {
          equipment.setCurrentStatus(receiveLocation.getType());
          equipment.setModifiedDate(req.getReceiveDate());
 
-         mtsEquipmentMasterRepository.save(equipment);
+         mtsEquipmentMasterRepository.saveAndFlush(equipment);
 
          result.put("status", 1);
          result.put("message", "Equipment received successfully");
