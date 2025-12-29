@@ -276,15 +276,15 @@ public class InventoryServiceImpl implements InventoryService {
              throw new RuntimeException("Equipment already in transit");
          }
          
-         MtsEquipmentAvailability availability =
-                 mtsEquipmentAvailabilityRepository
-                     .findByMtsEquipMasterId(equipment.getMtsEquipMasterId());
-         
-         int qty = req.getQty(); // for asset = 1
-         
-         if (availability.getAvailable() < qty) {
-             throw new RuntimeException("Insufficient available quantity");
-         }
+//         MtsEquipmentAvailability availability =
+//                 mtsEquipmentAvailabilityRepository
+//                     .findByMtsEquipMasterId(equipment.getMtsEquipMasterId());
+//         
+//         int qty = req.getQty(); // for asset = 1
+//         
+//         if (availability.getAvailable() < qty) {
+//             throw new RuntimeException("Insufficient available quantity");
+//         }
 
          // CREATE INVENTORY TRANSACTION (OPEN)
          MtsInventoryTransaction tx = new MtsInventoryTransaction();
@@ -305,7 +305,7 @@ public class InventoryServiceImpl implements InventoryService {
 //         availability.setInUse(availability.getInUse() + qty);
 //         availability.setModifiedOn(req.getDispatchDate());
 
-         mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
+//         mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
 
          // UPDATE EQUIPMENT → IN_TRANSIT
          equipment.setCurrentStatus(2); // IN_TRANSIT
