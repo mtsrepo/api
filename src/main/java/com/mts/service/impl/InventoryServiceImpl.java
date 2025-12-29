@@ -371,18 +371,18 @@ public class InventoryServiceImpl implements InventoryService {
              throw new RuntimeException("Inventory transaction already completed");
          }
          
-         int qty = req.getQty(); // asset = 1
+//         int qty = req.getQty(); // asset = 1
 
          // FETCH AVAILABILITY
          MtsEquipmentAvailability availability =
              mtsEquipmentAvailabilityRepository
                  .findByMtsEquipMasterId(req.getMtsEquipMasterId());
 
-         if (availability.getInUse() < qty) {
-             throw new RuntimeException("Invalid receive quantity");
-         }
+//         if (availability.getInUse() < qty) {
+//             throw new RuntimeException("Invalid receive quantity");
+//         }
          
-         availability.setModifiedOn(req.getReceiveDate());
+//         availability.setModifiedOn(req.getReceiveDate());
 
 
          // CLOSE TRANSACTION
