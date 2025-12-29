@@ -292,6 +292,7 @@ public class InventoryServiceImpl implements InventoryService {
          tx.setFromLocationId(req.getFromLocationId());
          tx.setToLocationId(req.getToLocationId());
          tx.setMtsChallanEquipId(req.getMtsChallanEquipId());
+         tx.setTransactionType("DISPATCH");
          tx.setCreatedBy(req.getUserId());
          tx.setCreatedOn(req.getDispatchDate());
          tx.setInTransitOrComplete(1); // OPEN
@@ -299,10 +300,10 @@ public class InventoryServiceImpl implements InventoryService {
 
          mtsInventoryTransactionRepository.saveAndFlush(tx);
          
-         // UPDATE AVAILABILITY  ✅
-         availability.setAvailable(availability.getAvailable() - qty);
-         availability.setInUse(availability.getInUse() + qty);
-         availability.setModifiedOn(req.getDispatchDate());
+         // UPDATE AVAILABILITY  ✅ no need
+//         availability.setAvailable(availability.getAvailable() - qty);
+//         availability.setInUse(availability.getInUse() + qty);
+//         availability.setModifiedOn(req.getDispatchDate());
 
          mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
 
