@@ -107,7 +107,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 				availability.setMtsEquipMasterId(asset.getMtsEquipMasterId());
 				availability.setTotalNo(1);
 				availability.setInUse(0);
-				availability.setAvailable(1);
+				availability.setAvailable(0);
 				availability.setCreatedOn(new Date().getTime());
 				availability.setModifiedOn(new Date().getTime());
 				availability.setIsActive(1);
