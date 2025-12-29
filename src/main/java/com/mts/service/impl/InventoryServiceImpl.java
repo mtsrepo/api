@@ -272,7 +272,7 @@ public class InventoryServiceImpl implements InventoryService {
         		    throw new RuntimeException("Equipment not at source location");
         		}
 
-         if (equipment.getCurrentStatus() == 2) {
+         if (equipment.getCurrentStatus() != null && equipment.getCurrentStatus() == 2) {
              throw new RuntimeException("Equipment already in transit");
          }
          
