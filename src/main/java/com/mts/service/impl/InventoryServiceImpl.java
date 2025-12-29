@@ -381,6 +381,9 @@ public class InventoryServiceImpl implements InventoryService {
          if (availability.getInUse() < qty) {
              throw new RuntimeException("Invalid receive quantity");
          }
+         
+         availability.setModifiedOn(req.getReceiveDate());
+
 
          // CLOSE TRANSACTION
          tx.setInTransitOrComplete(0); // COMPLETE
@@ -390,8 +393,8 @@ public class InventoryServiceImpl implements InventoryService {
          mtsInventoryTransactionRepository.saveAndFlush(tx);
          
       // UPDATE AVAILABILITY ✅
-         availability.setAvailable(availability.getAvailable() + qty);
-         availability.setInUse(availability.getInUse() - qty);
+//         availability.setAvailable(availability.getAvailable() + qty);
+//         availability.setInUse(availability.getInUse() - qty);
          availability.setModifiedOn(req.getReceiveDate());
 
          mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
@@ -405,6 +408,13 @@ public class InventoryServiceImpl implements InventoryService {
              mtsLocationMasterRepository.findById(req.getReceiveLocationId())
              .orElseThrow(() -> new RuntimeException("Location not found"));
 
+         if (receiveLocation.getType() == 1) { // WAREHOUSE
+			    availability.setAvailable(availability.getAvailable() + 1);
+			}
+			else if (receiveLocation.getType() == 3) { // PROJECT SITE
+			    availability.setInUse(availability.getInUse() + 1);
+			}
+         
          equipment.setMtsLocationMasterId(req.getReceiveLocationId());
          equipment.setCurrentStatus(receiveLocation.getType());
          equipment.setModifiedDate(req.getReceiveDate());
