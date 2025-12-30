@@ -247,19 +247,22 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 
 	Optional<MtsEquipmentMaster> findBySerialNo(String serialNo);
 
-	@Query(value = "SELECT \r\n"
+	@Query(value = "SELECT DISTINCT\r\n"
 			+ "    mem.mtsEquipMasterId,\r\n"
 			+ "    mem.mtsEquipName,\r\n"
 			+ "    mem.serialNo,\r\n"
 			+ "    metm.category,\r\n"
 			+ "    metm.mtsEquipTypeMasterId,\r\n"
 			+ "    metm.name AS mtsEquipTypeName,\r\n"
-			+ "    mea.available\r\n"
+			+ "    mea.available,\r\n"
+			+ "    mea.inUse\r\n"
 			+ "FROM mts_equipment_master mem\r\n"
 			+ "JOIN mts_equipment_type_master metm\r\n"
 			+ "    ON mem.mtsEquipTypeMasterId = metm.mtsEquipTypeMasterId\r\n"
 			+ "JOIN mts_equip_availability mea\r\n"
 			+ "    ON mea.mtsEquipMasterId = mem.mtsEquipMasterId\r\n"
+			+ "JOIN mts_location_master lm\r\n"
+			+ "    ON lm.mtsLocationMasterId = mem.mtsLocationMasterId\r\n"
 			+ "LEFT JOIN mts_inventory_transaction mit\r\n"
 			+ "    ON mit.mtsEquipMasterId = mem.mtsEquipMasterId\r\n"
 			+ "    AND mit.isActive = 1\r\n"
@@ -267,8 +270,13 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "WHERE\r\n"
 			+ "    mem.mtsLocationMasterId = :mtsLocationMasterId\r\n"
 			+ "    AND mem.currentStatus <> 2\r\n"
-			+ "    AND mea.available > 0\r\n"
-			+ "    AND mit.inventoryTransactionId IS NULL", nativeQuery = true)
+			+ "    AND mit.inventoryTransactionId IS NULL\r\n"
+			+ "    AND (\r\n"
+			+ "        (lm.type = 1 AND mea.available > 0)   -- WAREHOUSE\r\n"
+			+ "        OR\r\n"
+			+ "        (lm.type = 3 AND mea.inUse > 0)        -- PROJECT SITE\r\n"
+			+ "    );\r\n"
+			+ "", nativeQuery = true)
 	List<Map<String, Object>> getTypeWiseGoodsData(Long mtsLocationMasterId);
 
 	@Query(value = "SELECT em.*\r\n"
