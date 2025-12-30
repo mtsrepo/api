@@ -401,14 +401,35 @@ public class InventoryServiceImpl implements InventoryService {
          mtsInventoryTransactionRepository.saveAndFlush(tx);
          
       // UPDATE AVAILABILITY ✅
-         if (receiveLocation.getType() == 1) { // WAREHOUSE
-             availability.setAvailable(availability.getAvailable() + 1);
-             availability.setInUse(Math.max(0, availability.getInUse() - 1));
-         }
-         else if (receiveLocation.getType() == 3) { // PROJECT SITE
-             availability.setAvailable(Math.max(0, availability.getAvailable() - 1));
-             availability.setInUse(availability.getInUse() + 1);
-         }
+         int fromType =
+        		    mtsLocationMasterRepository
+        		        .findById(tx.getFromLocationId())
+        		        .orElseThrow()
+        		        .getType();
+
+        		int toType = receiveLocation.getType();
+
+        		/*
+        		 type:
+        		 1 = WAREHOUSE
+        		 3 = PROJECT
+        		*/
+
+        		// WAREHOUSE → PROJECT
+        		if (fromType == 1 && toType == 3) {
+        		    availability.setAvailable(availability.getAvailable() - 1);
+        		    availability.setInUse(availability.getInUse() + 1);
+        		}
+
+        		// PROJECT → WAREHOUSE
+        		else if (fromType == 3 && toType == 1) {
+        		    availability.setAvailable(availability.getAvailable() + 1);
+        		    availability.setInUse(Math.max(0, availability.getInUse() - 1));
+        		}
+
+        		// PROJECT → PROJECT  ❌ NO CHANGE
+        		// WAREHOUSE → WAREHOUSE ❌ NO CHANGE
+
 
          availability.setModifiedOn(req.getReceiveDate());
          mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
