@@ -271,7 +271,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "    AND mit.inventoryTransactionId IS NULL", nativeQuery = true)
 	List<Map<String, Object>> getTypeWiseGoodsData(Long mtsLocationMasterId);
 
-	@Query(value = "SELECT *\r\n"
+	@Query(value = "SELECT em.*\r\n"
 			+ "FROM mts_equipment_master em\r\n"
 			+ "LEFT JOIN mts_inventory_transaction it\r\n"
 			+ "    ON it.mtsEquipMasterId = em.mtsEquipMasterId\r\n"
@@ -305,7 +305,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 		    @Param("locationId") Long locationId
 		);
 
-	@Query(value = "SELECT *\r\n"
+	@Query(value = "SELECT em.*\r\n"
 			+ "FROM mts_equipment_master em\r\n"
 			+ "LEFT JOIN mts_inventory_transaction it\r\n"
 			+ "    ON it.mtsEquipMasterId = em.mtsEquipMasterId\r\n"
