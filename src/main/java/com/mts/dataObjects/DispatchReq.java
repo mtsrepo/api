@@ -15,5 +15,5 @@ public class DispatchReq {
     private Long mtsChallanId;        // optional
     private Long mtsChallanEquipId;   // optional
 
-    private Integer qty = 1;
+    private Integer qty;
 }

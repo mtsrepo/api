@@ -371,6 +371,11 @@ public class InventoryServiceImpl implements InventoryService {
              throw new RuntimeException("Inventory transaction already completed");
          }
          
+      // FETCH EQUIPMENT
+         MtsEquipmentMaster equipment =
+                 mtsEquipmentMasterRepository.findById(req.getMtsEquipMasterId())
+                 .orElseThrow(() -> new RuntimeException("Equipment not found"));
+         
 //         int qty = req.getQty(); // asset = 1
 
          // FETCH AVAILABILITY
@@ -383,7 +388,10 @@ public class InventoryServiceImpl implements InventoryService {
 //         }
          
 //         availability.setModifiedOn(req.getReceiveDate());
-
+      // Fetch EQUIPMENT LOCATION
+         MtsLocationMaster receiveLocation =
+             mtsLocationMasterRepository.findById(req.getReceiveLocationId())
+             .orElseThrow(() -> new RuntimeException("Location not found"));
 
          // CLOSE TRANSACTION
          tx.setInTransitOrComplete(0); // COMPLETE
@@ -393,28 +401,19 @@ public class InventoryServiceImpl implements InventoryService {
          mtsInventoryTransactionRepository.saveAndFlush(tx);
          
       // UPDATE AVAILABILITY ✅
-//         availability.setAvailable(availability.getAvailable() + qty);
-//         availability.setInUse(availability.getInUse() - qty);
-         availability.setModifiedOn(req.getReceiveDate());
-
-         mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
-
-         // UPDATE EQUIPMENT LOCATION
-         MtsEquipmentMaster equipment =
-             mtsEquipmentMasterRepository.findById(req.getMtsEquipMasterId())
-             .orElseThrow(() -> new RuntimeException("Equipment not found"));
-
-         MtsLocationMaster receiveLocation =
-             mtsLocationMasterRepository.findById(req.getReceiveLocationId())
-             .orElseThrow(() -> new RuntimeException("Location not found"));
-
          if (receiveLocation.getType() == 1) { // WAREHOUSE
-			    availability.setAvailable(availability.getAvailable() + 1);
-			}
-			else if (receiveLocation.getType() == 3) { // PROJECT SITE
-			    availability.setInUse(availability.getInUse() + 1);
-			}
+             availability.setAvailable(availability.getAvailable() + 1);
+             availability.setInUse(Math.max(0, availability.getInUse() - 1));
+         }
+         else if (receiveLocation.getType() == 3) { // PROJECT SITE
+             availability.setAvailable(Math.max(0, availability.getAvailable() - 1));
+             availability.setInUse(availability.getInUse() + 1);
+         }
+
+         availability.setModifiedOn(req.getReceiveDate());
+         mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
          
+         // UPDATE EQUIPMENT
          equipment.setMtsLocationMasterId(req.getReceiveLocationId());
          equipment.setCurrentStatus(receiveLocation.getType());
          equipment.setModifiedDate(req.getReceiveDate());

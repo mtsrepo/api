@@ -15,5 +15,5 @@ public class ReceiveReq {
     private Long receiveLocationId;
     private Long receiveDate;
 
-    private Integer qty = 1;
+    private Integer qty;
 }
