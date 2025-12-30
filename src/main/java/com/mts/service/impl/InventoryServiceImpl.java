@@ -394,6 +394,7 @@ public class InventoryServiceImpl implements InventoryService {
              .orElseThrow(() -> new RuntimeException("Location not found"));
 
          // CLOSE TRANSACTION
+         tx.setTransactionType("RECEIVE");
          tx.setInTransitOrComplete(0); // COMPLETE
          tx.setModifiedBy(req.getUserId());
          tx.setModifiedOn(req.getReceiveDate());
