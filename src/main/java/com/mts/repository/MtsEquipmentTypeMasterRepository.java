@@ -17,4 +17,6 @@ public interface MtsEquipmentTypeMasterRepository extends JpaRepository<MtsEquip
 	@Query(value = "select mtsEquipTypeMasterId, name from mts_equipment_type_master "
 			+ " where category <> 'Asset'", nativeQuery = true)
 	List<Map<String, Object>> getConsumableTypeIdName();
+
+	MtsEquipmentTypeMaster findByMtsEquipTypeMasterId(Long mtsEquipTypeMasterId);
 }

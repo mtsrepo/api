@@ -30,6 +30,7 @@ import com.mts.repository.MtsChallanDocumentRepository;
 import com.mts.repository.MtsChallanEquipDtlRepository;
 import com.mts.repository.MtsEquipmentAvailabilityRepository;
 import com.mts.repository.MtsEquipmentMasterRepository;
+import com.mts.repository.MtsEquipmentTypeMasterRepository;
 import com.mts.repository.MtsLocationMasterRepository;
 import com.mts.service.ChallanService;
 import com.mts.util.JsonUtil;
@@ -47,6 +48,8 @@ public class ChallanServiceImpl implements ChallanService {
 	MtsEquipmentAvailabilityRepository mtsEquipmentAvailabilityRepository;
 	@Autowired
 	MtsLocationMasterRepository mtsLocationMasterRepository;
+	@Autowired
+	MtsEquipmentTypeMasterRepository mtsEquipmentTypeMasterRepository;
 
 	@Override
 	@Transactional
@@ -54,7 +57,6 @@ public class ChallanServiceImpl implements ChallanService {
 		JSONObject result = new JSONObject();
 		MtsChallanDocument challan = null;
 		MtsChallanEquipDtl challanEquip = null;
-//		MtsEquipmentAvailability equipAvail = null;
 		MtsLocationMaster getDespFromLocationId = null;
 		MtsLocationMaster getDespToLocationId =	null;	
 		try {
@@ -63,9 +65,7 @@ public class ChallanServiceImpl implements ChallanService {
 						.findByMtsChallanId(chalReq.getMtsChallanId());
 				if (existingChallan.isPresent()) {
 					challan = existingChallan.get();
-//					if(challan.getDespToLocationMasterId() == chalReq.getDespFrmLocationMasterId()) {
 						challan.setCompletionStatus(0);
-//					}
 				}
 				
 				getDespFromLocationId = mtsLocationMasterRepository.findByMtsLocationMasterId(chalReq.getDespFrmLocationMasterId()); 
@@ -80,9 +80,6 @@ public class ChallanServiceImpl implements ChallanService {
 				challan.setCreateDate(new Date().getTime());
 				challan.setCompletionStatus(0);
 				
-//				getDespFromLocationId = mtsLocationMasterRepository.findByMtsPartyAddressId(chalReq.getDespFrmLocationMasterId()); 
-////				System.out.println("chalReq.getDespToLocationMasterId() "+ chalReq.getDespToLocationMasterId());
-//				getDespToLocationId = mtsLocationMasterRepository.findByMtsPartyAddressId(chalReq.getDespToLocationMasterId());
 				getDespFromLocationId = mtsLocationMasterRepository
 				        .findByMtsPartyAddressId(chalReq.getDespFrmLocationMasterId());
 
@@ -91,8 +88,6 @@ public class ChallanServiceImpl implements ChallanService {
 
 			
 			}
-			
-			
 			
 			challan.setTxnType(chalReq.getTxnType());
 			challan.setType(String.valueOf(chalReq.getTxnType()));
@@ -119,66 +114,60 @@ public class ChallanServiceImpl implements ChallanService {
 			MtsChallanDocument savedChallan = mtsChallanDocumentRepository.saveAndFlush(challan);
 
 			List<MtsChallanEquipDtl> challanEquipList = new ArrayList<>();
-			List<MtsEquipmentAvailability> equipAvailList = new ArrayList<>();
 
 			for (GoodsDto val : chalReq.getGoodsForChallan()) {
-				if (val.getMtsChallanEquipId() != null) {
-					Optional<MtsChallanEquipDtl> existingChallanEquip = mtsChallanEquipDtlRepository
-							.findByMtsChallanEquipId(val.getMtsChallanEquipId());
-					if (existingChallanEquip.isPresent()) {
-						challanEquip = existingChallanEquip.get();
-					}
-				} else {
-					challanEquip = new MtsChallanEquipDtl();
-					challanEquip.setCreateDate(new Date().getTime());
-					challanEquip.setCompanyId(chalReq.getCompanyId());
-					challanEquip.setMtsChallanId(savedChallan.getMtsChallanId());
-				}
-//				challanEquip.setType(val.getType());		i have to modify later
-//				mtsEquipName
-				challanEquip.setMtsEquipMasterId(val.getMtsEquipMasterId());
 
-				MtsEquipmentMaster data = mtsEquipmentMasterRepository
-						.findByMtsEquipMasterId(val.getMtsEquipMasterId()).get();
-				
-//				if(data.getMtsLocationMasterId() == chalReq.getDespFrmLocationMasterId()) {
-//					MtsChallanEquipDtl toBeDeactivated = mtsChallanEquipDtlRepository.findByMtsEquipMasterIdAndIsActive(val.getMtsEquipMasterId(), 1);
-//					toBeDeactivated.setIsActive(0);
-//					mtsChallanEquipDtlRepository.saveAndFlush(toBeDeactivated);
-//				}
-				
-				MtsEquipmentAvailability equipQty = mtsEquipmentAvailabilityRepository.findByMtsEquipMasterId(data.getMtsEquipMasterId());
+			    if (val.getMtsChallanEquipId() != null) {
+			        Optional<MtsChallanEquipDtl> existingChallanEquip =
+			            mtsChallanEquipDtlRepository.findByMtsChallanEquipId(val.getMtsChallanEquipId());
+			        if (existingChallanEquip.isPresent()) {
+			            challanEquip = existingChallanEquip.get();
+			        }
+			    } else {
+			        challanEquip = new MtsChallanEquipDtl();
+			        challanEquip.setCreateDate(System.currentTimeMillis());
+			        challanEquip.setCompanyId(chalReq.getCompanyId());
+			        challanEquip.setMtsChallanId(savedChallan.getMtsChallanId());
+			    }
 
-				challanEquip.setEquipName(data.getMtsEquipName());
-				challanEquip.setQty(val.getQty());
-				challanEquip.setValueOfGoods(val.getValueOfGoods());
-				challanEquip.setTaxableValue(val.getTaxableValue());
-				challanEquip.setIGSTPercentage(val.getIGSTPercentage());
-				challanEquip.setIsActive(1);
-				challanEquip.setModifiedDate(new Date().getTime());
-				
-//				if(equipQty.getAvailable() >= val.getQty()) {
-//					equipQty.setInUse(equipQty.getInUse()+val.getQty());
-//					equipQty.setAvailable(equipQty.getAvailable() - val.getQty());
-//					equipQty.setModifiedOn(new Date().getTime());
-//				}else {
-//					result.put("message","challan quantity is over the available quanty for "+data.getSerialNo());
-//					result.put("status", 0);
-//				}
-				if (equipQty.getAvailable() < val.getQty() && getDespFromLocationId.getType() == 1) {
-				    result.put("message", "Insufficient quantity for " + data.getSerialNo());
-					result.put("status", 0);
-					return result;
-				}
+			    challanEquip.setMtsEquipMasterId(val.getMtsEquipMasterId());
 
+			    MtsEquipmentMaster data =
+			        mtsEquipmentMasterRepository.findByMtsEquipMasterId(val.getMtsEquipMasterId()).get();
 
-				challanEquipList.add(challanEquip);
-				equipAvailList.add(equipQty);
+			    challanEquip.setEquipName(data.getMtsEquipName());
+			    challanEquip.setQty(val.getQty());
+			    challanEquip.setValueOfGoods(val.getValueOfGoods());
+			    challanEquip.setTaxableValue(val.getTaxableValue());
+			    challanEquip.setIGSTPercentage(val.getIGSTPercentage());
+			    challanEquip.setIsActive(1);
+			    challanEquip.setModifiedDate(System.currentTimeMillis());
+
+			    // 🔐 AVAILABILITY CHECK ONLY FOR ASSETS
+			    if ("Asset".equalsIgnoreCase(
+			            mtsEquipmentTypeMasterRepository
+			                .findByMtsEquipTypeMasterId(data.getMtsEquipTypeMasterId())
+			                .getCategory()
+			        )) {
+
+			        // Only warehouse stock is validated
+			        if (getDespFromLocationId.getType() == 1) {
+			            MtsEquipmentAvailability equipQty =
+			                mtsEquipmentAvailabilityRepository.findByMtsEquipMasterId(data.getMtsEquipMasterId());
+
+			            if (equipQty.getAvailable() < val.getQty()) {
+			                result.put("message", "Insufficient quantity for " + data.getSerialNo());
+			                result.put("status", 0);
+			                return result;
+			            }
+			        }
+			    }
+
+			    challanEquipList.add(challanEquip);
 			}
 
-			mtsChallanEquipDtlRepository.saveAllAndFlush(challanEquipList); // i need to check if saveupdate both
-																			// happening
-			mtsEquipmentAvailabilityRepository.saveAllAndFlush(equipAvailList);
+			mtsChallanEquipDtlRepository.saveAllAndFlush(challanEquipList); 
+			
 
 			result.put("message", "Challan saved successfully");
 			result.put("status", 1);
