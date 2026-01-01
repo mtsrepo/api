@@ -1,5 +1,6 @@
 package com.mts.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,5 +17,8 @@ public interface EquipmentAssetService {
 	JSONObject saveAsset(SaveAssetReq asstReq);
 
 	List<Map<String, Object>> getLocationMasterIdName();
+
+	JSONObject deleteAsset(Long mtsEquipMasterId);
+
 
 }

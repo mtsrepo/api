@@ -131,5 +131,33 @@ public class EquipmentAssetController {
 		}
 		return returnMap.toMap();
 	}
+	
+	@PostMapping("/deleteAsset")
+	@ResponseBody
+	@CrossOrigin
+	public Map<String, Object> deleteAsset(@RequestBody HashMap<String, String> asset) {
+		JSONObject returnMap = new JSONObject();
+		try {
+			String token = asset.get("authToken");
+			String userId = asset.get("userId");
+
+			boolean tokenVerified = jwtUtil.validateToken(token, userId);
+			
+			if (!tokenVerified) {
+				returnMap.put("status", 0);
+				returnMap.put("message", "invalid token");
+				return returnMap.toMap();
+			}
+			
+			Long mtsEquipMasterId = Long.valueOf(asset.get("mtsEquipMasterId"));
+			returnMap = equipmentAssetService.deleteAsset(mtsEquipMasterId);
+
+		} catch (Exception e) {
+			returnMap.put("message", "asset delete error");
+			returnMap.put("status", 0);
+			e.printStackTrace();
+		}
+		return returnMap.toMap();
+	}
 
 }

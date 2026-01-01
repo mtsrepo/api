@@ -16,11 +16,11 @@ import org.springframework.stereotype.Service;
 import com.mts.dataObjects.SaveAssetReq;
 import com.mts.entity.MtsEquipmentAvailability;
 import com.mts.entity.MtsEquipmentMaster;
-import com.mts.entity.MtsPartyMaster;
 import com.mts.entity.MtsQrCode;
 import com.mts.repository.MtsEquipmentAvailabilityRepository;
 import com.mts.repository.MtsEquipmentMasterRepository;
 import com.mts.repository.MtsEquipmentTypeMasterRepository;
+import com.mts.repository.MtsInventoryTransactionRepository;
 import com.mts.repository.MtsLocationMasterRepository;
 import com.mts.repository.MtsQrCodeRepository;
 import com.mts.service.EquipmentAssetService;
@@ -41,6 +41,8 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 	QrCodeService qrCodeService;
 	@Autowired
 	MtsEquipmentAvailabilityRepository mtsEquipmentAvailabilityRepository;
+	@Autowired
+	MtsInventoryTransactionRepository mtsInventoryTransactionRepository;
 
 	@Override
 	public JSONObject getAllAssets() {
@@ -125,7 +127,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 			asset.setLastDateOfWarranty(asstReq.getLastDateOfWarranty());
 //			asset.setMtsLocationMasterId(1L);		// at first not decided where it will
 			asset.setModifiedDate(new Date().getTime());
-			
+			asset.setIsActive(1);
 			
 			mtsEquipmentMasterRepository.saveAndFlush(asset);
 			
@@ -149,5 +151,57 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 		}
 		return result;
 	}
+
+
+	@Override
+	@Transactional
+	public JSONObject deleteAsset(Long mtsEquipMasterId) {
+
+	    JSONObject result = new JSONObject();
+
+	    try {
+	        MtsEquipmentMaster asset =
+	            mtsEquipmentMasterRepository
+	                .findByMtsEquipMasterId(mtsEquipMasterId)
+	                .orElseThrow(() -> new RuntimeException("Asset not found"));
+
+	        // ❌ Prevent delete if asset is in transit
+	        if (asset.getCurrentStatus() != null && asset.getCurrentStatus() == 2) {
+	            throw new RuntimeException("Cannot delete asset while in transit");
+	        }
+
+	        // 1️⃣ SOFT DELETE ASSET
+	        asset.setIsActive(0);
+	        asset.setModifiedDate(new Date().getTime());
+
+	        mtsEquipmentMasterRepository.saveAndFlush(asset);
+
+	        // 2️⃣ SOFT DELETE AVAILABILITY
+	        MtsEquipmentAvailability availability =
+	            mtsEquipmentAvailabilityRepository
+	                .findByMtsEquipMasterId(asset.getMtsEquipMasterId());
+
+	        if (availability != null) {
+	            availability.setIsActive(0);
+	            availability.setModifiedOn(new Date().getTime());
+	            mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
+	        }
+
+	        // 3️⃣ SOFT DELETE OPEN INVENTORY TRANSACTIONS (OPTIONAL BUT SAFE)
+	        mtsInventoryTransactionRepository
+	            .deactivateByEquipMasterId(asset.getMtsEquipMasterId());
+
+	        result.put("status", 1);
+	        result.put("message", "Asset deleted successfully");
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        result.put("status", 0);
+	        result.put("message", e.getMessage());
+	    }
+
+	    return result;
+	}
+
 
 }

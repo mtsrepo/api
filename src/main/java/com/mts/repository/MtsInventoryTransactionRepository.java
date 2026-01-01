@@ -1,6 +1,7 @@
 package com.mts.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -21,6 +22,13 @@ public interface MtsInventoryTransactionRepository extends JpaRepository<MtsInve
 			+ "		    ORDER BY createdOn DESC\n"
 			+ "		    LIMIT 1", nativeQuery = true)
 		MtsInventoryTransaction findOpenTransaction(@Param("equipId") Long equipId);
+
+	@Modifying
+	@Query(value = "UPDATE mts_inventory_transaction\r\n"
+			+ "	    SET isActive = 0\r\n"
+			+ "	    WHERE mtsEquipMasterId = :mtsEquipMasterId", nativeQuery = true)
+	void deactivateByEquipMasterId(@Param("mtsEquipMasterId") Long mtsEquipMasterId);
+
 
 
 }

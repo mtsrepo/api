@@ -120,6 +120,7 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 //			consumable.setMtsLocationMasterId(1L);			// at first not decided where it will
 			consumable.setMtsLocationMasterId(SD_WAREHOUSE_LOCATION_ID);
 			consumable.setModifiedDate(new Date().getTime());
+			consumable.setIsActive(1);
 			
 			mtsEquipmentMasterRepository.saveAndFlush(consumable);
 			
