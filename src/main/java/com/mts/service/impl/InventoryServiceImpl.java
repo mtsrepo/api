@@ -276,15 +276,38 @@ public class InventoryServiceImpl implements InventoryService {
              throw new RuntimeException("Equipment already in transit");
          }
          
-//         MtsEquipmentAvailability availability =
-//                 mtsEquipmentAvailabilityRepository
-//                     .findByMtsEquipMasterId(equipment.getMtsEquipMasterId());
-//         
-//         int qty = req.getQty(); // for asset = 1
-//         
-//         if (availability.getAvailable() < qty) {
-//             throw new RuntimeException("Insufficient available quantity");
-//         }
+      // FETCH AVAILABILITY
+         MtsEquipmentAvailability availability =
+                 mtsEquipmentAvailabilityRepository
+                     .findByMtsEquipMasterId(equipment.getMtsEquipMasterId());
+         
+         int fromType = mtsLocationMasterRepository
+        	        .findById(req.getFromLocationId())
+        	        .orElseThrow()
+        	        .getType();
+         
+         /*
+         type:
+         1 = WAREHOUSE
+         3 = PROJECT
+        */
+
+        // REMOVE FROM SOURCE
+        if (fromType == 1) { // WAREHOUSE
+            if (availability.getAvailable() < 1) {
+                throw new RuntimeException("Asset not available in warehouse");
+            }
+            availability.setAvailable(availability.getAvailable() - 1);
+        }
+        else if (fromType == 3) { // PROJECT
+            if (availability.getInUse() < 1) {
+                throw new RuntimeException("Asset not in use at project");
+            }
+            availability.setInUse(availability.getInUse() - 1);
+        }
+
+        availability.setModifiedOn(req.getDispatchDate());
+        mtsEquipmentAvailabilityRepository.saveAndFlush(availability);
 
          // CREATE INVENTORY TRANSACTION (OPEN)
          MtsInventoryTransaction tx = new MtsInventoryTransaction();
@@ -402,11 +425,11 @@ public class InventoryServiceImpl implements InventoryService {
          mtsInventoryTransactionRepository.saveAndFlush(tx);
          
       // UPDATE AVAILABILITY ✅
-         int fromType =
-        		    mtsLocationMasterRepository
-        		        .findById(tx.getFromLocationId())
-        		        .orElseThrow()
-        		        .getType();
+//         int fromType =
+//        		    mtsLocationMasterRepository
+//        		        .findById(tx.getFromLocationId())
+//        		        .orElseThrow()
+//        		        .getType();
 
         		int toType = receiveLocation.getType();
 
@@ -416,16 +439,16 @@ public class InventoryServiceImpl implements InventoryService {
         		 3 = PROJECT
         		*/
 
-        		// WAREHOUSE → PROJECT
-        		if (fromType == 1 && toType == 3) {
-        		    availability.setAvailable(availability.getAvailable() - 1);
-        		    availability.setInUse(availability.getInUse() + 1);
+        		// WAREHOUSE
+        		if (toType == 1) {
+        		    availability.setAvailable(availability.getAvailable() + 1);
+//        		    availability.setInUse(availability.getInUse() + 1);
         		}
 
-        		// PROJECT → WAREHOUSE
-        		else if (fromType == 3 && toType == 1) {
-        		    availability.setAvailable(availability.getAvailable() + 1);
-        		    availability.setInUse(Math.max(0, availability.getInUse() - 1));
+        		// PROJECT
+        		else if (toType == 3) {
+        		    availability.setAvailable(availability.getInUse() + 1);
+//        		    availability.setInUse(Math.max(0, availability.getInUse() - 1));
         		}
 
         		// PROJECT → PROJECT  ❌ NO CHANGE

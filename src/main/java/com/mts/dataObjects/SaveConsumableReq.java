@@ -1,8 +1,11 @@
 package com.mts.dataObjects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SaveConsumableReq {
 	private String userId;
 	private String authToken;
@@ -19,6 +22,6 @@ public class SaveConsumableReq {
 	private Long lastDateOfWarranty;
 	private Long mtsLocationMasterId;
 	
-	private Long mtsPartyMasterId;
-	private Long mtsPartyAddressId;
+//	private Long mtsPartyMasterId;
+//	private Long mtsPartyAddressId;
 }
