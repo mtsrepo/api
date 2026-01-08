@@ -137,6 +137,7 @@ public class ChallanServiceImpl implements ChallanService {
 
 			    challanEquip.setEquipName(data.getMtsEquipName());
 			    challanEquip.setQty(val.getQty());
+			    challanEquip.setUnit(val.getUnit());
 			    challanEquip.setValueOfGoods(val.getValueOfGoods());
 			    challanEquip.setTaxableValue(val.getTaxableValue());
 			    challanEquip.setIGSTPercentage(val.getIGSTPercentage());

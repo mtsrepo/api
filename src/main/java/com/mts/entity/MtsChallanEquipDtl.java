@@ -34,6 +34,8 @@ public class MtsChallanEquipDtl {
 
 	private Integer qty;
 
+	private String unit;
+	
 	private Double valueOfGoods;
 
 	private Double taxableValue;

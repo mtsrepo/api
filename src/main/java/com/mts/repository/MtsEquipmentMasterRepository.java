@@ -45,7 +45,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "JOIN mts_equip_availability mea \r\n"
 			+ "    ON mem.mtsEquipMasterId = mea.mtsEquipMasterId\r\n"
 			+ "WHERE \r\n"
-			+ "    metm.category <> 'Asset' mem.isActive = 1\r\n"
+			+ "    metm.category <> 'Asset' and mem.isActive = 1\r\n"
 			+ " ORDER BY \r\n"
 			+ "    mem.createDate DESC;\r\n"
 			+ "", nativeQuery = true)
@@ -245,7 +245,7 @@ public interface MtsEquipmentMasterRepository extends JpaRepository<MtsEquipment
 			+ "				AND met.category = 'Asset' ", nativeQuery = true)
 	List<Map<String, Object>> nonLocatedEquipmentsFromStatus();
 
-	Optional<MtsEquipmentMaster> findBySerialNo(String serialNo);
+	Optional<MtsEquipmentMaster> findBySerialNoAndIsActive(String serialNo, int isActive);
 
 	@Query(value = "SELECT DISTINCT\r\n"
 			+ "    mem.mtsEquipMasterId,\r\n"

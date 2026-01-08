@@ -13,6 +13,7 @@ public class GoodsDto {
 	private Long mtsEquipMasterId;
 	private String type;
 	private Integer qty;
+	private String unit;   // ✅ NEW
 	private Double valueOfGoods;
 	private Double taxableValue;
 	private Double iGSTPercentage;

@@ -36,8 +36,6 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 	@Autowired
 	MtsEquipmentAvailabilityRepository mtsEquipmentAvailabilityRepository; 
 	
-	@Value("${SD_WAREHOUSE_LOCATION_ID}")
-	private long SD_WAREHOUSE_LOCATION_ID;
 	
 	@Override
 	public List<Map<String, Object>> getConsumableTypeIdName() {
@@ -118,7 +116,7 @@ public class EquipmentConsumableServiceImpl implements EquipmentConsumableServic
 			consumable.setDateOfPurchase(consReq.getDateOfPurchase());
 			consumable.setLastDateOfWarranty(consReq.getLastDateOfWarranty());
 //			consumable.setMtsLocationMasterId(1L);			// at first not decided where it will
-			consumable.setMtsLocationMasterId(SD_WAREHOUSE_LOCATION_ID);
+//			consumable.setMtsLocationMasterId(SD_WAREHOUSE_LOCATION_ID);
 			consumable.setModifiedDate(new Date().getTime());
 			consumable.setIsActive(1);
 			

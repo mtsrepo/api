@@ -84,7 +84,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 					asset = existingAsset.get();
 				}
 			} else {
-				Optional<MtsEquipmentMaster> checkAlready = mtsEquipmentMasterRepository.findBySerialNo(asstReq.getSerialNo()); 
+				Optional<MtsEquipmentMaster> checkAlready = mtsEquipmentMasterRepository.findBySerialNoAndIsActive(asstReq.getSerialNo(), 1); 
 				checkAlready.ifPresent(existingParty -> {
 				    throw new RuntimeException("Asset with this serial number already exists.");
 				});
@@ -109,7 +109,7 @@ public class EquipmentAssetServiceImpl implements EquipmentAssetService {
 				availability.setMtsEquipMasterId(asset.getMtsEquipMasterId());
 				availability.setTotalNo(1);
 				availability.setInUse(0);
-				availability.setAvailable(0);
+				availability.setAvailable(1);
 				availability.setCreatedOn(new Date().getTime());
 				availability.setModifiedOn(new Date().getTime());
 				availability.setIsActive(1);
